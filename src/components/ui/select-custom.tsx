@@ -72,7 +72,7 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.18, ease: EASE }}
-            className="rounded-2xl border border-white/[0.08] bg-black/95 p-1.5 shadow-2xl shadow-black/60 backdrop-blur-xl"
+            className="rounded-2xl border border-foreground/[0.08] bg-background/95 p-1.5 shadow-2xl shadow-black/60 backdrop-blur-xl"
           >
             {options.map((opt) => {
               const isSelected = opt.value === value
@@ -81,9 +81,9 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
                   key={opt.value}
                   type="button"
                   onClick={() => { onChange(opt.value); setOpen(false) }}
-                  className="flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-sm transition-colors duration-100 hover:bg-white/[0.06]"
+                  className="flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-sm transition-colors duration-100 hover:bg-foreground/[0.06]"
                 >
-                  <span className={isSelected ? 'text-white' : 'text-white/50'}>{opt.label}</span>
+                  <span className={isSelected ? 'text-foreground' : 'text-foreground/50'}>{opt.label}</span>
                   <AnimatePresence>
                     {isSelected && (
                       <motion.span
@@ -92,7 +92,7 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
                         exit={{ opacity: 0, scale: 0.4 }}
                         transition={{ duration: 0.15, type: 'spring', bounce: 0.3 }}
                       >
-                        <Check className="h-3.5 w-3.5 text-white/50" />
+                        <Check className="h-3.5 w-3.5 text-foreground/50" />
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -112,16 +112,16 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
         ref={triggerRef}
         type="button"
         onClick={toggle}
-        className={`flex w-full items-center justify-between rounded-2xl border border-white/[0.08] bg-white/[0.03] py-3 text-left text-sm transition-colors duration-200 hover:border-white/[0.16] focus:border-white/20 focus:outline-none ${Icon ? 'pl-10 pr-4' : 'px-4'}`}
+        className={`flex w-full items-center justify-between rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] py-3 text-left text-sm transition-colors duration-200 hover:border-foreground/[0.16] focus:border-foreground/20 focus:outline-none ${Icon ? 'pl-10 pr-4' : 'px-4'}`}
       >
-        <span className={selected ? 'text-white' : 'text-white/20'}>
+        <span className={selected ? 'text-foreground' : 'text-foreground/20'}>
           {selected ? selected.label : placeholder}
         </span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2, ease: EASE }}
         >
-          <ChevronDown className="h-3.5 w-3.5 text-white/25" />
+          <ChevronDown className="h-3.5 w-3.5 text-foreground/25" />
         </motion.span>
       </button>
 

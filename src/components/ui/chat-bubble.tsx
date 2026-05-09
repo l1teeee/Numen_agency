@@ -2,15 +2,27 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { MessageCircle, X, Send } from 'lucide-react'
 
 const EASE = [0.22, 1, 0.36, 1] as const
-import { MessageCircle, X, Send } from 'lucide-react'
+
+type Message = { role: 'user' | 'assistant'; content: string }
+
+const INITIAL: Message[] = [
+  {
+    role: 'assistant',
+    content: "Hi! I'm Numen's AI assistant. Ask me anything about our services, process, pricing, or how we can help build your project.",
+  },
+]
 
 export function ChatBubble() {
   const [open, setOpen] = useState(false)
-  const [message, setMessage] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sent'>('idle')
+  const [messages, setMessages] = useState<Message[]>(INITIAL)
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!open) return
@@ -21,10 +33,44 @@ export function ChatBubble() {
     return () => document.removeEventListener('mousedown', onDown)
   }, [open])
 
-  const send = (e: React.FormEvent) => {
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, loading])
+
+  useEffect(() => {
+    if (open) setTimeout(() => inputRef.current?.focus(), 300)
+  }, [open])
+
+  const send = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!message.trim()) return
-    setStatus('sent')
+    const text = input.trim()
+    if (!text || loading) return
+
+    const userMsg: Message = { role: 'user', content: text }
+    const next = [...messages, userMsg]
+    setMessages(next)
+    setInput('')
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: next }),
+      })
+      const data = await res.json()
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', content: data.reply ?? 'Sorry, something went wrong. Please try again.' },
+      ])
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', content: 'Something went wrong. Please try again or email us at hola@numenagency.com.' },
+      ])
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -36,25 +82,25 @@ export function ChatBubble() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.96 }}
             transition={{ duration: 0.25, ease: EASE }}
-            className="w-80 overflow-hidden rounded-2xl border border-white/[0.08] bg-black/95 shadow-2xl shadow-black/60 backdrop-blur-xl"
+            className="flex w-80 flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-background/95 shadow-2xl shadow-black/60 backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between border-b border-foreground/[0.08] px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.08] text-xs font-medium text-white/40">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/[0.08] text-xs font-medium text-foreground/40">
                     N
                   </div>
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-black bg-emerald-400" />
+                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">Numen Agency</p>
-                  <p className="text-xs text-white/30">Usually replies in minutes</p>
+                  <p className="text-sm font-semibold text-foreground">Numen AI</p>
+                  <p className="text-xs text-foreground/30">Ask about our services</p>
                 </div>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="text-white/30 transition-colors hover:text-white"
+                className="text-foreground/30 transition-colors hover:text-foreground"
                 aria-label="Close chat"
               >
                 <X size={15} />
@@ -62,45 +108,64 @@ export function ChatBubble() {
             </div>
 
             {/* Messages */}
-            <div className="space-y-3 px-5 py-4">
-              <div className="flex gap-3">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/[0.08] text-[10px] font-medium text-white/40">
-                  JM
+            <div className="flex max-h-72 flex-col gap-3 overflow-y-auto px-4 py-4">
+              {messages.map((msg, i) => (
+                <div key={i} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  {msg.role === 'assistant' && (
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[9px] font-medium text-foreground/40">
+                      N
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-[210px] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                      msg.role === 'user'
+                        ? 'rounded-tr-sm bg-foreground text-background'
+                        : 'rounded-tl-sm bg-foreground/[0.06] text-foreground/70'
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
                 </div>
-                <div className="max-w-[210px] rounded-2xl rounded-tl-sm bg-white/[0.06] px-4 py-3 text-sm leading-relaxed text-white/70">
-                  Hey! Tell us about your project and we&apos;ll get back to you right away.
+              ))}
+
+              {loading && (
+                <div className="flex gap-2.5">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[9px] font-medium text-foreground/40">
+                    N
+                  </div>
+                  <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-foreground/[0.06] px-3.5 py-3">
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-foreground/30 [animation-delay:0ms]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-foreground/30 [animation-delay:150ms]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-foreground/30 [animation-delay:300ms]" />
+                  </div>
                 </div>
-              </div>
+              )}
+
+              <div ref={bottomRef} />
             </div>
 
             {/* Input */}
-            {status === 'sent' ? (
-              <div className="border-t border-white/[0.08] px-5 py-4 text-center">
-                <p className="text-sm text-white/50">
-                  Message sent! We&apos;ll be in touch soon.
-                </p>
-              </div>
-            ) : (
-              <form
-                onSubmit={send}
-                className="flex items-center gap-2 border-t border-white/[0.08] px-4 py-3"
+            <form
+              onSubmit={send}
+              className="flex shrink-0 items-center gap-2 border-t border-foreground/[0.08] px-4 py-3"
+            >
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask a question..."
+                disabled={loading}
+                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground/20 focus:outline-none disabled:opacity-40"
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || loading}
+                className="text-foreground/30 transition-colors hover:text-foreground disabled:opacity-20"
+                aria-label="Send"
               >
-                <input
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 bg-transparent text-sm text-white placeholder:text-white/20 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  disabled={!message.trim()}
-                  className="text-white/30 transition-colors hover:text-white disabled:opacity-20"
-                  aria-label="Send message"
-                >
-                  <Send size={15} />
-                </button>
-              </form>
-            )}
+                <Send size={15} />
+              </button>
+            </form>
           </motion.div>
         )}
       </AnimatePresence>
@@ -110,11 +175,11 @@ export function ChatBubble() {
         onClick={() => setOpen((p) => !p)}
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
-        className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-lg shadow-white/10"
+        className="relative flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg shadow-white/10"
         aria-label="Open chat"
       >
         {!open && (
-          <span className="absolute inset-0 animate-ping rounded-full bg-white/20" />
+          <span className="absolute inset-0 animate-ping rounded-full bg-foreground/20" />
         )}
         <AnimatePresence mode="wait">
           {open ? (

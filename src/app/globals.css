@@ -50,7 +50,7 @@
 
 :root {
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -84,8 +84,8 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
@@ -117,6 +117,40 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+:root {
+  --grid-line: rgba(0, 0, 0, 0.45);
+  --grid-fine: rgba(0, 0, 0, 0.25);
+  --vignette: #ffffff;
+}
+
+.dark {
+  --grid-line: rgba(255, 255, 255, 0.12);
+  --grid-fine: rgba(255, 255, 255, 0.035);
+  --vignette: #000000;
+}
+
+
+/* ── Theme switch: circular reveal via View Transitions ──────── */
+@keyframes theme-reveal {
+  from { clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%)); }
+  to   { clip-path: circle(200vmax at var(--theme-x, 50%) var(--theme-y, 50%)); }
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  animation: theme-reveal 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none !important; }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -128,3 +162,34 @@
     @apply font-sans;
   }
 }
+
+/* ── Light mode: solid grays (no opacity) ─────────────────────
+   Opacity fractions look washed-out on white bg.
+   We override each shade with a solid dark-gray equivalent. */
+html:not(.dark) .text-foreground\/60  { color: #111111; }
+html:not(.dark) .text-foreground\/50  { color: #222222; }
+html:not(.dark) .text-foreground\/40  { color: #333333; }
+html:not(.dark) .text-foreground\/35  { color: #444444; }
+html:not(.dark) .text-foreground\/30  { color: #555555; }
+html:not(.dark) .text-foreground\/25  { color: #666666; }
+html:not(.dark) .text-foreground\/20  { color: #777777; }
+html:not(.dark) .text-foreground\/15  { color: #888888; }
+html:not(.dark) .placeholder\:text-foreground\/20::placeholder { color: #aaaaaa; }
+
+/* Light mode borders — clearly visible */
+html:not(.dark) .border-foreground\/\[0\.08\]  { border-color: #b8b8b8; }
+html:not(.dark) .border-foreground\/\[0\.14\]  { border-color: #999999; }
+html:not(.dark) .border-foreground\/\[0\.16\]  { border-color: #888888; }
+html:not(.dark) .border-foreground\/\[0\.06\]  { border-color: #cccccc; }
+
+/* Light mode input / card backgrounds — white lifts above the page */
+html:not(.dark) .bg-foreground\/\[0\.03\]  { background-color: #ffffff; }
+html:not(.dark) .bg-foreground\/\[0\.05\]  { background-color: #f0f0f0; }
+html:not(.dark) .bg-foreground\/\[0\.06\]  { background-color: #e8e8e8; }
+
+/* Light mode inline bg elements (dividers, progress dots) */
+html:not(.dark) .bg-foreground\/\[0\.08\]  { background-color: #c8c8c8; }
+html:not(.dark) .bg-foreground\/\[0\.12\]  { background-color: #b8b8b8; }
+
+/* Light mode opacity-60 icons — boost visibility */
+html:not(.dark) .opacity-60 { opacity: 0.8; }

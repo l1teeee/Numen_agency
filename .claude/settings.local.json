@@ -13,7 +13,23 @@
       "Bash(node -e \"const data = require\\('./node_modules/next/dist/compiled/@next/font/dist/google/font-data.json'\\); const keys = Object.keys\\(data\\); console.log\\(keys.filter\\(k => k.toLowerCase\\(\\).includes\\('jakarta'\\) || k.toLowerCase\\(\\).includes\\('outfit'\\) || k.toLowerCase\\(\\).includes\\('geist'\\)\\)\\)\")",
       "Bash(node -e \"const f = require\\('next/font/google'\\); console.log\\(typeof f.Plus_Jakarta_Sans\\)\")",
       "Bash(node -e \"const f = require\\('next/font/google'\\); const k = Object.keys\\(f\\); console.log\\(k.filter\\(k => k.includes\\('Jakarta'\\) || k.includes\\('Outfit'\\)\\)\\)\")",
-      "Bash(node -e \"try { const { Plus_Jakarta_Sans } = require\\('next/dist/compiled/@next/font/dist/google'\\); console.log\\(typeof Plus_Jakarta_Sans\\) } catch\\(e\\) { console.log\\(e.message\\) }\")"
+      "Bash(node -e \"try { const { Plus_Jakarta_Sans } = require\\('next/dist/compiled/@next/font/dist/google'\\); console.log\\(typeof Plus_Jakarta_Sans\\) } catch\\(e\\) { console.log\\(e.message\\) }\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Proyects\\\\numen-agency\" -Recurse -Depth 2 -Force)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(Format-Table -AutoSize)",
+      "WebFetch(domain:vielinks.com)",
+      "WebFetch(domain:inkytap.com)",
+      "WebFetch(domain:app.inkytap.com)",
+      "Bash(npx tsc *)",
+      "WebFetch(domain:www.pexels.com)",
+      "mcp__nano-banana__generate_image",
+      "Bash(Start-Sleep -Seconds 45)",
+      "Bash(Write-Output \"ready\")",
+      "Bash(dir \"C:\\\\Proyects\\\\numen-agency\\\\public\")",
+      "Bash(dir \"C:\\\\Proyects\\\\numen-agency\\\\src\\\\app\")",
+      "Bash(del *)",
+      "Bash(dir C:\\\\Proyects\\\\numen-agency\\\\public *)",
+      "Bash(findstr -i \"openai\\\\|ai\\\\|anthropic\")"
     ]
   }
 }

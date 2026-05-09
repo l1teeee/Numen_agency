@@ -3,9 +3,10 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
+import { PhotoSpread } from '@/components/ui/gallery'
 interface BlurStyle {
   filter: MotionValue<string>
   opacity: MotionValue<number>
@@ -38,29 +39,37 @@ const blurLeave = {
 }
 
 const INPUT =
-  'w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-white/20 focus:outline-none transition-colors duration-200'
+  'w-full rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] px-4 py-3 text-sm text-foreground placeholder:text-foreground/20 focus:border-foreground/20 focus:outline-none transition-colors duration-200'
 
 // ─── Services ────────────────────────────────────────────────
 const services = [
   {
     num: '01',
     title: 'Web Development',
-    desc: 'Full-stack apps with Next.js, TypeScript and Supabase. From MVPs to production-grade SaaS platforms.',
+    desc: 'Full-stack applications built with Next.js, TypeScript, and Supabase. From zero-to-one MVPs to production-grade SaaS — fast, scalable, and maintainable from day one.',
+    tags: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Stripe'],
+    img: '/programming.png',
   },
   {
     num: '02',
     title: 'Product Design',
-    desc: 'Design systems built in Figma, shipped pixel-perfect. Accessible, scalable, consistent across every screen.',
+    desc: 'End-to-end design in Figma: user flows, wireframes, interactive prototypes, and production-ready design systems. Pixel-perfect and accessible across every screen.',
+    tags: ['Figma', 'Design Systems', 'UX Research', 'Prototyping'],
+    img: '/design.png',
   },
   {
     num: '03',
     title: 'AI Integration',
-    desc: 'Embed AI into your product — chatbots, recommendations, automation — powered by the latest models.',
+    desc: 'Embed intelligence into your product — conversational AI, semantic search, content automation, and smart recommendations — powered by the latest frontier models.',
+    tags: ['OpenAI', 'Anthropic', 'RAG', 'Embeddings', 'Automation'],
+    img: '/ia.png',
   },
   {
     num: '04',
     title: 'Digital Strategy',
-    desc: "Architecture, roadmaps, and growth strategy. We think before we build so you don't have to rebuild.",
+    desc: 'Architecture planning, tech stack selection, and growth roadmaps. We make the right decisions before a line of code is written so you never have to rebuild from scratch.',
+    tags: ['Architecture', 'Roadmapping', 'Tech Audits', 'Consulting'],
+    img: '/strategy.png',
   },
 ]
 
@@ -68,26 +77,48 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
-    <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-black">
+    <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-background">
       <motion.div
         className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8"
         style={blurStyle}
       >
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>What We Do</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>02</span>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What We Do</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>02</span>
         </div>
-        <div className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 overflow-hidden">
           {services.map((s, i) => (
             <motion.div
               key={s.num}
               {...fadeUp(i * 0.08)}
-              className="flex flex-col justify-between rounded-2xl border border-white/[0.08] p-6 transition-colors duration-300 hover:border-white/[0.16]"
+              className="group relative overflow-hidden rounded-2xl border border-foreground/[0.08] transition-colors duration-300 hover:border-foreground/[0.14]"
             >
-              <span className="text-xs font-medium text-white/20">{s.num}</span>
-              <div>
-                <h3 className="mb-2 text-base font-semibold text-white">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-white/40">{s.desc}</p>
+              {/* full-card background image */}
+              <img
+                src={s.img}
+                alt={s.title}
+                style={{ objectPosition: 'center 18%' }}
+                className="absolute inset-0 h-full w-full object-contain scale-[0.82] origin-top transition-transform duration-700 group-hover:scale-[0.87] invert brightness-[0.88] dark:invert-0 dark:brightness-100"
+              />
+
+              {/* gradient: transparent top → soft mid */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background/20" />
+
+              {/* strong gradient behind text area only */}
+              <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-background via-background/90 to-transparent" />
+
+              {/* content overlay */}
+              <div className="relative z-10 flex h-full flex-col justify-between p-5">
+                <span className="text-[10px] font-medium text-foreground/30">{s.num}</span>
+                <div>
+                  <h3 className="mb-1.5 text-sm font-semibold text-foreground">{s.title}</h3>
+                  <p className="mb-3 text-xs leading-relaxed text-foreground/50">{s.desc}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {s.tags.map((tag) => (
+                      <span key={tag} className="rounded-full border border-foreground/[0.14] bg-background/40 px-2.5 py-0.5 text-[10px] text-foreground/40 backdrop-blur-sm">{tag}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -100,25 +131,32 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 // ─── Projects ────────────────────────────────────────────────
 const projects = [
   {
-    name: 'VieLink',
+    name: 'VieLinks',
     category: 'Platform · 2024',
-    desc: 'Smart platform for digital professionals to manage their online presence, connect with clients, and showcase their work — all from a single link.',
+    desc: 'Your entire online presence, one link. VieLinks lets digital professionals centralize their portfolio, social profiles, and work history into a single shareable page — clean, fast, and fully customizable.',
     stack: ['Next.js', 'Supabase', 'TypeScript', 'Tailwind CSS'],
-    href: '#',
+    href: 'https://vielinks.com',
+    status: 'Live',
+    dot: 'bg-emerald-400',
   },
   {
     name: 'InkyTap',
-    category: 'SaaS · 2024',
-    desc: 'Digital ordering and menu management platform for modern restaurants and cafes.',
-    stack: ['Next.js', 'Supabase', 'Stripe'],
-    href: '#',
+    category: 'Web App · 2026',
+    desc: '"Historias para descubrir." A curated story library for Spanish readers — browse 15+ genres from fiction to biography, filter by reading time, and find your next great read.',
+    stack: ['Next.js', 'AWS S3', 'TypeScript', 'Tailwind CSS'],
+    href: 'https://inkytap.com',
+    status: 'Live',
+    dot: 'bg-emerald-400',
+    img: '/inkytap/principal.png',
   },
   {
-    name: 'Numen DS',
-    category: 'Internal · 2025',
-    desc: 'Component library and design tokens powering all our client products.',
-    stack: ['shadcn/ui', 'Figma', 'Tailwind CSS'],
-    href: '#',
+    name: 'InkyTap Quiz',
+    category: 'Web App · 2026',
+    desc: '"Desafía tu conocimiento." Create and share quizzes on any topic — no account needed to play. Covers hobbies, history, and exam prep.',
+    stack: ['Next.js', 'TypeScript', 'Supabase'],
+    href: 'https://app.inkytap.com',
+    status: 'Live',
+    dot: 'bg-emerald-400',
   },
 ]
 
@@ -127,53 +165,100 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.5, once: false })
   const [featured, ...rest] = projects
   return (
-    <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-white/[0.08] bg-black">
+    <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div
         className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8"
         style={blurStyle}
       >
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>Selected Work</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>03</span>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Selected Work</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
         </div>
         <div className="mt-6 flex flex-1 flex-col gap-3 lg:flex-row">
-          <motion.div {...fadeUp(0)} className="flex-1 lg:flex-[2]">
-            <Link href={featured.href} className="group flex h-full flex-col justify-between rounded-2xl border border-white/[0.08] p-6 transition-colors duration-300 hover:border-white/[0.16]">
+          <motion.div {...fadeUp(0)} className="flex flex-col flex-1 lg:flex-[3]">
+            <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex flex-1 flex-col justify-between rounded-2xl bg-background p-6 ring-1 ring-foreground/[0.08]">
+              {/* gradient ring on hover — CSS mask creates a hollow 1px donut */}
+              <div
+                className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                style={{
+                  background: 'linear-gradient(to right, #d394ff, #f0dcff, #c97cff)',
+                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                  WebkitMaskComposite: 'xor',
+                  mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                  maskComposite: 'exclude',
+                  padding: '1px',
+                }}
+              />
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-xs text-white/30">{featured.category}</span>
-                  <h3 className="mt-1 text-xl font-semibold text-white">{featured.name}</h3>
+                  <span className="text-xs text-foreground/30">{featured.category}</span>
+                  <div className="mt-1 flex items-center gap-2">
+                    <h3 className="text-xl font-semibold text-foreground">{featured.name}</h3>
+                    {featured.status && (
+                      <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
+                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${featured.dot}`} />
+                        {featured.status}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <ArrowUpRight className="size-4 shrink-0 text-white/20 transition-colors duration-200 group-hover:text-white" />
+                <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#d394ff]" />
+              </div>
+              <div className="flex items-center justify-center">
+                <PhotoSpread
+                  images={[
+                    '/vielink/dashboard.png',
+                    '/vielink/principal.png',
+                    '/vielink/know.png',
+                  ]}
+                  width={170}
+                  height={280}
+                  centerWidth={260}
+                />
               </div>
               <div>
-                <p className="mb-4 text-sm leading-relaxed text-white/40">{featured.desc}</p>
+                <p className="mb-4 text-sm leading-relaxed text-foreground/40">{featured.desc}</p>
                 <div className="flex flex-wrap gap-2">
                   {featured.stack.map((t) => (
-                    <span key={t} className="rounded-full border border-white/[0.08] px-3 py-1 text-xs text-white/40">{t}</span>
+                    <span key={t} className="rounded-full border border-foreground/[0.08] px-3 py-1 text-xs text-foreground/40">{t}</span>
                   ))}
                 </div>
+                <p className="mt-3 text-[11px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/40">{featured.href.replace('https://', '')}</p>
               </div>
             </Link>
           </motion.div>
-          <div className="flex flex-row gap-3 lg:flex-col lg:flex-1">
+          <div className="flex flex-row gap-3 lg:flex-col lg:flex-[2]">
             {rest.map((p, i) => (
               <motion.div key={p.name} {...fadeUp(0.1 + i * 0.08)} className="flex-1">
-                <Link href={p.href} className="group flex h-full flex-col justify-between rounded-2xl border border-white/[0.08] p-5 transition-colors duration-300 hover:border-white/[0.16]">
+                <Link href={p.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-5 transition-colors duration-300 hover:border-foreground/[0.16]">
                   <div className="flex items-start justify-between">
                     <div>
-                      <span className="text-xs text-white/30">{p.category}</span>
-                      <h3 className="mt-1 text-sm font-semibold text-white">{p.name}</h3>
+                      <span className="text-xs text-foreground/30">{p.category}</span>
+                      <div className="mt-1 flex items-center gap-1.5">
+                        <h3 className="text-sm font-semibold text-foreground">{p.name}</h3>
+                        {p.status && (
+                          <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-1.5 py-0.5 text-[9px] text-foreground/30">
+                            <span className={`inline-block h-1 w-1 rounded-full ${p.dot}`} />
+                            {p.status}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <ArrowUpRight className="size-3.5 shrink-0 text-white/20 transition-colors duration-200 group-hover:text-white" />
+                    <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                   </div>
-                  <div>
-                    <p className="mb-3 text-xs leading-relaxed text-white/40">{p.desc}</p>
+                  {p.img && (
+                    <div className="my-4 flex-1 overflow-hidden rounded-xl">
+                      <img src={p.img} alt={p.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+                    </div>
+                  )}
+                  <div className={p.img ? '' : 'mt-auto'}>
+                    <p className="mb-3 text-xs leading-relaxed text-foreground/40">{p.desc}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {p.stack.map((t) => (
-                        <span key={t} className="rounded-full border border-white/[0.08] px-2.5 py-0.5 text-xs text-white/40">{t}</span>
+                        <span key={t} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-xs text-foreground/40">{t}</span>
                       ))}
                     </div>
+                    <p className="mt-2 text-[10px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/35">{p.href.replace('https://', '')}</p>
                   </div>
                 </Link>
               </motion.div>
@@ -191,13 +276,13 @@ const team = [
     initials: 'JM',
     name: 'Julian Mendez',
     role: 'Full-Stack Developer & Co-founder',
-    desc: 'Leads architecture and backend systems. Obsessed with clean code and scalable infrastructure.',
+    desc: 'Leads architecture, backend systems, and infrastructure. Obsessed with clean code, performance, and shipping products that actually scale.',
   },
   {
     initials: 'IR',
     name: 'Igmer Rodriguez',
     role: 'Full-Stack Developer & Co-founder',
-    desc: 'Drives frontend and product design. Turns complex UX problems into elegant, pixel-perfect interfaces.',
+    desc: 'Drives frontend engineering and product design. Turns complex UX challenges into fast, accessible, pixel-perfect interfaces.',
   },
 ]
 
@@ -205,24 +290,27 @@ export function AboutSection() {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
-    <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-white/[0.08] bg-black">
+    <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8">
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>About Numen</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>04</span>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>About Numen</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
         </div>
 
         <div className="mt-8 grid flex-1 grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
           <motion.div {...fadeUp(0)} className="flex flex-col gap-6">
             <div>
-              <h2 className="text-3xl font-semibold leading-snug tracking-tight text-white lg:text-4xl">
+              <h2 className="text-3xl font-semibold leading-snug tracking-tight text-foreground lg:text-4xl">
                 A small team that builds<br />
-                <span className="text-white/25">great digital products.</span>
+                <span className="text-foreground/25">great digital products.</span>
               </h2>
-              <p className="mt-4 text-sm leading-relaxed text-white/40">
+              <p className="mt-4 text-sm leading-relaxed text-foreground/40">
                 Numen Agency was founded with one mission: build digital products that actually work.
                 We combine design thinking with engineering precision to deliver software that scales
                 and experiences that people love.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-foreground/30">
+                Based in El Salvador, working fully remote with clients worldwide. We move fast, communicate clearly, and treat every project like it&apos;s our own product.
               </p>
             </div>
 
@@ -231,15 +319,15 @@ export function AboutSection() {
                 <motion.div
                   key={member.name}
                   {...fadeUp(0.12 + i * 0.08)}
-                  className="flex items-start gap-4 rounded-2xl border border-white/[0.08] p-4 transition-colors duration-200 hover:border-white/[0.16]"
+                  className="flex items-start gap-4 rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-200 hover:border-foreground/[0.16]"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/[0.08] text-xs font-medium text-white/40">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-xs font-medium text-foreground/40">
                     {member.initials}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">{member.name}</p>
-                    <p className="text-xs text-white/30">{member.role}</p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-white/40">{member.desc}</p>
+                    <p className="text-sm font-semibold text-foreground">{member.name}</p>
+                    <p className="text-xs text-foreground/30">{member.role}</p>
+                    <p className="mt-1.5 text-xs leading-relaxed text-foreground/40">{member.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -250,12 +338,12 @@ export function AboutSection() {
             {[
               { value: '10+', label: 'Projects delivered' },
               { value: '3+', label: 'Years of experience' },
-              { value: '100%', label: 'Remote & async' },
-              { value: '24h', label: 'Response time' },
+              { value: '2', label: 'Products live in production' },
+              { value: '24h', label: 'Max response time' },
             ].map((stat, i) => (
-              <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="rounded-2xl border border-white/[0.08] p-6">
-                <p className="text-3xl font-bold text-white">{stat.value}</p>
-                <p className="mt-1 text-xs text-white/40">{stat.label}</p>
+              <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="rounded-2xl border border-foreground/[0.08] p-6">
+                <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                <p className="mt-1 text-xs text-foreground/40">{stat.label}</p>
               </motion.div>
             ))}
           </div>
@@ -311,95 +399,82 @@ const slideVariants = {
   exit: (dir: number) => ({ x: dir > 0 ? -48 : 48, opacity: 0 }),
 }
 
+const PAGES = [testimonials.slice(0, 3), testimonials.slice(3, 6)]
+
 export function TestimonialsSection() {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
-  const [current, setCurrent] = useState(0)
+  const [page, setPage] = useState(0)
   const [direction, setDirection] = useState(0)
 
-  const prev = () => {
-    setDirection(-1)
-    setCurrent((i) => (i - 1 + testimonials.length) % testimonials.length)
-  }
-
-  const next = () => {
-    setDirection(1)
-    setCurrent((i) => (i + 1) % testimonials.length)
-  }
+  const prev = () => { setDirection(-1); setPage((p) => (p - 1 + PAGES.length) % PAGES.length) }
+  const next = () => { setDirection(1);  setPage((p) => (p + 1) % PAGES.length) }
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setDirection(1)
-      setCurrent((i) => (i + 1) % testimonials.length)
-    }, 5000)
+    const id = setInterval(() => { setDirection(1); setPage((p) => (p + 1) % PAGES.length) }, 7000)
     return () => clearInterval(id)
   }, [])
 
-  const t = testimonials[current]
-
   return (
-    <section ref={ref} id="testimonials" className="border-t border-white/[0.08] bg-black py-24">
+    <section ref={ref} id="testimonials" className="border-t border-foreground/[0.08] bg-background py-24">
       <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
         <motion.div
-          className="flex items-center justify-between border-b border-white/[0.08] pb-6"
+          className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
           {...fadeUp(0)}
         >
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>What Clients Say</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>05</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What Clients Say</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </motion.div>
 
         <motion.div {...fadeUp(0.05)} className="mt-16">
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] p-8 md:p-12">
+          <div className="relative overflow-hidden">
             <AnimatePresence custom={direction} mode="wait">
               <motion.div
-                key={current}
+                key={page}
                 custom={direction}
                 variants={slideVariants}
                 initial="enter"
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.38, ease: EASE }}
+                className="grid grid-cols-1 gap-4 sm:grid-cols-3"
               >
-                <p className="text-lg leading-relaxed text-white/60 md:text-xl md:leading-relaxed">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <div className="mt-8 flex items-center gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.08] text-xs font-medium text-white/40">
-                    {t.initials}
+                {PAGES[page].map((t) => (
+                  <div key={t.name} className="flex flex-col justify-between rounded-2xl border border-foreground/[0.08] p-6">
+                    <p className="text-sm leading-relaxed text-foreground/60">
+                      &ldquo;{t.quote}&rdquo;
+                    </p>
+                    <div className="mt-6 flex items-center gap-3">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[10px] font-medium text-foreground/40">
+                        {t.initials}
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-foreground">{t.name}</p>
+                        <p className="text-[10px] text-foreground/30">{t.role}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white">{t.name}</p>
-                    <p className="text-xs text-white/30">{t.role}</p>
-                  </div>
-                </div>
+                ))}
               </motion.div>
             </AnimatePresence>
           </div>
 
           <div className="mt-6 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              {testimonials.map((_, i) => (
+              {PAGES.map((_, i) => (
                 <button
                   key={i}
                   type="button"
-                  onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i) }}
-                  className={`h-1 rounded-full transition-all duration-300 ${i === current ? 'w-6 bg-white/40' : 'w-1.5 bg-white/[0.12] hover:bg-white/20'}`}
+                  onClick={() => { setDirection(i > page ? 1 : -1); setPage(i) }}
+                  className={`h-1 rounded-full transition-all duration-300 ${i === page ? 'w-6 bg-foreground/40' : 'w-1.5 bg-foreground/[0.12] hover:bg-foreground/20'}`}
                 />
               ))}
             </div>
             <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={prev}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.08] text-white/30 transition-colors duration-200 hover:border-white/[0.16] hover:text-white"
-              >
+              <button type="button" onClick={prev} className="flex h-9 w-9 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground/30 transition-colors duration-200 hover:border-foreground/[0.16] hover:text-foreground">
                 <ChevronLeft size={15} />
               </button>
-              <button
-                type="button"
-                onClick={next}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.08] text-white/30 transition-colors duration-200 hover:border-white/[0.16] hover:text-white"
-              >
+              <button type="button" onClick={next} className="flex h-9 w-9 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground/30 transition-colors duration-200 hover:border-foreground/[0.16] hover:text-foreground">
                 <ChevronRight size={15} />
               </button>
             </div>
@@ -419,20 +494,31 @@ const stackCategories = [
       { name: 'React', icon: 'react' },
       { name: 'TypeScript', icon: 'typescript' },
       { name: 'Tailwind CSS', icon: 'tailwindcss' },
+      { name: 'Framer Motion', icon: 'framer' },
     ],
   },
   {
     label: 'Backend & DB',
     items: [
+      { name: 'Node.js', icon: 'nodedotjs' },
       { name: 'Supabase', icon: 'supabase' },
       { name: 'PostgreSQL', icon: 'postgresql' },
+      { name: 'Prisma', icon: 'prisma' },
+      { name: 'Redis', icon: 'redis' },
+    ],
+  },
+  {
+    label: 'Payments & AI',
+    items: [
+      { name: 'Stripe', icon: 'stripe' },
+      { name: 'OpenAI', icon: 'openai' },
+      { name: 'Anthropic', icon: 'anthropic' },
     ],
   },
   {
     label: 'Design',
     items: [
       { name: 'Figma', icon: 'figma' },
-      { name: 'Framer', icon: 'framer' },
     ],
   },
   {
@@ -440,7 +526,9 @@ const stackCategories = [
     items: [
       { name: 'Vercel', icon: 'vercel' },
       { name: 'GitHub', icon: 'github' },
+      { name: 'Docker', icon: 'docker' },
       { name: 'Notion', icon: 'notion' },
+      { name: 'Linear', icon: 'linear' },
     ],
   },
 ]
@@ -449,23 +537,23 @@ export function TechStackSection() {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
-    <section ref={ref} id="stack" className="rounded-t-[2rem] border-t border-white/[0.08] bg-black py-24">
+    <section ref={ref} id="stack" className="rounded-t-[2rem] border-t border-foreground/[0.08] bg-background py-24">
       <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
         <motion.div
-          className="flex items-center justify-between border-b border-white/[0.08] pb-6"
+          className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
           {...fadeUp(0)}
         >
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>Our Stack</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>06</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
         </motion.div>
 
         <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
           <motion.div {...fadeUp(0.05)}>
-            <h2 className="text-3xl font-semibold tracking-tight text-white lg:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
               Tools we trust<br />
-              <span className="text-white/25">to build with.</span>
+              <span className="text-foreground/25">to build with.</span>
             </h2>
-            <p className="mt-6 text-sm leading-relaxed text-white/40">
+            <p className="mt-6 text-sm leading-relaxed text-foreground/40">
               We carefully select every tool for reliability, developer experience, and long-term
               scalability. No hype — only tools that actually deliver in production.
             </p>
@@ -480,21 +568,21 @@ export function TechStackSection() {
           >
             {stackCategories.map((cat) => (
               <motion.div key={cat.label} variants={staggerItem}>
-                <span className="mb-3 block text-xs uppercase tracking-widest text-white/25">
+                <span className="mb-3 block text-xs uppercase tracking-widest text-foreground/25">
                   {cat.label}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {cat.items.map((item) => (
                     <span
                       key={item.name}
-                      className="flex items-center gap-2 rounded-2xl border border-white/[0.08] px-4 py-2 transition-colors duration-200 hover:border-white/[0.16]"
+                      className="flex items-center gap-2 rounded-2xl border border-foreground/[0.08] px-4 py-2 transition-colors duration-200 hover:border-foreground/[0.16]"
                     >
                       <img
                         src={`https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/${item.icon}.svg`}
                         alt={item.name}
-                        className="h-3.5 w-3.5 invert opacity-60"
+                        className="h-3.5 w-3.5 dark:invert opacity-60"
                       />
-                      <span className="text-sm text-white/60">{item.name}</span>
+                      <span className="text-sm text-foreground/60">{item.name}</span>
                     </span>
                   ))}
                 </div>
@@ -509,61 +597,210 @@ export function TechStackSection() {
 
 // ─── Process ─────────────────────────────────────────────────
 const steps = [
-  {
-    num: '01',
-    title: 'Discovery',
-    desc: 'We start by understanding your goals, users, and constraints. Deep dive into the problem space before writing a single line of code.',
-  },
-  {
-    num: '02',
-    title: 'Design',
-    desc: 'Wireframes, prototypes and design systems built in Figma. We validate ideas early so nothing is left to chance during development.',
-  },
-  {
-    num: '03',
-    title: 'Build',
-    desc: 'Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos to keep you in the loop.',
-  },
-  {
-    num: '04',
-    title: 'Launch',
-    desc: 'Deploy with confidence. We set up monitoring, analytics and documentation, then stay close for the first weeks post-launch.',
-  },
+  { num: '01', title: 'Discovery', desc: 'We start by understanding your goals, users, and constraints. Deep dive into the problem space before writing a single line of code.', img: '/discovery.png' },
+  { num: '02', title: 'Design',    desc: 'Wireframes, prototypes and design systems built in Figma. We validate ideas early so nothing is left to chance during development.',     img: '/ux.png' },
+  { num: '03', title: 'Build',     desc: 'Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos to keep you in the loop.',                  img: '/build.png' },
+  { num: '04', title: 'Launch',    desc: 'Deploy with confidence. We set up monitoring, analytics and documentation, then stay close for the first weeks post-launch.',            img: '/launch.png' },
+  { num: '05', title: 'Scale',     desc: 'Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.', img: '/scale.png' },
 ]
 
 export function ProcessSection() {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
-    <section ref={ref} id="process" className="border-t border-white/[0.08] bg-black py-24">
+    <section ref={ref} id="process" className="border-t border-foreground/[0.08] bg-background py-24">
       <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
         <motion.div
-          className="flex items-center justify-between border-b border-white/[0.08] pb-6"
+          className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
           {...fadeUp(0)}
         >
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>How We Work</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>07</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>How We Work</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </motion.div>
 
         <motion.div
-          className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-16 grid grid-cols-1 gap-2 lg:grid-cols-3 lg:[grid-template-rows:repeat(3,minmax(12rem,1fr))]"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          {steps.map((step) => (
-            <motion.div
-              key={step.num}
-              variants={staggerItem}
-              className="rounded-2xl border border-white/[0.08] p-6 transition-colors duration-300 hover:border-white/[0.16]"
-            >
-              <span className="text-xs font-medium text-white/20">{step.num}</span>
-              <h3 className="mb-3 mt-6 text-base font-semibold text-white">{step.title}</h3>
-              <p className="text-sm leading-relaxed text-white/40">{step.desc}</p>
-            </motion.div>
-          ))}
+          {/* 01 Discovery — cols 1-2, row 1 */}
+          <motion.div
+            variants={staggerItem}
+            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
+          >
+            <div className="flex flex-1 flex-col justify-between p-5 lg:w-1/2 lg:flex-none">
+              <span className="text-[10px] font-medium text-white/30">01</span>
+              <div>
+                <h3 className="mb-1 text-sm font-semibold text-white">Discovery</h3>
+                <p className="text-xs leading-relaxed text-white/50">We start by understanding your goals, users, and constraints. Deep dive into the problem space before writing a single line of code.</p>
+                <p className="mt-2 text-xs leading-relaxed text-white/35">From user research and competitor analysis to technical requirements and project scope — we leave nothing to assumptions before development begins.</p>
+              </div>
+            </div>
+            <div className="relative h-48 overflow-hidden lg:h-auto lg:w-1/2">
+              <img src="/discovery.png" alt="Discovery" className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-700 group-hover:scale-[1.05]" />
+            </div>
+          </motion.div>
+
+          {/* 02 Design — col 3, rows 1-2 (tall) */}
+          <motion.div
+            variants={staggerItem}
+            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
+          >
+            <div className="relative min-h-0 flex-[4] overflow-hidden">
+              <img src="/ux.png" alt="Design" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+            </div>
+            <div className="flex flex-[2] flex-col justify-end p-4">
+              <span className="text-[10px] font-medium text-white/30">02</span>
+              <h3 className="mt-1 text-sm font-semibold text-white">Design</h3>
+              <p className="mt-0.5 text-xs leading-relaxed text-white/50">Wireframes, prototypes and design systems built in Figma. We validate ideas early so nothing is left to chance during development.</p>
+              <p className="mt-2 text-xs leading-relaxed text-white/35">Every screen is designed for real users — accessible, responsive, and aligned with your brand from day one.</p>
+            </div>
+          </motion.div>
+
+          {/* 03 Build — col 2, row 2 */}
+          <motion.div
+            variants={staggerItem}
+            className="group flex min-h-[10rem] flex-col justify-between overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black p-5 transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
+          >
+            <span className="text-[10px] font-medium text-white/30">03</span>
+            <div>
+              <h3 className="mb-1.5 text-sm font-semibold text-white">Build</h3>
+              <p className="text-xs leading-relaxed text-white/50">Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos to keep you in the loop.</p>
+            </div>
+          </motion.div>
+
+          {/* 04 Launch — col 1, rows 2-3 (tall) */}
+          <motion.div
+            variants={staggerItem}
+            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:1] lg:[grid-row-start:2] lg:[grid-row-end:4]"
+          >
+            <div className="relative min-h-0 flex-[4] overflow-hidden">
+              <img src="/launch.png" alt="Launch" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+            </div>
+            <div className="flex flex-[2] flex-col justify-end p-4">
+              <span className="text-[10px] font-medium text-white/30">04</span>
+              <h3 className="mt-1 text-sm font-semibold text-white">Launch</h3>
+              <p className="mt-0.5 text-xs leading-relaxed text-white/50">Deploy with confidence. We handle infrastructure setup, CI/CD pipelines, environment configuration, and go-live checklists so nothing slips through the cracks.</p>
+              <p className="mt-2 text-xs leading-relaxed text-white/35">We set up monitoring, error tracking, and analytics — then stay close for the first weeks post-launch to catch anything that surfaces in production.</p>
+            </div>
+          </motion.div>
+
+          {/* 05 Scale — cols 2-3, row 3 */}
+          <motion.div
+            variants={staggerItem}
+            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
+          >
+            <div className="relative h-48 overflow-hidden lg:h-auto lg:w-2/5">
+              <img src="/scale.png" alt="Scale" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+            </div>
+            <div className="flex flex-col justify-between p-5 lg:w-3/5">
+              <span className="text-[10px] font-medium text-white/30">05</span>
+              <div>
+                <h3 className="mb-1 text-sm font-semibold text-white">Scale</h3>
+                <p className="text-xs leading-relaxed text-white/50">Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.</p>
+                <p className="mt-2 text-xs leading-relaxed text-white/35">From A/B testing and analytics to new feature rollouts and infrastructure scaling — we treat your product as a living system, not a finished deliverable.</p>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
+      </motion.div>
+    </section>
+  )
+}
+
+// ─── FAQ ────────────────────────────────────────────────────
+const faqs = [
+  {
+    q: 'What does Numen Agency do?',
+    a: 'We are a boutique digital product studio that designs and builds full-stack web applications, SaaS products, and AI-powered tools. From zero-to-one MVPs to production-grade platforms — we handle design, development, and strategy end to end.',
+  },
+  {
+    q: 'How much does a project cost?',
+    a: 'Projects start at under $5k for focused scopes and scale to $50k+ for complex SaaS or enterprise platforms. After a quick discovery call we give you a transparent estimate with no surprises.',
+  },
+  {
+    q: 'How long does a typical project take?',
+    a: 'A focused MVP typically ships in 4–8 weeks. More complex products with multiple modules and design systems take 10–16 weeks. We give you a realistic timeline upfront.',
+  },
+  {
+    q: 'Do you work with international clients?',
+    a: "Yes. We're based in El Salvador and work fully remote with clients worldwide. We adapt our schedule to overlap with your timezone for key meetings and demos.",
+  },
+  {
+    q: 'What technologies do you use?',
+    a: 'Our primary stack is Next.js, TypeScript, Tailwind CSS, Supabase, and PostgreSQL. For AI we use OpenAI and Anthropic APIs. For design, Figma. We pick tools that are battle-tested and give your team a clean foundation.',
+  },
+  {
+    q: 'Do you provide support after launch?',
+    a: 'Yes. We stay close during the first weeks post-launch and offer ongoing maintenance, monitoring, and feature iteration. Many clients continue on a retainer after the initial build.',
+  },
+  {
+    q: 'How do I start a project with you?',
+    a: "Fill out the contact form below or email hola@numenagency.com. We'll schedule a 30-minute discovery call to understand your goals, then send a detailed proposal within a few days.",
+  },
+]
+
+export function FAQSection() {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.4, once: false })
+  const [open, setOpen] = useState<number | null>(null)
+  return (
+    <section ref={ref} id="faq" className="border-t border-foreground/[0.08] bg-background py-24">
+      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
+        <motion.div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6" {...fadeUp(0)}>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>FAQ</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
+        </motion.div>
+
+        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <motion.div {...fadeUp(0.05)}>
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
+              Common questions<br />
+              <span className="text-foreground/25">answered.</span>
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-foreground/40">
+              Not finding what you&apos;re looking for? Use the AI assistant at the bottom right or send us a message directly.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            {faqs.map((faq, i) => (
+              <motion.div key={i} variants={staggerItem} className="border-b border-foreground/[0.06]">
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between py-4 text-left"
+                  onClick={() => setOpen(open === i ? null : i)}
+                >
+                  <span className="pr-4 text-sm font-medium text-foreground">{faq.q}</span>
+                  <Plus
+                    size={14}
+                    className={`shrink-0 text-foreground/30 transition-transform duration-300 ${open === i ? 'rotate-45' : ''}`}
+                  />
+                </button>
+                <AnimatePresence initial={false}>
+                  {open === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: EASE }}
+                      className="overflow-hidden"
+                    >
+                      <p className="pb-4 text-xs leading-relaxed text-foreground/45">{faq.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
       </motion.div>
     </section>
   )
@@ -587,7 +824,7 @@ export function ContactFormSection() {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.3, once: false })
   const [form, setForm] = useState({ name: '', email: '', budget: '', message: '' })
-  const [status, setStatus] = useState<'idle' | 'loading' | 'sent'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
 
   const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }))
@@ -595,30 +832,39 @@ export function ContactFormSection() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('loading')
-    await new Promise((r) => setTimeout(r, 1200))
-    setStatus('sent')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error()
+      setStatus('sent')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
     <>
-      <section ref={ref} id="contact" className="border-t border-white/[0.08] bg-black py-24">
+      <section ref={ref} id="contact" className="border-t border-foreground/[0.08] bg-background py-24">
         <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
           <motion.div
-            className="flex items-center justify-between border-b border-white/[0.08] pb-6"
+            className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
             {...fadeUp(0)}
           >
-            <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>Start a Project</span>
-            <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>08</span>
+            <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
+            <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
           </motion.div>
 
           <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
             <div className="flex flex-col justify-between gap-10">
               <motion.div {...fadeUp(0.05)}>
-                <h2 className="text-3xl font-semibold tracking-tight text-white lg:text-4xl">
+                <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
                   Let&apos;s build something<br />
-                  <span className="text-white/25">great together.</span>
+                  <span className="text-foreground/25">great together.</span>
                 </h2>
-                <p className="mt-5 text-sm leading-relaxed text-white/40">
+                <p className="mt-5 text-sm leading-relaxed text-foreground/40">
                   Tell us about your project. We&apos;ll get back to you within 24 hours with
                   thoughts and next steps.
                 </p>
@@ -635,10 +881,10 @@ export function ContactFormSection() {
                   <motion.div
                     key={item.label}
                     variants={staggerItem}
-                    className="flex items-center gap-4 rounded-2xl border border-white/[0.08] px-5 py-4"
+                    className="flex items-center gap-4 rounded-2xl border border-foreground/[0.08] px-5 py-4"
                   >
-                    <span className="w-20 shrink-0 text-xs text-white/30">{item.label}</span>
-                    <span className="text-sm text-white/60">{item.value}</span>
+                    <span className="w-20 shrink-0 text-xs text-foreground/30">{item.label}</span>
+                    <span className="text-sm text-foreground/60">{item.value}</span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -646,12 +892,12 @@ export function ContactFormSection() {
 
             <motion.div {...fadeUp(0.12)}>
               {status === 'sent' ? (
-                <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-2xl border border-white/[0.08] p-12 text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/[0.08] text-white">
+                <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-12 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground">
                     ✓
                   </div>
-                  <h3 className="mt-5 text-lg font-semibold text-white">Message sent!</h3>
-                  <p className="mt-2 text-sm text-white/40">
+                  <h3 className="mt-5 text-lg font-semibold text-foreground">Message sent!</h3>
+                  <p className="mt-2 text-sm text-foreground/40">
                     We&apos;ll get back to you within 24 hours.
                   </p>
                 </div>
@@ -659,9 +905,9 @@ export function ContactFormSection() {
                 <form onSubmit={submit} className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-white/30">Name *</label>
+                      <label className="text-xs text-foreground/30">Name *</label>
                       <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20 pointer-events-none" />
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
                         <input
                           name="name"
                           required
@@ -673,9 +919,9 @@ export function ContactFormSection() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-white/30">Email *</label>
+                      <label className="text-xs text-foreground/30">Email *</label>
                       <div className="relative">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20 pointer-events-none" />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
                         <input
                           name="email"
                           type="email"
@@ -690,9 +936,9 @@ export function ContactFormSection() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-white/30">Budget range</label>
+                    <label className="text-xs text-foreground/30">Budget range</label>
                     <div className="relative">
-                      <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20 pointer-events-none z-10" />
+                      <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
                       <SelectCustom
                         name="budget"
                         value={form.budget}
@@ -705,9 +951,9 @@ export function ContactFormSection() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-white/30">Tell us about your project *</label>
+                    <label className="text-xs text-foreground/30">Tell us about your project *</label>
                     <div className="relative">
-                      <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-white/20 pointer-events-none" />
+                      <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
                       <textarea
                         name="message"
                         required
@@ -720,11 +966,16 @@ export function ContactFormSection() {
                     </div>
                   </div>
 
+                  {status === 'error' && (
+                    <p className="text-center text-xs text-red-400/70">
+                      Something went wrong. Please try again or email us directly.
+                    </p>
+                  )}
                   <Button
                     type="submit"
                     size="lg"
                     disabled={status === 'loading'}
-                    className="w-full rounded-full bg-white text-black hover:bg-white/90 disabled:opacity-50"
+                    className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
                   >
                     {status === 'loading' ? 'Sending...' : 'Send message'}
                   </Button>
@@ -735,15 +986,15 @@ export function ContactFormSection() {
         </motion.div>
       </section>
 
-      <footer className="border-t border-white/[0.08] bg-black">
+      <footer className="border-t border-foreground/[0.08] bg-background">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-6 sm:flex-row lg:px-8">
-          <span className="text-xs text-white/20">© 2025 Numen Agency. All rights reserved.</span>
+          <span className="text-xs text-foreground/20">© 2025 Numen Agency. All rights reserved.</span>
           <div className="flex gap-6">
             {['Twitter', 'Instagram', 'LinkedIn', 'GitHub'].map((s) => (
               <Link
                 key={s}
                 href="#"
-                className="text-xs text-white/20 transition-colors duration-150 hover:text-white/60"
+                className="text-xs text-foreground/20 transition-colors duration-150 hover:text-foreground/60"
               >
                 {s}
               </Link>
