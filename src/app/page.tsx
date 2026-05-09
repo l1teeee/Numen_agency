@@ -1,9 +1,7 @@
 import { Navbar } from "@/components/blocks/navbar";
 import { HeroSection } from "@/components/blocks/hero-section";
+import { StickyStack } from "@/components/blocks/sticky-stack";
 import {
-  ServicesSection,
-  ProjectsSection,
-  AboutSection,
   TestimonialsSection,
   TechStackSection,
   ProcessSection,
@@ -16,14 +14,7 @@ export default function Home() {
     <div className="bg-black">
       <Navbar />
       <HeroSection />
-
-      {/* Sticky stack — wrapper height = n sections × 100vh so they can un-stick */}
-      <div style={{ height: "300vh" }}>
-        <ServicesSection />
-        <ProjectsSection />
-        <AboutSection />
-      </div>
-
+      <StickyStack />
       <TestimonialsSection />
       <TechStackSection />
       <ProcessSection />

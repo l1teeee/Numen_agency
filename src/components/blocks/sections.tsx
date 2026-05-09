@@ -1,11 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react'
+import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
+interface BlurStyle {
+  filter: MotionValue<string>
+  opacity: MotionValue<number>
+}
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -22,6 +26,13 @@ const staggerContainer = {
 const staggerItem = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+}
+
+const blurLeave = {
+  initial: { filter: 'blur(6px)', opacity: 0.5 },
+  whileInView: { filter: 'blur(0px)', opacity: 1 },
+  viewport: { once: false as const, amount: 0.15 },
+  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
 }
 
 const INPUT =
@@ -51,13 +62,18 @@ const services = [
   },
 ]
 
-export function ServicesSection() {
+export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
-    <section id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-black">
-      <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8">
+    <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-black">
+      <motion.div
+        className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8"
+        style={blurStyle}
+      >
         <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
-          <span className="text-xs uppercase tracking-widest text-white/30">What We Do</span>
-          <span className="text-xs text-white/20">02</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>What We Do</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>02</span>
         </div>
         <div className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
           {services.map((s, i) => (
@@ -74,7 +90,7 @@ export function ServicesSection() {
             </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }
@@ -104,14 +120,19 @@ const projects = [
   },
 ]
 
-export function ProjectsSection() {
+export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
   const [featured, ...rest] = projects
   return (
-    <section id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-white/[0.08] bg-black">
-      <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8">
+    <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-white/[0.08] bg-black">
+      <motion.div
+        className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8"
+        style={blurStyle}
+      >
         <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
-          <span className="text-xs uppercase tracking-widest text-white/30">Selected Work</span>
-          <span className="text-xs text-white/20">03</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>Selected Work</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>03</span>
         </div>
         <div className="mt-6 flex flex-1 flex-col gap-3 lg:flex-row">
           <motion.div {...fadeUp(0)} className="flex-1 lg:flex-[2]">
@@ -157,7 +178,7 @@ export function ProjectsSection() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }
@@ -179,16 +200,17 @@ const team = [
 ]
 
 export function AboutSection() {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
-    <section id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-white/[0.08] bg-black">
+    <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-white/[0.08] bg-black">
       <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8">
         <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
-          <span className="text-xs uppercase tracking-widest text-white/30">About Numen</span>
-          <span className="text-xs text-white/20">04</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>About Numen</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>04</span>
         </div>
 
         <div className="mt-8 grid flex-1 grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
-          {/* Left — text + team */}
           <motion.div {...fadeUp(0)} className="flex flex-col gap-6">
             <div>
               <h2 className="text-3xl font-semibold leading-snug tracking-tight text-white lg:text-4xl">
@@ -222,7 +244,6 @@ export function AboutSection() {
             </div>
           </motion.div>
 
-          {/* Right — stats */}
           <div className="grid grid-cols-2 content-start gap-3">
             {[
               { value: '10+', label: 'Projects delivered' },
@@ -238,6 +259,151 @@ export function AboutSection() {
           </div>
         </div>
       </div>
+    </section>
+  )
+}
+
+// ─── Testimonials ────────────────────────────────────────────
+const testimonials = [
+  {
+    quote: 'Working with Numen was exactly what our startup needed. They took our rough idea and shipped a product our users actually love. Fast, communicative, and genuinely invested in the outcome.',
+    name: 'Maria Santos',
+    role: 'CEO, Finspark',
+    initials: 'MS',
+  },
+  {
+    quote: 'The level of polish they deliver is remarkable. Our redesign went from concept to launch in 6 weeks, and the design system they built saved us months of future work.',
+    name: 'Carlos Herrera',
+    role: 'Founder, Stackr',
+    initials: 'CH',
+  },
+  {
+    quote: 'Most agencies over-promise and under-deliver. Numen did the opposite — low ego, high output. They felt like part of our team from day one.',
+    name: 'Ana Rodriguez',
+    role: 'Head of Product, Lumos',
+    initials: 'AR',
+  },
+  {
+    quote: 'We needed an AI integration built fast without sacrificing quality. Numen delivered a production-ready solution in three weeks. The code is clean and our team could take it over immediately.',
+    name: 'David Chen',
+    role: 'CTO, Pulsar Labs',
+    initials: 'DC',
+  },
+  {
+    quote: 'From the first call it was clear these guys care about outcomes, not just deliverables. Our conversion rate went up 34% after they rebuilt our onboarding flow.',
+    name: 'Sofia Ramirez',
+    role: 'Founder, Bloom',
+    initials: 'SR',
+  },
+  {
+    quote: 'Numen handled a complex migration with zero downtime. Their communication throughout was exceptional — we always knew exactly where things stood.',
+    name: 'James Osei',
+    role: 'Head of Engineering, Drift',
+    initials: 'JO',
+  },
+]
+
+const slideVariants = {
+  enter: (dir: number) => ({ x: dir > 0 ? 48 : -48, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (dir: number) => ({ x: dir > 0 ? -48 : 48, opacity: 0 }),
+}
+
+export function TestimonialsSection() {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.4, once: false })
+  const [current, setCurrent] = useState(0)
+  const [direction, setDirection] = useState(0)
+
+  const prev = () => {
+    setDirection(-1)
+    setCurrent((i) => (i - 1 + testimonials.length) % testimonials.length)
+  }
+
+  const next = () => {
+    setDirection(1)
+    setCurrent((i) => (i + 1) % testimonials.length)
+  }
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setDirection(1)
+      setCurrent((i) => (i + 1) % testimonials.length)
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
+
+  const t = testimonials[current]
+
+  return (
+    <section ref={ref} id="testimonials" className="border-t border-white/[0.08] bg-black py-24">
+      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
+        <motion.div
+          className="flex items-center justify-between border-b border-white/[0.08] pb-6"
+          {...fadeUp(0)}
+        >
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>What Clients Say</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>05</span>
+        </motion.div>
+
+        <motion.div {...fadeUp(0.05)} className="mt-16">
+          <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] p-8 md:p-12">
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.div
+                key={current}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="text-lg leading-relaxed text-white/60 md:text-xl md:leading-relaxed">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="mt-8 flex items-center gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.08] text-xs font-medium text-white/40">
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white">{t.name}</p>
+                    <p className="text-xs text-white/30">{t.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="mt-6 flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i) }}
+                  className={`h-1 rounded-full transition-all duration-300 ${i === current ? 'w-6 bg-white/40' : 'w-1.5 bg-white/[0.12] hover:bg-white/20'}`}
+                />
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={prev}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.08] text-white/30 transition-colors duration-200 hover:border-white/[0.16] hover:text-white"
+              >
+                <ChevronLeft size={15} />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.08] text-white/30 transition-colors duration-200 hover:border-white/[0.16] hover:text-white"
+              >
+                <ChevronRight size={15} />
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }
@@ -278,15 +444,17 @@ const stackCategories = [
 ]
 
 export function TechStackSection() {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
-    <section id="stack" className="rounded-t-[2rem] border-t border-white/[0.08] bg-black py-24">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
+    <section ref={ref} id="stack" className="rounded-t-[2rem] border-t border-white/[0.08] bg-black py-24">
+      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
         <motion.div
           className="flex items-center justify-between border-b border-white/[0.08] pb-6"
           {...fadeUp(0)}
         >
-          <span className="text-xs uppercase tracking-widest text-white/30">Our Stack</span>
-          <span className="text-xs text-white/20">06</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>Our Stack</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>06</span>
         </motion.div>
 
         <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
@@ -332,74 +500,7 @@ export function TechStackSection() {
             ))}
           </motion.div>
         </div>
-      </div>
-    </section>
-  )
-}
-
-// ─── Testimonials ────────────────────────────────────────────
-const testimonials = [
-  {
-    quote: 'Working with Numen was exactly what our startup needed. They took our rough idea and shipped a product our users actually love. Fast, communicative, and genuinely invested in the outcome.',
-    name: 'Maria Santos',
-    role: 'CEO, Finspark',
-    initials: 'MS',
-  },
-  {
-    quote: 'The level of polish they deliver is remarkable. Our redesign went from concept to launch in 6 weeks, and the design system they built saved us months of future work.',
-    name: 'Carlos Herrera',
-    role: 'Founder, Stackr',
-    initials: 'CH',
-  },
-  {
-    quote: 'Most agencies over-promise and under-deliver. Numen did the opposite — low ego, high output. They felt like part of our team from day one.',
-    name: 'Ana Rodriguez',
-    role: 'Head of Product, Lumos',
-    initials: 'AR',
-  },
-]
-
-export function TestimonialsSection() {
-  return (
-    <section className="border-t border-white/[0.08] bg-black py-24">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
-        <motion.div
-          className="flex items-center justify-between border-b border-white/[0.08] pb-6"
-          {...fadeUp(0)}
-        >
-          <span className="text-xs uppercase tracking-widest text-white/30">What Clients Say</span>
-          <span className="text-xs text-white/20">05</span>
-        </motion.div>
-
-        <motion.div
-          className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-        >
-          {testimonials.map((t) => (
-            <motion.div
-              key={t.name}
-              variants={staggerItem}
-              className="flex flex-col justify-between gap-8 rounded-2xl border border-white/[0.08] p-6 transition-colors duration-300 hover:border-white/[0.16]"
-            >
-              <p className="text-sm leading-relaxed text-white/50">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/[0.08] text-[10px] font-medium text-white/30">
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white">{t.name}</p>
-                  <p className="text-xs text-white/30">{t.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }
@@ -429,15 +530,17 @@ const steps = [
 ]
 
 export function ProcessSection() {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
-    <section id="process" className="border-t border-white/[0.08] bg-black py-24">
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
+    <section ref={ref} id="process" className="border-t border-white/[0.08] bg-black py-24">
+      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
         <motion.div
           className="flex items-center justify-between border-b border-white/[0.08] pb-6"
           {...fadeUp(0)}
         >
-          <span className="text-xs uppercase tracking-widest text-white/30">How We Work</span>
-          <span className="text-xs text-white/20">07</span>
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>How We Work</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>07</span>
         </motion.div>
 
         <motion.div
@@ -459,7 +562,7 @@ export function ProcessSection() {
             </motion.div>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }
@@ -479,6 +582,8 @@ const budgetOptions = [
 ]
 
 export function ContactFormSection() {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.3, once: false })
   const [form, setForm] = useState({ name: '', email: '', budget: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent'>('idle')
 
@@ -494,18 +599,17 @@ export function ContactFormSection() {
 
   return (
     <>
-      <section id="contact" className="border-t border-white/[0.08] bg-black py-24">
-        <div className="mx-auto max-w-5xl px-6 lg:px-8">
+      <section ref={ref} id="contact" className="border-t border-white/[0.08] bg-black py-24">
+        <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
           <motion.div
             className="flex items-center justify-between border-b border-white/[0.08] pb-6"
             {...fadeUp(0)}
           >
-            <span className="text-xs uppercase tracking-widest text-white/30">Start a Project</span>
-            <span className="text-xs text-white/20">08</span>
+            <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-white/60' : 'text-white/30'}`}>Start a Project</span>
+            <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-white/40' : 'text-white/20'}`}>08</span>
           </motion.div>
 
           <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
-            {/* Left — info */}
             <div className="flex flex-col justify-between gap-10">
               <motion.div {...fadeUp(0.05)}>
                 <h2 className="text-3xl font-semibold tracking-tight text-white lg:text-4xl">
@@ -538,7 +642,6 @@ export function ContactFormSection() {
               </motion.div>
             </div>
 
-            {/* Right — form */}
             <motion.div {...fadeUp(0.12)}>
               {status === 'sent' ? (
                 <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-2xl border border-white/[0.08] p-12 text-center">
@@ -627,10 +730,9 @@ export function ContactFormSection() {
               )}
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Footer — outside section so border spans full width, content max-w aligned */}
       <footer className="border-t border-white/[0.08] bg-black">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-6 sm:flex-row lg:px-8">
           <span className="text-xs text-white/20">© 2025 Numen Agency. All rights reserved.</span>
