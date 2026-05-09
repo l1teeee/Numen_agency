@@ -4,10 +4,12 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 
+const EASE = [0.22, 1, 0.36, 1] as const
+
 const enter = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
+  transition: { duration: 0.75, ease: EASE, delay },
 })
 
 export function HeroSection() {

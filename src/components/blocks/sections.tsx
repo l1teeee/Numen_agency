@@ -11,11 +11,13 @@ interface BlurStyle {
   opacity: MotionValue<number>
 }
 
+const EASE = [0.22, 1, 0.36, 1] as const
+
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.15 },
-  transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
+  transition: { duration: 0.65, ease: EASE, delay },
 })
 
 const staggerContainer = {
@@ -25,14 +27,14 @@ const staggerContainer = {
 
 const staggerItem = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 }
 
 const blurLeave = {
   initial: { filter: 'blur(6px)', opacity: 0.5 },
   whileInView: { filter: 'blur(0px)', opacity: 1 },
   viewport: { once: false as const, amount: 0.15 },
-  transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
+  transition: { duration: 0.55, ease: EASE },
 }
 
 const INPUT =
@@ -356,7 +358,7 @@ export function TestimonialsSection() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.38, ease: EASE }}
               >
                 <p className="text-lg leading-relaxed text-white/60 md:text-xl md:leading-relaxed">
                   &ldquo;{t.quote}&rdquo;

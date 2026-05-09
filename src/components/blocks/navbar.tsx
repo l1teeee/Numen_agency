@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+
+const EASE = [0.22, 1, 0.36, 1] as const
 import { X, Menu } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 
@@ -56,7 +58,7 @@ export function Navbar() {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.35, ease: EASE }}
           className="fixed top-5 left-1/2 z-50 -translate-x-1/2"
         >
           {/* Desktop */}
@@ -110,7 +112,7 @@ export function Navbar() {
                   initial={{ opacity: 0, y: -6, scale: 0.97 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.2, ease: EASE }}
                   className="absolute left-1/2 top-full mt-2 w-44 -translate-x-1/2 rounded-2xl border border-white/[0.08] bg-black/80 p-1.5 backdrop-blur-xl"
                 >
                   {[...links, { label: "Let's Talk", href: '#contact' }].map((l) => (

@@ -5,6 +5,8 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Check, type LucideIcon } from 'lucide-react'
 
+const EASE = [0.22, 1, 0.36, 1] as const
+
 interface Option {
   value: string
   label: string
@@ -69,7 +71,7 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
             initial={{ opacity: 0, y: -6, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.18, ease: EASE }}
             className="rounded-2xl border border-white/[0.08] bg-black/95 p-1.5 shadow-2xl shadow-black/60 backdrop-blur-xl"
           >
             {options.map((opt) => {
@@ -117,7 +119,7 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
         </span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.2, ease: EASE }}
         >
           <ChevronDown className="h-3.5 w-3.5 text-white/25" />
         </motion.span>
