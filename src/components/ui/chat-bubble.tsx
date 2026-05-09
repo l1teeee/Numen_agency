@@ -11,8 +11,15 @@ type Message = { role: 'user' | 'assistant'; content: string }
 const INITIAL: Message[] = [
   {
     role: 'assistant',
-    content: "Hi! I'm Numen's AI assistant. Ask me anything about our services, process, pricing, or how we can help build your project.",
+    content: "Hi! I'm Numen's AI assistant. Ask me anything about our services, process, or pricing — or write in Spanish if you prefer.",
   },
+]
+
+const SUGGESTIONS = [
+  'What services do you offer?',
+  'How much does a project cost?',
+  'How do I start a project?',
+  'Tell me about your process',
 ]
 
 export function ChatBubble() {
@@ -41,37 +48,47 @@ export function ChatBubble() {
     if (open) setTimeout(() => inputRef.current?.focus(), 300)
   }, [open])
 
-  const send = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const text = input.trim()
-    if (!text || loading) return
-
-    const userMsg: Message = { role: 'user', content: text }
-    const next = [...messages, userMsg]
-    setMessages(next)
-    setInput('')
+  const callApi = async (msgs: Message[]) => {
     setLoading(true)
-
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: msgs }),
       })
       const data = await res.json()
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: data.reply ?? 'Sorry, something went wrong. Please try again.' },
+        { role: 'assistant', content: data.reply ?? 'Something went wrong. Please try again.' },
       ])
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Something went wrong. Please try again or email us at hola@numenagency.com.' },
+        { role: 'assistant', content: 'Something went wrong. Email us at hola@numenagency.com.' },
       ])
     } finally {
       setLoading(false)
     }
   }
+
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const text = input.trim()
+    if (!text || loading) return
+    const next: Message[] = [...messages, { role: 'user', content: text }]
+    setMessages(next)
+    setInput('')
+    await callApi(next)
+  }
+
+  const quickSend = async (text: string) => {
+    if (loading) return
+    const next: Message[] = [...messages, { role: 'user', content: text }]
+    setMessages(next)
+    await callApi(next)
+  }
+
+  const showSuggestions = messages.length === 1 && !loading
 
   return (
     <div ref={containerRef} className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
@@ -108,7 +125,7 @@ export function ChatBubble() {
             </div>
 
             {/* Messages */}
-            <div className="flex max-h-72 flex-col gap-3 overflow-y-auto px-4 py-4">
+            <div className="flex max-h-64 flex-col gap-3 overflow-y-auto px-4 py-4">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                   {msg.role === 'assistant' && (
@@ -143,6 +160,30 @@ export function ChatBubble() {
 
               <div ref={bottomRef} />
             </div>
+
+            {/* Suggestion chips */}
+            <AnimatePresence>
+              {showSuggestions && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2, ease: EASE }}
+                  className="flex flex-wrap gap-1.5 overflow-hidden border-t border-foreground/[0.06] px-4 py-3"
+                >
+                  {SUGGESTIONS.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => quickSend(s)}
+                      className="rounded-full border border-foreground/[0.12] bg-foreground/[0.03] px-3 py-1.5 text-[11px] text-foreground/50 transition-colors duration-150 hover:border-foreground/[0.22] hover:text-foreground/80"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Input */}
             <form

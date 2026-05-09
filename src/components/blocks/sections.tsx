@@ -248,7 +248,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   </div>
                   {p.img && (
                     <div className="my-4 flex-1 overflow-hidden rounded-xl">
-                      <img src={p.img} alt={p.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+                      <img src={p.img} alt={p.name} className="h-full w-full object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
                     </div>
                   )}
                   <div className={p.img ? '' : 'mt-auto'}>
@@ -277,12 +277,14 @@ const team = [
     name: 'Julian Mendez',
     role: 'Full-Stack Developer & Co-founder',
     desc: 'Leads architecture, backend systems, and infrastructure. Obsessed with clean code, performance, and shipping products that actually scale.',
+    linkedin: 'https://linkedin.com/in/julianmendez',
   },
   {
     initials: 'IR',
     name: 'Igmer Rodriguez',
     role: 'Full-Stack Developer & Co-founder',
     desc: 'Drives frontend engineering and product design. Turns complex UX challenges into fast, accessible, pixel-perfect interfaces.',
+    linkedin: 'https://linkedin.com/in/igmerrodriguez',
   },
 ]
 
@@ -314,23 +316,39 @@ export function AboutSection() {
               </p>
             </div>
 
-            <div className="space-y-2.5">
-              {team.map((member, i) => (
-                <motion.div
-                  key={member.name}
-                  {...fadeUp(0.12 + i * 0.08)}
-                  className="flex items-start gap-4 rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-200 hover:border-foreground/[0.16]"
-                >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-xs font-medium text-foreground/40">
-                    {member.initials}
-                  </div>
-                  <div>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                {team.map((member, i) => (
+                  <motion.div
+                    key={member.name}
+                    {...fadeUp(0.12 + i * 0.08)}
+                    className="flex flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-200 hover:border-foreground/[0.16]"
+                  >
+                    {/* Photo placeholder */}
+                    <div className="mb-3 flex h-28 w-full items-end justify-end overflow-hidden rounded-xl bg-foreground/[0.04] p-2">
+                      <span className="select-none text-4xl font-bold text-foreground/[0.07]">{member.initials}</span>
+                    </div>
                     <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                    <p className="text-xs text-foreground/30">{member.role}</p>
-                    <p className="mt-1.5 text-xs leading-relaxed text-foreground/40">{member.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
+                    <p className="mt-0.5 text-[10px] text-foreground/30">{member.role}</p>
+                    <p className="mt-2 text-[11px] leading-relaxed text-foreground/40">{member.desc}</p>
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 flex items-center gap-1.5 text-[10px] text-foreground/25 transition-colors duration-150 hover:text-foreground/55"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
+                      LinkedIn
+                    </a>
+                  </motion.div>
+                ))}
+              </div>
+
+              <motion.p {...fadeUp(0.3)} className="text-[11px] italic text-foreground/25">
+                Engineered with precision. Designed with purpose.
+              </motion.p>
             </div>
           </motion.div>
 
@@ -628,79 +646,79 @@ export function ProcessSection() {
           {/* 01 Discovery — cols 1-2, row 1 */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
+            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
           >
             <div className="flex flex-1 flex-col justify-between p-5 lg:w-1/2 lg:flex-none">
-              <span className="text-[10px] font-medium text-white/30">01</span>
+              <span className="text-[10px] font-medium text-foreground/30">01</span>
               <div>
-                <h3 className="mb-1 text-sm font-semibold text-white">Discovery</h3>
-                <p className="text-xs leading-relaxed text-white/50">We start by understanding your goals, users, and constraints. Deep dive into the problem space before writing a single line of code.</p>
-                <p className="mt-2 text-xs leading-relaxed text-white/35">From user research and competitor analysis to technical requirements and project scope — we leave nothing to assumptions before development begins.</p>
+                <h3 className="mb-1 text-sm font-semibold text-foreground">Discovery</h3>
+                <p className="text-xs leading-relaxed text-foreground/50">We start by understanding your goals, users, and constraints. Deep dive into the problem space before writing a single line of code.</p>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/35">From user research and competitor analysis to technical requirements and project scope — we leave nothing to assumptions before development begins.</p>
               </div>
             </div>
             <div className="relative h-48 overflow-hidden lg:h-auto lg:w-1/2">
-              <img src="/discovery.png" alt="Discovery" className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-700 group-hover:scale-[1.05]" />
+              <img src="/discovery.png" alt="Discovery" className="absolute inset-0 h-full w-full object-contain p-4 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
             </div>
           </motion.div>
 
           {/* 02 Design — col 3, rows 1-2 (tall) */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
+            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
           >
             <div className="relative min-h-0 flex-[4] overflow-hidden">
-              <img src="/ux.png" alt="Design" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+              <img src="/ux.png" alt="Design" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
             <div className="flex flex-[2] flex-col justify-end p-4">
-              <span className="text-[10px] font-medium text-white/30">02</span>
-              <h3 className="mt-1 text-sm font-semibold text-white">Design</h3>
-              <p className="mt-0.5 text-xs leading-relaxed text-white/50">Wireframes, prototypes and design systems built in Figma. We validate ideas early so nothing is left to chance during development.</p>
-              <p className="mt-2 text-xs leading-relaxed text-white/35">Every screen is designed for real users — accessible, responsive, and aligned with your brand from day one.</p>
+              <span className="text-[10px] font-medium text-foreground/30">02</span>
+              <h3 className="mt-1 text-sm font-semibold text-foreground">Design</h3>
+              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Wireframes, prototypes and design systems built in Figma. We validate ideas early so nothing is left to chance during development.</p>
+              <p className="mt-2 text-xs leading-relaxed text-foreground/35">Every screen is designed for real users — accessible, responsive, and aligned with your brand from day one.</p>
             </div>
           </motion.div>
 
           {/* 03 Build — col 2, row 2 */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[10rem] flex-col justify-between overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black p-5 transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
+            className="group flex min-h-[10rem] flex-col justify-between overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background p-5 transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
           >
-            <span className="text-[10px] font-medium text-white/30">03</span>
+            <span className="text-[10px] font-medium text-foreground/30">03</span>
             <div>
-              <h3 className="mb-1.5 text-sm font-semibold text-white">Build</h3>
-              <p className="text-xs leading-relaxed text-white/50">Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos to keep you in the loop.</p>
+              <h3 className="mb-1.5 text-sm font-semibold text-foreground">Build</h3>
+              <p className="text-xs leading-relaxed text-foreground/50">Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos to keep you in the loop.</p>
             </div>
           </motion.div>
 
           {/* 04 Launch — col 1, rows 2-3 (tall) */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:1] lg:[grid-row-start:2] lg:[grid-row-end:4]"
+            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:1] lg:[grid-row-start:2] lg:[grid-row-end:4]"
           >
             <div className="relative min-h-0 flex-[4] overflow-hidden">
-              <img src="/launch.png" alt="Launch" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+              <img src="/launch.png" alt="Launch" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
             <div className="flex flex-[2] flex-col justify-end p-4">
-              <span className="text-[10px] font-medium text-white/30">04</span>
-              <h3 className="mt-1 text-sm font-semibold text-white">Launch</h3>
-              <p className="mt-0.5 text-xs leading-relaxed text-white/50">Deploy with confidence. We handle infrastructure setup, CI/CD pipelines, environment configuration, and go-live checklists so nothing slips through the cracks.</p>
-              <p className="mt-2 text-xs leading-relaxed text-white/35">We set up monitoring, error tracking, and analytics — then stay close for the first weeks post-launch to catch anything that surfaces in production.</p>
+              <span className="text-[10px] font-medium text-foreground/30">04</span>
+              <h3 className="mt-1 text-sm font-semibold text-foreground">Launch</h3>
+              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Deploy with confidence. We handle infrastructure setup, CI/CD pipelines, environment configuration, and go-live checklists so nothing slips through the cracks.</p>
+              <p className="mt-2 text-xs leading-relaxed text-foreground/35">We set up monitoring, error tracking, and analytics — then stay close for the first weeks post-launch to catch anything that surfaces in production.</p>
             </div>
           </motion.div>
 
           {/* 05 Scale — cols 2-3, row 3 */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
+            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
           >
             <div className="relative h-48 overflow-hidden lg:h-auto lg:w-2/5">
-              <img src="/scale.png" alt="Scale" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+              <img src="/scale.png" alt="Scale" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
             <div className="flex flex-col justify-between p-5 lg:w-3/5">
-              <span className="text-[10px] font-medium text-white/30">05</span>
+              <span className="text-[10px] font-medium text-foreground/30">05</span>
               <div>
-                <h3 className="mb-1 text-sm font-semibold text-white">Scale</h3>
-                <p className="text-xs leading-relaxed text-white/50">Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.</p>
-                <p className="mt-2 text-xs leading-relaxed text-white/35">From A/B testing and analytics to new feature rollouts and infrastructure scaling — we treat your product as a living system, not a finished deliverable.</p>
+                <h3 className="mb-1 text-sm font-semibold text-foreground">Scale</h3>
+                <p className="text-xs leading-relaxed text-foreground/50">Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.</p>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/35">From A/B testing and analytics to new feature rollouts and infrastructure scaling — we treat your product as a living system, not a finished deliverable.</p>
               </div>
             </div>
           </motion.div>

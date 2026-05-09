@@ -29,7 +29,9 @@
       "Bash(dir \"C:\\\\Proyects\\\\numen-agency\\\\src\\\\app\")",
       "Bash(del *)",
       "Bash(dir C:\\\\Proyects\\\\numen-agency\\\\public *)",
-      "Bash(findstr -i \"openai\\\\|ai\\\\|anthropic\")"
+      "Bash(findstr -i \"openai\\\\|ai\\\\|anthropic\")",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); const matches = Object.keys\\(icons\\).filter\\(k => k.toLowerCase\\(\\).includes\\('linkedin'\\)\\); console.log\\(matches\\)\")",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); const matches = Object.keys\\(icons\\).filter\\(k => k.toLowerCase\\(\\).includes\\('link'\\)\\); console.log\\(matches\\)\")"
     ]
   }
 }

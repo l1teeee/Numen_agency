@@ -62,7 +62,7 @@ function Photo({
           src={src}
           alt=""
           draggable={false}
-          className="h-full w-full rounded-2xl object-cover"
+          className="h-full w-full rounded-2xl object-cover invert dark:invert-0"
         />
       </div>
     </motion.div>
