@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "mcp___21st-dev_magic__21st_magic_component_builder",
+      "mcp___21st-dev_magic__21st_magic_component_inspiration",
+      "Bash(node -e \"require\\('lenis/react'\\)\")",
+      "Bash(node -e \"const m = require\\('lenis/react'\\); console.log\\(Object.keys\\(m\\)\\)\")",
+      "Bash(node -e \"const f = require\\('next/dist/compiled/@next/font/dist/google/index.js'\\); console.log\\(typeof f.Plus_Jakarta_Sans\\)\")",
+      "Bash(node -e \"const f = require\\('next/dist/compiled/@next/font/dist/google/index.js'\\); const keys = Object.keys\\(f\\); console.log\\(keys.filter\\(k => k.toLowerCase\\(\\).includes\\('jakarta'\\) || k.toLowerCase\\(\\).includes\\('geist'\\) || k.toLowerCase\\(\\).includes\\('outfit'\\)\\)\\)\")",
+      "Bash(node -e \"const f = require\\('next/dist/compiled/@next/font/dist/google/index.js'\\); const keys = Object.keys\\(f\\); console.log\\(keys.filter\\(k => k.toLowerCase\\(\\).includes\\('plus'\\) || k.toLowerCase\\(\\).includes\\('jakarta'\\)\\)\\)\")",
+      "Bash(node -e \"const f = require\\('next/dist/compiled/@next/font/dist/google/index.js'\\); const keys = Object.keys\\(f\\); keys.slice\\(0,5\\).forEach\\(k => console.log\\(k\\)\\); console.log\\('total:', keys.length\\)\")",
+      "Bash(node -e \"const data = require\\('./node_modules/next/dist/compiled/@next/font/dist/google/font-data.json'\\); const keys = Object.keys\\(data\\); console.log\\(keys.filter\\(k => k.toLowerCase\\(\\).includes\\('jakarta'\\) || k.toLowerCase\\(\\).includes\\('outfit'\\) || k.toLowerCase\\(\\).includes\\('geist'\\)\\)\\)\")",
+      "Bash(node -e \"const f = require\\('next/font/google'\\); console.log\\(typeof f.Plus_Jakarta_Sans\\)\")",
+      "Bash(node -e \"const f = require\\('next/font/google'\\); const k = Object.keys\\(f\\); console.log\\(k.filter\\(k => k.includes\\('Jakarta'\\) || k.includes\\('Outfit'\\)\\)\\)\")",
+      "Bash(node -e \"try { const { Plus_Jakarta_Sans } = require\\('next/dist/compiled/@next/font/dist/google'\\); console.log\\(typeof Plus_Jakarta_Sans\\) } catch\\(e\\) { console.log\\(e.message\\) }\")"
+    ]
+  }
+}
