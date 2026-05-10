@@ -646,7 +646,7 @@ export function ProcessSection() {
           {/* 01 Discovery — cols 1-2, row 1 */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
+            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
           >
             <div className="flex flex-1 flex-col justify-between p-5 lg:w-1/2 lg:flex-none">
               <span className="text-[10px] font-medium text-foreground/30">01</span>
@@ -664,7 +664,7 @@ export function ProcessSection() {
           {/* 02 Design — col 3, rows 1-2 (tall) */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
+            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
           >
             <div className="relative min-h-0 flex-[4] overflow-hidden">
               <img src="/ux.png" alt="Design" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
@@ -680,7 +680,7 @@ export function ProcessSection() {
           {/* 03 Build — col 2, row 2 */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[10rem] flex-col justify-between overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background p-5 transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
+            className="group flex min-h-[10rem] flex-col justify-between overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black p-5 transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
           >
             <span className="text-[10px] font-medium text-foreground/30">03</span>
             <div>
@@ -692,7 +692,7 @@ export function ProcessSection() {
           {/* 04 Launch — col 1, rows 2-3 (tall) */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:1] lg:[grid-row-start:2] lg:[grid-row-end:4]"
+            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:1] lg:[grid-row-start:2] lg:[grid-row-end:4]"
           >
             <div className="relative min-h-0 flex-[4] overflow-hidden">
               <img src="/launch.png" alt="Launch" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
@@ -708,7 +708,7 @@ export function ProcessSection() {
           {/* 05 Scale — cols 2-3, row 3 */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] dark:bg-zinc-950 bg-background transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
+            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
           >
             <div className="relative h-48 overflow-hidden lg:h-auto lg:w-2/5">
               <img src="/scale.png" alt="Scale" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
