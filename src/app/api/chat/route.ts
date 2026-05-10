@@ -52,8 +52,6 @@ RULES — FOLLOW STRICTLY
 7. Be friendly, professional, and direct — not salesy.
 8. LANGUAGE: Detect the language of each user message and always reply in that same language. If they write in Spanish, respond entirely in Spanish. If in English, respond in English. Never mix languages in a single response. The agency information above can be communicated in any language.`
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
 export async function POST(req: NextRequest) {
   const { messages } = await req.json() as {
     messages: Array<{ role: 'user' | 'assistant'; content: string }>
@@ -62,6 +60,8 @@ export async function POST(req: NextRequest) {
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json({ error: 'AI not configured' }, { status: 500 })
   }
+
+  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
   try {
     const completion = await client.chat.completions.create({
