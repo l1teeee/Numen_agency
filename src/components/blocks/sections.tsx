@@ -3,32 +3,35 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
-import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
+import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus } from 'lucide-react'
+import { motion, AnimatePresence, useInView, animate, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
 import { PhotoSpread } from '@/components/ui/gallery'
-interface BlurStyle {
-  filter: MotionValue<string>
-  opacity: MotionValue<number>
-}
+
+interface BlurStyle { filter: MotionValue<string> }
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.15 },
-  transition: { duration: 0.65, ease: EASE, delay },
+  initial: { opacity: 0, y: 60, scale: 0.97 },
+  whileInView: { opacity: 1, y: 0, scale: 1 },
+  viewport: { once: true, amount: 0.08 },
+  transition: { type: 'spring', stiffness: 60, damping: 14, delay },
 })
 
 const staggerContainer = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+  visible: { transition: { staggerChildren: 0.2, delayChildren: 0.12 } },
 }
 
 const staggerItem = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+  hidden: { opacity: 0, y: 60, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: 'spring' as const, stiffness: 60, damping: 14 },
+  },
 }
 
 const blurLeave = {
@@ -78,25 +81,29 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
     <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-background">
-      <motion.div
-        className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8"
-        style={blurStyle}
-      >
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What We Do</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>02</span>
         </div>
-        <div className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 overflow-hidden">
+        <motion.div
+          className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 overflow-hidden"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
           {services.map((s, i) => (
             <motion.div
               key={s.num}
-              {...fadeUp(i * 0.08)}
-              className="group relative overflow-hidden rounded-2xl border border-foreground/[0.08] transition-colors duration-300 hover:border-foreground/[0.14]"
+              variants={staggerItem}
+              className={`group relative overflow-hidden rounded-2xl border border-foreground/[0.08] transition-colors duration-300 hover:border-foreground/[0.14]${i >= 2 ? ' lg:mb-14' : ''}`}
             >
               {/* full-card background image */}
               <img
                 src={s.img}
                 alt={s.title}
+                loading="lazy"
                 style={{ objectPosition: 'center 18%' }}
                 className="absolute inset-0 h-full w-full object-contain scale-[0.82] origin-top transition-transform duration-700 group-hover:scale-[0.87] invert brightness-[0.88] dark:invert-0 dark:brightness-100"
               />
@@ -122,7 +129,7 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   )
@@ -166,17 +173,20 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const [featured, ...rest] = projects
   return (
     <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div
-        className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8"
-        style={blurStyle}
-      >
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Selected Work</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
         </div>
-        <div className="mt-6 flex flex-1 flex-col gap-3 lg:flex-row">
-          <motion.div {...fadeUp(0)} className="flex flex-col flex-1 lg:flex-[3]">
-            <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex flex-1 flex-col justify-between rounded-2xl bg-background p-6 ring-1 ring-foreground/[0.08]">
+        <motion.div
+          className="mt-6 flex flex-1 flex-col gap-3 lg:mb-24 lg:flex-row"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          <motion.div variants={staggerItem} className="flex flex-col flex-none lg:flex-1 lg:flex-[3]">
+            <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col justify-between rounded-2xl bg-background p-6 ring-1 ring-foreground/[0.08]">
               {/* gradient ring on hover — CSS mask creates a hollow 1px donut */}
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -204,7 +214,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 </div>
                 <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#d394ff]" />
               </div>
-              <div className="flex items-center justify-center">
+              {/* Desktop only: photo spread */}
+              <div className="hidden lg:flex items-center justify-center">
                 <PhotoSpread
                   images={[
                     '/vielink/dashboard.png',
@@ -227,9 +238,9 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               </div>
             </Link>
           </motion.div>
-          <div className="flex flex-row gap-3 lg:flex-col lg:flex-[2]">
+          <motion.div variants={staggerContainer} className="flex flex-col gap-3 lg:flex-[2]">
             {rest.map((p, i) => (
-              <motion.div key={p.name} {...fadeUp(0.1 + i * 0.08)} className="flex-1">
+              <motion.div key={p.name} variants={staggerItem} className="flex-1">
                 <Link href={p.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-5 transition-colors duration-300 hover:border-foreground/[0.16]">
                   <div className="flex items-start justify-between">
                     <div>
@@ -247,8 +258,9 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                     <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                   </div>
                   {p.img && (
-                    <div className="my-4 flex-1 overflow-hidden rounded-xl">
-                      <img src={p.img} alt={p.name} className="h-full w-full object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
+                    <div className="hidden my-4 overflow-hidden rounded-xl lg:block lg:flex-1">
+                      <img src={p.img} alt={p.name} loading="lazy"
+                      className="h-full w-full object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
                     </div>
                   )}
                   <div className={p.img ? '' : 'mt-auto'}>
@@ -263,8 +275,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 </Link>
               </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </motion.div>
     </section>
   )
@@ -288,20 +300,21 @@ const team = [
   },
 ]
 
-export function AboutSection() {
+export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
     <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>About Numen</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
         </div>
 
-        <div className="mt-8 grid flex-1 grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
-          <motion.div {...fadeUp(0)} className="flex flex-col gap-6">
-            <div>
+        <div className="mt-6 flex flex-1 flex-col gap-4 overflow-hidden">
+          {/* Top row: headline + stats */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
+            <motion.div {...fadeUp(0)}>
               <h2 className="text-3xl font-semibold leading-snug tracking-tight text-foreground lg:text-4xl">
                 A small team that builds<br />
                 <span className="text-foreground/25">great digital products.</span>
@@ -314,59 +327,71 @@ export function AboutSection() {
               <p className="mt-3 text-sm leading-relaxed text-foreground/30">
                 Based in El Salvador, working fully remote with clients worldwide. We move fast, communicate clearly, and treat every project like it&apos;s our own product.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                {team.map((member, i) => (
-                  <motion.div
-                    key={member.name}
-                    {...fadeUp(0.12 + i * 0.08)}
-                    className="flex flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-200 hover:border-foreground/[0.16]"
+            <div className="grid h-full grid-cols-2 grid-rows-2 gap-3">
+              {[
+                { value: '10+', label: 'Projects delivered' },
+                { value: '3+', label: 'Years of experience' },
+                { value: '2', label: 'Products live in production' },
+                { value: '24h', label: 'Max response time' },
+              ].map((stat, i) => (
+                <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="flex flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-6 text-center transition-colors duration-200 hover:border-foreground/[0.18] hover:bg-foreground/[0.02]">
+                  <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                  <p className="mt-1 text-xs text-foreground/40">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom row: team cards + principles */}
+          <div className="grid grid-cols-1 gap-6 lg:mb-24 lg:grid-cols-2 lg:gap-10">
+            <div className="grid grid-cols-2 gap-3">
+              {team.map((member, i) => (
+                <motion.div
+                  key={member.name}
+                  {...fadeUp(0.12 + i * 0.08)}
+                  className="flex flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-200 hover:border-foreground/[0.16]"
+                >
+                  <div className="mb-3 flex h-20 w-full items-end justify-end overflow-hidden rounded-xl bg-foreground/[0.04] p-2">
+                    <span className="select-none text-4xl font-bold text-foreground/[0.07]">{member.initials}</span>
+                  </div>
+                  <p className="text-sm font-semibold text-foreground">{member.name}</p>
+                  <p className="mt-0.5 text-[10px] text-foreground/30">{member.role}</p>
+                  <p className="mt-2 text-[11px] leading-relaxed text-foreground/40">{member.desc}</p>
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 flex items-center gap-1.5 text-[10px] text-foreground/25 transition-colors duration-150 hover:text-foreground/55"
                   >
-                    {/* Photo placeholder */}
-                    <div className="mb-3 flex h-28 w-full items-end justify-end overflow-hidden rounded-xl bg-foreground/[0.04] p-2">
-                      <span className="select-none text-4xl font-bold text-foreground/[0.07]">{member.initials}</span>
-                    </div>
-                    <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                    <p className="mt-0.5 text-[10px] text-foreground/30">{member.role}</p>
-                    <p className="mt-2 text-[11px] leading-relaxed text-foreground/40">{member.desc}</p>
-                    <a
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 flex items-center gap-1.5 text-[10px] text-foreground/25 transition-colors duration-150 hover:text-foreground/55"
-                    >
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                      </svg>
-                      LinkedIn
-                    </a>
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.p {...fadeUp(0.3)} className="text-[11px] italic text-foreground/25">
-                Engineered with precision. Designed with purpose.
-              </motion.p>
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>
+                    LinkedIn
+                  </a>
+                </motion.div>
+              ))}
             </div>
-          </motion.div>
 
-          <div className="grid grid-cols-2 content-start gap-3">
-            {[
-              { value: '10+', label: 'Projects delivered' },
-              { value: '3+', label: 'Years of experience' },
-              { value: '2', label: 'Products live in production' },
-              { value: '24h', label: 'Max response time' },
-            ].map((stat, i) => (
-              <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="rounded-2xl border border-foreground/[0.08] p-6">
-                <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-                <p className="mt-1 text-xs text-foreground/40">{stat.label}</p>
-              </motion.div>
-            ))}
+            <motion.div {...fadeUp(0.32)} className="flex flex-col gap-2">
+              {[
+                { title: 'Ship fast', desc: 'We deliver working software in weeks, not months. Momentum beats perfection every time.' },
+                { title: 'Outcome-focused', desc: 'We measure success by results — conversion rates, retention, revenue — not by hours billed.' },
+                { title: 'Zero lock-in', desc: 'Clean code, full documentation, and a clean handoff. You own everything we build, always.' },
+              ].map((v) => (
+                <div key={v.title} className="flex items-start gap-3 rounded-2xl border border-foreground/[0.08] px-4 py-3">
+                  <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/20" />
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">{v.title}</p>
+                    <p className="mt-0.5 text-[10px] leading-relaxed text-foreground/40">{v.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }
@@ -411,93 +436,94 @@ const testimonials = [
   },
 ]
 
-const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? 48 : -48, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir > 0 ? -48 : 48, opacity: 0 }),
+const statItems = [
+  { to: 10,  suffix: '+',  label: 'Happy clients' },
+  { to: 4.9, suffix: '★',  decimals: 1, label: 'Avg. satisfaction' },
+  { to: 5,   suffix: '+',  label: 'Countries served' },
+  { to: 24,  suffix: 'h',  label: 'Response time' },
+]
+
+function CountUp({ to, suffix, decimals = 0 }: { to: number; suffix: string; decimals?: number }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true })
+  useEffect(() => {
+    if (!inView) return
+    const el = ref.current
+    if (!el) return
+    const ctrl = animate(0, to, {
+      duration: 1.8,
+      ease: 'easeOut',
+      onUpdate: (v) => {
+        el.textContent = (decimals > 0 ? v.toFixed(decimals) : Math.floor(v).toString()) + suffix
+      },
+    })
+    return ctrl.stop
+  }, [inView, to, suffix, decimals])
+  return <span ref={ref}>0{suffix}</span>
 }
 
-const PAGES = [testimonials.slice(0, 3), testimonials.slice(3, 6)]
-
-export function TestimonialsSection() {
+export function TestimonialsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
-  const [page, setPage] = useState(0)
-  const [direction, setDirection] = useState(0)
-
-  const prev = () => { setDirection(-1); setPage((p) => (p - 1 + PAGES.length) % PAGES.length) }
-  const next = () => { setDirection(1);  setPage((p) => (p + 1) % PAGES.length) }
-
-  useEffect(() => {
-    const id = setInterval(() => { setDirection(1); setPage((p) => (p + 1) % PAGES.length) }, 7000)
-    return () => clearInterval(id)
-  }, [])
 
   return (
-    <section ref={ref} id="testimonials" className="border-t border-foreground/[0.08] bg-background py-24">
-      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
-        <motion.div
-          className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
-          {...fadeUp(0)}
-        >
+    <section ref={ref} id="testimonials" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What Clients Say</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
-        </motion.div>
+        </div>
 
-        <motion.div {...fadeUp(0.05)} className="mt-16">
-          <div className="relative overflow-hidden">
-            <AnimatePresence custom={direction} mode="wait">
-              <motion.div
-                key={page}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.38, ease: EASE }}
-                className="grid grid-cols-1 gap-4 sm:grid-cols-3"
-              >
-                {PAGES[page].map((t) => (
-                  <div key={t.name} className="flex flex-col justify-between rounded-2xl border border-foreground/[0.08] p-6">
-                    <p className="text-sm leading-relaxed text-foreground/60">
-                      &ldquo;{t.quote}&rdquo;
-                    </p>
-                    <div className="mt-6 flex items-center gap-3">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[10px] font-medium text-foreground/40">
-                        {t.initials}
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold text-foreground">{t.name}</p>
-                        <p className="text-[10px] text-foreground/30">{t.role}</p>
-                      </div>
-                    </div>
+        <div className="mt-6 flex flex-1 flex-col gap-3 overflow-hidden">
+          <motion.h2 {...fadeUp(0)} className="shrink-0 text-2xl font-semibold tracking-tight text-foreground lg:text-3xl">
+            Trusted by builders<br />
+            <span className="text-foreground/25">who move fast.</span>
+          </motion.h2>
+
+          <motion.div
+            className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.05 }}
+          >
+            {testimonials.map((t) => (
+              <motion.div key={t.name} variants={staggerItem} className="flex flex-col gap-3 rounded-2xl border border-foreground/[0.08] p-4">
+                <div className="flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg key={i} className="h-3 w-3 fill-foreground/25" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="line-clamp-4 text-xs leading-relaxed text-foreground/55">&ldquo;{t.quote}&rdquo;</p>
+                <div className="mt-auto flex items-center gap-2.5 pt-1">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[9px] font-medium text-foreground/40">
+                    {t.initials}
                   </div>
-                ))}
+                  <div>
+                    <p className="text-[11px] font-semibold text-foreground">{t.name}</p>
+                    <p className="text-[10px] text-foreground/30">{t.role}</p>
+                  </div>
+                </div>
               </motion.div>
-            </AnimatePresence>
-          </div>
+            ))}
+          </motion.div>
 
-          <div className="mt-6 flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              {PAGES.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => { setDirection(i > page ? 1 : -1); setPage(i) }}
-                  className={`h-1 rounded-full transition-all duration-300 ${i === page ? 'w-6 bg-foreground/40' : 'w-1.5 bg-foreground/[0.12] hover:bg-foreground/20'}`}
-                />
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <button type="button" onClick={prev} className="flex h-9 w-9 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground/30 transition-colors duration-200 hover:border-foreground/[0.16] hover:text-foreground">
-                <ChevronLeft size={15} />
-              </button>
-              <button type="button" onClick={next} className="flex h-9 w-9 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground/30 transition-colors duration-200 hover:border-foreground/[0.16] hover:text-foreground">
-                <ChevronRight size={15} />
-              </button>
-            </div>
-          </div>
-        </motion.div>
+          <motion.div
+            {...fadeUp(0.1)}
+            className="shrink-0 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-foreground/[0.08] sm:grid-cols-4 lg:mb-24"
+          >
+            {statItems.map((s) => (
+              <div key={s.label} className="flex flex-col items-center justify-center gap-1.5 bg-foreground/[0.02] px-4 py-6 text-center lg:py-8">
+                <p className="text-5xl font-bold tracking-tight text-foreground lg:text-6xl">
+                  <CountUp to={s.to} suffix={s.suffix} decimals={s.decimals} />
+                </p>
+                <p className="text-xs text-foreground/35">{s.label}</p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
       </motion.div>
     </section>
   )
@@ -551,34 +577,31 @@ const stackCategories = [
   },
 ]
 
-export function TechStackSection() {
+export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
-    <section ref={ref} id="stack" className="rounded-t-[2rem] border-t border-foreground/[0.08] bg-background py-24">
-      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
-        <motion.div
-          className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
-          {...fadeUp(0)}
-        >
+    <section ref={ref} id="stack" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
-        </motion.div>
+        </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-8 lg:grid-cols-2">
           <motion.div {...fadeUp(0.05)}>
             <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
               Tools we trust<br />
               <span className="text-foreground/25">to build with.</span>
             </h2>
-            <p className="mt-6 text-sm leading-relaxed text-foreground/40">
+            <p className="mt-4 text-sm leading-relaxed text-foreground/40">
               We carefully select every tool for reliability, developer experience, and long-term
               scalability. No hype — only tools that actually deliver in production.
             </p>
           </motion.div>
 
           <motion.div
-            className="space-y-8"
+            className="space-y-4 overflow-hidden"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -586,21 +609,22 @@ export function TechStackSection() {
           >
             {stackCategories.map((cat) => (
               <motion.div key={cat.label} variants={staggerItem}>
-                <span className="mb-3 block text-xs uppercase tracking-widest text-foreground/25">
+                <span className="mb-2 block text-xs uppercase tracking-widest text-foreground/25">
                   {cat.label}
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {cat.items.map((item) => (
                     <span
                       key={item.name}
-                      className="flex items-center gap-2 rounded-2xl border border-foreground/[0.08] px-4 py-2 transition-colors duration-200 hover:border-foreground/[0.16]"
+                      className="flex items-center gap-2 rounded-2xl border border-foreground/[0.08] px-3 py-1.5 transition-colors duration-200 hover:border-foreground/[0.16]"
                     >
                       <img
                         src={`https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/${item.icon}.svg`}
                         alt={item.name}
-                        className="h-3.5 w-3.5 dark:invert opacity-60"
+                        loading="lazy"
+                      className="h-3 w-3 dark:invert opacity-60"
                       />
-                      <span className="text-sm text-foreground/60">{item.name}</span>
+                      <span className="text-xs text-foreground/60">{item.name}</span>
                     </span>
                   ))}
                 </div>
@@ -622,103 +646,108 @@ const steps = [
   { num: '05', title: 'Scale',     desc: 'Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.', img: '/scale.png' },
 ]
 
-export function ProcessSection() {
+export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
-    <section ref={ref} id="process" className="border-t border-foreground/[0.08] bg-background py-24">
-      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
-        <motion.div
-          className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
-          {...fadeUp(0)}
-        >
+    <section ref={ref} id="process" className="sticky top-0 z-[60] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>How We Work</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
-        </motion.div>
+        </div>
 
         <motion.div
-          className="mt-16 grid grid-cols-1 gap-2 lg:grid-cols-3 lg:[grid-template-rows:repeat(3,minmax(12rem,1fr))]"
+          className="mt-6 grid flex-1 grid-cols-2 gap-2 overflow-hidden lg:grid-cols-3 lg:[grid-template-rows:repeat(3,minmax(0,1fr))]"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          {/* 01 Discovery — cols 1-2, row 1 */}
+          {/* 01 Discovery — full width mobile, cols 1-2 row 1 desktop */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
+            className="col-span-2 group flex min-h-[6rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
           >
-            <div className="flex flex-1 flex-col justify-between p-5 lg:w-1/2 lg:flex-none">
+            <div className="flex flex-1 flex-col justify-between p-4 lg:p-5 lg:w-1/2 lg:flex-none">
               <span className="text-[10px] font-medium text-foreground/30">01</span>
               <div>
                 <h3 className="mb-1 text-sm font-semibold text-foreground">Discovery</h3>
                 <p className="text-xs leading-relaxed text-foreground/50">We start by understanding your goals, users, and constraints. Deep dive into the problem space before writing a single line of code.</p>
-                <p className="mt-2 text-xs leading-relaxed text-foreground/35">From user research and competitor analysis to technical requirements and project scope — we leave nothing to assumptions before development begins.</p>
+                <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">From user research and competitor analysis to technical requirements and project scope — we leave nothing to assumptions before development begins.</p>
               </div>
             </div>
-            <div className="relative h-48 overflow-hidden lg:h-auto lg:w-1/2">
-              <img src="/discovery.png" alt="Discovery" className="absolute inset-0 h-full w-full object-contain p-4 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
+            <div className="relative h-24 overflow-hidden lg:h-auto lg:w-1/2">
+              <img src="/discovery.png" alt="Discovery" loading="lazy"
+              className="absolute inset-0 h-full w-full object-contain p-4 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
             </div>
           </motion.div>
 
-          {/* 02 Design — col 3, rows 1-2 (tall) */}
+          {/* 02 Design — col 1 mobile row 2, col 3 rows 1-2 desktop */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
+            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
           >
-            <div className="relative min-h-0 flex-[4] overflow-hidden">
-              <img src="/ux.png" alt="Design" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+            <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[4]">
+              <img src="/ux.png" alt="Design" loading="lazy"
+                className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
-            <div className="flex flex-[2] flex-col justify-end p-4">
+            <div className="flex flex-col justify-end p-4 lg:flex-[2]">
               <span className="text-[10px] font-medium text-foreground/30">02</span>
               <h3 className="mt-1 text-sm font-semibold text-foreground">Design</h3>
               <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Wireframes, prototypes and design systems built in Figma. We validate ideas early so nothing is left to chance during development.</p>
-              <p className="mt-2 text-xs leading-relaxed text-foreground/35">Every screen is designed for real users — accessible, responsive, and aligned with your brand from day one.</p>
+              <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">Every screen is designed for real users — accessible, responsive, and aligned with your brand from day one.</p>
             </div>
           </motion.div>
 
-          {/* 03 Build — col 2, row 2 */}
+          {/* 03 Build — col 2 mobile row 2, col 2 row 2 desktop */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[10rem] flex-col justify-between overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black p-5 transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
+            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
           >
-            <span className="text-[10px] font-medium text-foreground/30">03</span>
-            <div>
-              <h3 className="mb-1.5 text-sm font-semibold text-foreground">Build</h3>
-              <p className="text-xs leading-relaxed text-foreground/50">Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos to keep you in the loop.</p>
+            <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[3]">
+              <img src="/build.png" alt="Build" loading="lazy"
+                className="absolute inset-0 h-full w-full object-contain p-2 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
+            </div>
+            <div className="flex flex-col justify-end p-4">
+              <span className="text-[10px] font-medium text-foreground/30">03</span>
+              <h3 className="mt-1 text-sm font-semibold text-foreground">Build</h3>
+              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos.</p>
             </div>
           </motion.div>
 
-          {/* 04 Launch — col 1, rows 2-3 (tall) */}
+          {/* 04 Launch — full width mobile, col 1 rows 2-3 desktop */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[16rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:1] lg:[grid-row-start:2] lg:[grid-row-end:4]"
+            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:mb-14 lg:min-h-0 lg:flex-col lg:[grid-column-start:1] lg:[grid-column-end:2] lg:[grid-row-start:2] lg:[grid-row-end:4]"
           >
-            <div className="relative min-h-0 flex-[4] overflow-hidden">
-              <img src="/launch.png" alt="Launch" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+            <div className="relative w-2/5 overflow-hidden lg:w-auto lg:min-h-0 lg:flex-[4]">
+              <img src="/launch.png" alt="Launch" loading="lazy"
+                className="absolute inset-0 h-full w-full object-contain p-2 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
-            <div className="flex flex-[2] flex-col justify-end p-4">
+            <div className="flex flex-1 flex-col justify-center p-4 lg:flex-[2] lg:justify-end">
               <span className="text-[10px] font-medium text-foreground/30">04</span>
               <h3 className="mt-1 text-sm font-semibold text-foreground">Launch</h3>
-              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Deploy with confidence. We handle infrastructure setup, CI/CD pipelines, environment configuration, and go-live checklists so nothing slips through the cracks.</p>
-              <p className="mt-2 text-xs leading-relaxed text-foreground/35">We set up monitoring, error tracking, and analytics — then stay close for the first weeks post-launch to catch anything that surfaces in production.</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Deploy with confidence. We handle infrastructure setup, CI/CD pipelines, and go-live checklists.</p>
+              <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">We set up monitoring, error tracking, and analytics — then stay close for the first weeks post-launch.</p>
             </div>
           </motion.div>
 
-          {/* 05 Scale — cols 2-3, row 3 */}
+          {/* 05 Scale — full width mobile, cols 2-3 row 3 desktop */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[14rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
+            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:mb-14 lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
           >
-            <div className="relative h-48 overflow-hidden lg:h-auto lg:w-2/5">
-              <img src="/scale.png" alt="Scale" className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+            <div className="relative w-2/5 overflow-hidden lg:h-auto lg:w-2/5">
+              <img src="/scale.png" alt="Scale" loading="lazy"
+                className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
-            <div className="flex flex-col justify-between p-5 lg:w-3/5">
+            <div className="flex flex-1 flex-col justify-center p-4 lg:justify-between lg:w-3/5">
               <span className="text-[10px] font-medium text-foreground/30">05</span>
               <div>
                 <h3 className="mb-1 text-sm font-semibold text-foreground">Scale</h3>
-                <p className="text-xs leading-relaxed text-foreground/50">Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.</p>
-                <p className="mt-2 text-xs leading-relaxed text-foreground/35">From A/B testing and analytics to new feature rollouts and infrastructure scaling — we treat your product as a living system, not a finished deliverable.</p>
+                <p className="text-xs leading-relaxed text-foreground/50">Continuous iteration, performance tuning, and new features. We stay by your side long after launch.</p>
+                <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">From A/B testing to infrastructure scaling — we treat your product as a living system, not a finished deliverable.</p>
               </div>
             </div>
           </motion.div>
@@ -728,7 +757,7 @@ export function ProcessSection() {
   )
 }
 
-// ─── FAQ ────────────────────────────────────────────────────
+// ─── FAQ ─────────────────────────────────────────────────────
 const faqs = [
   {
     q: 'What does Numen Agency do?',
@@ -760,30 +789,42 @@ const faqs = [
   },
 ]
 
-export function FAQSection() {
+export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
   const [open, setOpen] = useState<number | null>(null)
   return (
-    <section ref={ref} id="faq" className="border-t border-foreground/[0.08] bg-background py-24">
-      <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
-        <motion.div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6" {...fadeUp(0)}>
+    <section ref={ref} id="faq" className="sticky top-0 z-[70] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>FAQ</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
-        </motion.div>
+        </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
-          <motion.div {...fadeUp(0.05)}>
-            <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
-              Common questions<br />
-              <span className="text-foreground/25">answered.</span>
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-foreground/40">
-              Not finding what you&apos;re looking for? Use the AI assistant at the bottom right or send us a message directly.
-            </p>
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2 lg:gap-12 lg:mb-24">
+          {/* Left: large headline + CTA */}
+          <motion.div {...fadeUp(0)} className="flex flex-col justify-between">
+            <div>
+              <h2 className="text-4xl font-semibold tracking-tight text-foreground lg:text-6xl">
+                Common<br />questions,<br />
+                <span className="text-foreground/25">answered.</span>
+              </h2>
+              <p className="mt-5 max-w-xs text-sm leading-relaxed text-foreground/40">
+                Not finding what you&apos;re looking for? Use the AI assistant at the bottom right or send us a message.
+              </p>
+            </div>
+            <Link
+              href="#contact"
+              className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-75 lg:mt-0"
+            >
+              Start a project <ArrowUpRight size={14} />
+            </Link>
           </motion.div>
 
+          {/* Right: scrollable FAQ accordion */}
           <motion.div
+            className="overflow-y-auto [&::-webkit-scrollbar]:hidden"
+            style={{ scrollbarWidth: 'none' }}
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -793,7 +834,7 @@ export function FAQSection() {
               <motion.div key={i} variants={staggerItem} className="border-b border-foreground/[0.06]">
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between py-4 text-left"
+                  className="flex w-full items-center justify-between py-3.5 text-left"
                   onClick={() => setOpen(open === i ? null : i)}
                 >
                   <span className="pr-4 text-sm font-medium text-foreground">{faq.q}</span>
@@ -838,7 +879,7 @@ const budgetOptions = [
   { value: '50k+', label: '$50k+' },
 ]
 
-export function ContactFormSection() {
+export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.3, once: false })
   const [form, setForm] = useState({ name: '', email: '', budget: '', message: '' })
@@ -864,162 +905,175 @@ export function ContactFormSection() {
   }
 
   return (
-    <>
-      <section ref={ref} id="contact" className="border-t border-foreground/[0.08] bg-background py-24">
-        <motion.div {...blurLeave} className="mx-auto max-w-5xl px-6 lg:px-8">
-          <motion.div
-            className="flex items-center justify-between border-b border-foreground/[0.08] pb-6"
-            {...fadeUp(0)}
-          >
-            <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
-            <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
-          </motion.div>
+    <section ref={ref} id="contact" className="sticky top-0 z-[80] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-10 pb-0 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
+          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
+        </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
-            <div className="flex flex-col justify-between gap-10">
-              <motion.div {...fadeUp(0.05)}>
-                <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
-                  Let&apos;s build something<br />
-                  <span className="text-foreground/25">great together.</span>
-                </h2>
-                <p className="mt-5 text-sm leading-relaxed text-foreground/40">
-                  Tell us about your project. We&apos;ll get back to you within 24 hours with
-                  thoughts and next steps.
-                </p>
-              </motion.div>
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">
+          <div className="hidden flex-col justify-between gap-6 lg:flex">
+            <motion.div {...fadeUp(0.05)}>
+              <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
+                Let&apos;s build something<br />
+                <span className="text-foreground/25">great together.</span>
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-foreground/40">
+                Tell us about your project. We&apos;ll get back to you within 24 hours with
+                thoughts and next steps.
+              </p>
+            </motion.div>
 
-              <motion.div
-                className="space-y-3"
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-              >
-                {infoItems.map((item) => (
-                  <motion.div
-                    key={item.label}
-                    variants={staggerItem}
-                    className="flex items-center gap-4 rounded-2xl border border-foreground/[0.08] px-5 py-4"
-                  >
-                    <span className="w-20 shrink-0 text-xs text-foreground/30">{item.label}</span>
-                    <span className="text-sm text-foreground/60">{item.value}</span>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-
-            <motion.div {...fadeUp(0.12)}>
-              {status === 'sent' ? (
-                <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-12 text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground">
-                    ✓
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold text-foreground">Message sent!</h3>
-                  <p className="mt-2 text-sm text-foreground/40">
-                    We&apos;ll get back to you within 24 hours.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={submit} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-foreground/30">Name *</label>
-                      <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
-                        <input
-                          name="name"
-                          required
-                          value={form.name}
-                          onChange={handle}
-                          placeholder="Alex Johnson"
-                          className={`${INPUT} pl-10`}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-foreground/30">Email *</label>
-                      <div className="relative">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
-                        <input
-                          name="email"
-                          type="email"
-                          required
-                          value={form.email}
-                          onChange={handle}
-                          placeholder="alex@company.com"
-                          className={`${INPUT} pl-10`}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-foreground/30">Budget range</label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
-                      <SelectCustom
-                        name="budget"
-                        value={form.budget}
-                        onChange={(v) => setForm((p) => ({ ...p, budget: v }))}
-                        options={budgetOptions}
-                        placeholder="Select a range"
-                        icon={DollarSign}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-foreground/30">Tell us about your project *</label>
-                    <div className="relative">
-                      <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
-                      <textarea
-                        name="message"
-                        required
-                        rows={5}
-                        value={form.message}
-                        onChange={handle}
-                        placeholder="We're looking to build..."
-                        className={`${INPUT} resize-none pl-10`}
-                      />
-                    </div>
-                  </div>
-
-                  {status === 'error' && (
-                    <p className="text-center text-xs text-red-400/70">
-                      Something went wrong. Please try again or email us directly.
-                    </p>
-                  )}
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={status === 'loading'}
-                    className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
-                  >
-                    {status === 'loading' ? 'Sending...' : 'Send message'}
-                  </Button>
-                </form>
-              )}
+            <motion.div
+              className="space-y-3"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              {infoItems.map((item) => (
+                <motion.div
+                  key={item.label}
+                  variants={staggerItem}
+                  className="flex items-center gap-4 rounded-2xl border border-foreground/[0.08] px-5 py-4"
+                >
+                  <span className="w-20 shrink-0 text-xs text-foreground/30">{item.label}</span>
+                  <span className="text-sm text-foreground/60">{item.value}</span>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
-        </motion.div>
-      </section>
 
-      <footer className="border-t border-foreground/[0.08] bg-background">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-6 sm:flex-row lg:px-8">
+          <motion.div {...fadeUp(0.05)} className="flex flex-col">
+            <div className="mb-4 lg:hidden">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+                Let&apos;s build something<br />
+                <span className="text-foreground/25">great together.</span>
+              </h2>
+            </div>
+            {status === 'sent' ? (
+              <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-8 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground">
+                  ✓
+                </div>
+                <h3 className="mt-4 text-lg font-semibold text-foreground">Message sent!</h3>
+                <p className="mt-2 text-sm text-foreground/40">
+                  We&apos;ll get back to you within 24 hours.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={submit} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs text-foreground/30">Name *</label>
+                    <div className="relative">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
+                      <input
+                        name="name"
+                        required
+                        value={form.name}
+                        onChange={handle}
+                        placeholder="Alex Johnson"
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs text-foreground/30">Email *</label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
+                      <input
+                        name="email"
+                        type="email"
+                        required
+                        value={form.email}
+                        onChange={handle}
+                        placeholder="alex@company.com"
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs text-foreground/30">Budget range</label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
+                    <SelectCustom
+                      name="budget"
+                      value={form.budget}
+                      onChange={(v) => setForm((p) => ({ ...p, budget: v }))}
+                      options={budgetOptions}
+                      placeholder="Select a range"
+                      icon={DollarSign}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs text-foreground/30">Tell us about your project *</label>
+                  <div className="relative">
+                    <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
+                    <textarea
+                      name="message"
+                      required
+                      rows={3}
+                      value={form.message}
+                      onChange={handle}
+                      placeholder="We're looking to build..."
+                      className={`${INPUT} resize-none pl-10`}
+                    />
+                  </div>
+                </div>
+
+                {status === 'error' && (
+                  <p className="text-center text-xs text-red-400/70">
+                    Something went wrong. Please try again or email us directly.
+                  </p>
+                )}
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={status === 'loading'}
+                  className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
+                >
+                  {status === 'loading' ? 'Sending...' : 'Send message'}
+                </Button>
+              </form>
+            )}
+          </motion.div>
+        </div>
+        <div className="mt-3 shrink-0 flex flex-col items-center justify-between gap-2 border-t border-foreground/[0.08] py-4 sm:flex-row">
           <span className="text-xs text-foreground/20">© 2025 Numen Agency. All rights reserved.</span>
-          <div className="flex gap-6">
+          <div className="flex gap-5">
             {['Twitter', 'Instagram', 'LinkedIn', 'GitHub'].map((s) => (
-              <Link
-                key={s}
-                href="#"
-                className="text-xs text-foreground/20 transition-colors duration-150 hover:text-foreground/60"
-              >
-                {s}
-              </Link>
+              <Link key={s} href="#" className="text-xs text-foreground/20 transition-colors duration-150 hover:text-foreground/60">{s}</Link>
             ))}
           </div>
         </div>
-      </footer>
-    </>
+      </motion.div>
+    </section>
+  )
+}
+
+export function SiteFooter() {
+  return (
+    <footer className="border-t border-foreground/[0.08] bg-background">
+      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-6 sm:flex-row lg:px-8">
+        <span className="text-xs text-foreground/20">© 2025 Numen Agency. All rights reserved.</span>
+        <div className="flex gap-6">
+          {['Twitter', 'Instagram', 'LinkedIn', 'GitHub'].map((s) => (
+            <Link
+              key={s}
+              href="#"
+              className="text-xs text-foreground/20 transition-colors duration-150 hover:text-foreground/60"
+            >
+              {s}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </footer>
   )
 }

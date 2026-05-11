@@ -2,11 +2,19 @@
 
 import { useRef } from 'react'
 import { useScroll, useTransform, MotionValue } from 'framer-motion'
-import { ServicesSection, ProjectsSection, AboutSection } from './sections'
+import {
+  ServicesSection,
+  ProjectsSection,
+  AboutSection,
+  TestimonialsSection,
+  TechStackSection,
+  ProcessSection,
+  FAQSection,
+  ContactFormSection,
+} from './sections'
 
-interface BlurStyle {
+export interface BlurStyle {
   filter: MotionValue<string>
-  opacity: MotionValue<number>
 }
 
 function useBlurStyle(
@@ -14,32 +22,45 @@ function useBlurStyle(
   start: number,
   end: number,
 ): BlurStyle {
-  const blurPx = useTransform(scrollYProgress, [start, end], [0, 7])
-  const opacity = useTransform(scrollYProgress, [start, end], [1, 0.35])
+  const blurPx = useTransform(scrollYProgress, [start, end], [0, 8])
   const filter = useTransform(blurPx, (v) => `blur(${v}px)`)
-  return { filter, opacity }
+  return { filter }
+}
+
+const TOTAL = 8
+
+// blur starts when next section covers ~48% of viewport, ends at ~96%
+function r(k: number): [number, number] {
+  const base = (k - 1) / TOTAL
+  return [base + 0.06, base + 0.12]
 }
 
 export function StickyStack() {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // progress 0 = container top at viewport top
-  // progress 1 = container bottom at viewport top (spans 300 vh of scroll)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   })
 
-  // Projects enters viewport at ~0.33, sticks at ~0.33 — blur Services during that approach
-  const servicesBlur = useBlurStyle(scrollYProgress, 0.18, 0.38)
-  // About enters viewport at ~0.67 — blur Projects during that approach
-  const projectsBlur = useBlurStyle(scrollYProgress, 0.51, 0.71)
+  const b1 = useBlurStyle(scrollYProgress, ...r(1))
+  const b2 = useBlurStyle(scrollYProgress, ...r(2))
+  const b3 = useBlurStyle(scrollYProgress, ...r(3))
+  const b4 = useBlurStyle(scrollYProgress, ...r(4))
+  const b5 = useBlurStyle(scrollYProgress, ...r(5))
+  const b6 = useBlurStyle(scrollYProgress, ...r(6))
+  const b7 = useBlurStyle(scrollYProgress, ...r(7))
 
   return (
-    <div ref={containerRef} style={{ height: '300vh' }}>
-      <ServicesSection blurStyle={servicesBlur} />
-      <ProjectsSection blurStyle={projectsBlur} />
-      <AboutSection />
+    <div ref={containerRef} style={{ height: `${TOTAL * 100}vh` }}>
+      <ServicesSection blurStyle={b1} />
+      <ProjectsSection blurStyle={b2} />
+      <AboutSection blurStyle={b3} />
+      <TestimonialsSection blurStyle={b4} />
+      <TechStackSection blurStyle={b5} />
+      <ProcessSection blurStyle={b6} />
+      <FAQSection blurStyle={b7} />
+      <ContactFormSection />
     </div>
   )
 }

@@ -1,13 +1,6 @@
 import { Navbar } from "@/components/blocks/navbar";
 import { HeroSection } from "@/components/blocks/hero-section";
 import { StickyStack } from "@/components/blocks/sticky-stack";
-import {
-  TestimonialsSection,
-  TechStackSection,
-  ProcessSection,
-  FAQSection,
-  ContactFormSection,
-} from "@/components/blocks/sections";
 import { ChatBubble } from "@/components/ui/chat-bubble";
 
 const jsonLd = {
@@ -78,11 +71,6 @@ export default function Home() {
         <Navbar />
         <HeroSection />
         <StickyStack />
-        <TestimonialsSection />
-        <TechStackSection />
-        <ProcessSection />
-        <FAQSection />
-        <ContactFormSection />
         <ChatBubble />
       </div>
     </>
