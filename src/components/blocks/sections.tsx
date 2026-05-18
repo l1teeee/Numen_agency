@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus } from 'lucide-react'
-import { motion, AnimatePresence, useInView, animate, type MotionValue } from 'framer-motion'
+import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
 import { PhotoSpread } from '@/components/ui/gallery'
 
@@ -394,138 +394,6 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
-// ─── Testimonials ────────────────────────────────────────────
-const testimonials = [
-  {
-    quote: 'Working with Numen was exactly what our startup needed. They took our rough idea and shipped a product our users actually love. Fast, communicative, and genuinely invested in the outcome.',
-    name: 'Maria Santos',
-    role: 'CEO, Finspark',
-    initials: 'MS',
-  },
-  {
-    quote: 'The level of polish they deliver is remarkable. Our redesign went from concept to launch in 6 weeks, and the design system they built saved us months of future work.',
-    name: 'Carlos Herrera',
-    role: 'Founder, Stackr',
-    initials: 'CH',
-  },
-  {
-    quote: 'Most agencies over-promise and under-deliver. Numen did the opposite — low ego, high output. They felt like part of our team from day one.',
-    name: 'Ana Rodriguez',
-    role: 'Head of Product, Lumos',
-    initials: 'AR',
-  },
-  {
-    quote: 'We needed an AI integration built fast without sacrificing quality. Numen delivered a production-ready solution in three weeks. The code is clean and our team could take it over immediately.',
-    name: 'David Chen',
-    role: 'CTO, Pulsar Labs',
-    initials: 'DC',
-  },
-  {
-    quote: 'From the first call it was clear these guys care about outcomes, not just deliverables. Our conversion rate went up 34% after they rebuilt our onboarding flow.',
-    name: 'Sofia Ramirez',
-    role: 'Founder, Bloom',
-    initials: 'SR',
-  },
-  {
-    quote: 'Numen handled a complex migration with zero downtime. Their communication throughout was exceptional — we always knew exactly where things stood.',
-    name: 'James Osei',
-    role: 'Head of Engineering, Drift',
-    initials: 'JO',
-  },
-]
-
-const statItems = [
-  { to: 10,  suffix: '+',  label: 'Happy clients' },
-  { to: 4.9, suffix: '★',  decimals: 1, label: 'Avg. satisfaction' },
-  { to: 5,   suffix: '+',  label: 'Countries served' },
-  { to: 24,  suffix: 'h',  label: 'Response time' },
-]
-
-function CountUp({ to, suffix, decimals = 0 }: { to: number; suffix: string; decimals?: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true })
-  useEffect(() => {
-    if (!inView) return
-    const el = ref.current
-    if (!el) return
-    const ctrl = animate(0, to, {
-      duration: 1.8,
-      ease: 'easeOut',
-      onUpdate: (v) => {
-        el.textContent = (decimals > 0 ? v.toFixed(decimals) : Math.floor(v).toString()) + suffix
-      },
-    })
-    return ctrl.stop
-  }, [inView, to, suffix, decimals])
-  return <span ref={ref}>0{suffix}</span>
-}
-
-export function TestimonialsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
-  const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.4, once: false })
-
-  return (
-    <section ref={ref} id="testimonials" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What Clients Say</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
-        </div>
-
-        <div className="mt-6 flex flex-1 flex-col gap-3 overflow-hidden">
-          <motion.h2 {...fadeUp(0)} className="shrink-0 text-2xl font-semibold tracking-tight text-foreground lg:text-3xl">
-            Trusted by builders<br />
-            <span className="text-foreground/25">who move fast.</span>
-          </motion.h2>
-
-          <motion.div
-            className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2"
-            variants={staggerContainer}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            {testimonials.map((t) => (
-              <motion.div key={t.name} variants={staggerItem} className="flex flex-col gap-3 rounded-2xl border border-foreground/[0.08] p-4">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <svg key={i} className="h-3 w-3 fill-foreground/25" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="line-clamp-4 text-xs leading-relaxed text-foreground/55">&ldquo;{t.quote}&rdquo;</p>
-                <div className="mt-auto flex items-center gap-2.5 pt-1">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[9px] font-medium text-foreground/40">
-                    {t.initials}
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-semibold text-foreground">{t.name}</p>
-                    <p className="text-[10px] text-foreground/30">{t.role}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            {...fadeUp(0.1)}
-            className="shrink-0 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-foreground/[0.08] sm:grid-cols-4 lg:mb-24"
-          >
-            {statItems.map((s) => (
-              <div key={s.label} className="flex flex-col items-center justify-center gap-1.5 bg-foreground/[0.02] px-4 py-6 text-center lg:py-8">
-                <p className="text-5xl font-bold tracking-tight text-foreground lg:text-6xl">
-                  <CountUp to={s.to} suffix={s.suffix} decimals={s.decimals} />
-                </p>
-                <p className="text-xs text-foreground/35">{s.label}</p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.div>
-    </section>
-  )
-}
-
 // ─── Tech Stack ──────────────────────────────────────────────
 const stackCategories = [
   {
@@ -586,13 +454,13 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const data = stackCategories.find((c) => c.capability === 'Data')!
 
   return (
-    <section ref={ref} id="stack" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+    <section ref={ref} id="stack" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
 
         {/* Section label */}
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </div>
 
         {/* Headline */}
@@ -651,11 +519,11 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
-    <section ref={ref} id="process" className="sticky top-0 z-[60] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+    <section ref={ref} id="process" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>How We Work</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
         </div>
 
         <motion.div
@@ -794,11 +662,11 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.4, once: false })
   const [open, setOpen] = useState<number | null>(null)
   return (
-    <section ref={ref} id="faq" className="sticky top-0 z-[70] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+    <section ref={ref} id="faq" className="sticky top-0 z-60 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>FAQ</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2 lg:gap-12 lg:mb-24">
@@ -904,11 +772,11 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
   }
 
   return (
-    <section ref={ref} id="contact" className="sticky top-0 z-[80] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+    <section ref={ref} id="contact" className="sticky top-0 z-[70] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-10 pb-0 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
+          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">

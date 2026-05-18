@@ -12,7 +12,6 @@ const links = [
   { label: 'Services',     href: '#services'     },
   { label: 'Work',         href: '#work'         },
   { label: 'About',        href: '#about'        },
-  { label: 'Testimonials', href: '#testimonials' },
   { label: 'Stack',        href: '#stack'        },
   { label: 'Process',      href: '#process'      },
   { label: 'FAQ',          href: '#faq'          },
