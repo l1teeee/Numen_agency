@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const completion = await client.chat.completions.create({
-      model: process.env.NUMEN_OPENAI_MODEL,
+      model: process.env.NUMEN_OPENAI_MODEL as string,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         ...messages,
