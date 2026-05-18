@@ -9,7 +9,7 @@ const font = Plus_Jakarta_Sans({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-const BASE_URL = "https://numenagency.com";
+const BASE_URL = "https://delta-numen.com";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -20,11 +20,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Numen Agency — Digital Product Studio",
-    template: "%s | Numen Agency",
+    default: "Numen — Digital Product Studio",
+    template: "%s | Numen",
   },
   description:
-    "Boutique digital product studio from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools with Next.js, TypeScript, and Supabase.",
+    "Numen is a boutique digital product studio from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools with Next.js, TypeScript, and Supabase.",
   keywords: [
     "digital product studio",
     "web development agency",
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
     "full-stack development",
     "Supabase",
   ],
-  authors: [{ name: "Numen Agency", url: BASE_URL }],
-  creator: "Numen Agency",
-  publisher: "Numen Agency",
+  authors: [{ name: "Numen", url: BASE_URL }],
+  creator: "Numen",
+  publisher: "Numen",
   robots: {
     index: true,
     follow: true,
@@ -56,11 +56,11 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "Numen Agency — Digital Product Studio",
+    title: "Numen — Digital Product Studio",
     description:
       "Boutique digital product studio. Full-stack apps, product design, and AI integration from El Salvador.",
     url: BASE_URL,
-    siteName: "Numen Agency",
+    siteName: "Numen",
     type: "website",
     locale: "en_US",
     images: [
@@ -68,13 +68,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Numen Agency — Digital Product Studio",
+        alt: "Numen — Digital Product Studio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Numen Agency — Digital Product Studio",
+    title: "Numen — Digital Product Studio",
     description:
       "Boutique digital product studio. Full-stack apps, product design, and AI integration.",
     images: ["/og.png"],

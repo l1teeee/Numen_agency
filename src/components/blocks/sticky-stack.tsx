@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useScroll, useTransform, MotionValue } from 'framer-motion'
 import {
   ServicesSection,
@@ -29,14 +29,25 @@ function useBlurStyle(
 
 const TOTAL = 8
 
-// blur starts when next section covers ~48% of viewport, ends at ~96%
 function r(k: number): [number, number] {
   const base = (k - 1) / TOTAL
   return [base + 0.06, base + 0.12]
 }
 
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false)
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isDesktop
+}
+
 export function StickyStack() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const isDesktop = useIsDesktop()
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -51,15 +62,19 @@ export function StickyStack() {
   const b6 = useBlurStyle(scrollYProgress, ...r(6))
   const b7 = useBlurStyle(scrollYProgress, ...r(7))
 
+  const blur = isDesktop
+    ? { b1, b2, b3, b4, b5, b6, b7 }
+    : { b1: undefined, b2: undefined, b3: undefined, b4: undefined, b5: undefined, b6: undefined, b7: undefined }
+
   return (
     <div ref={containerRef} style={{ height: `${TOTAL * 100}vh` }}>
-      <ServicesSection blurStyle={b1} />
-      <ProjectsSection blurStyle={b2} />
-      <AboutSection blurStyle={b3} />
-      <TestimonialsSection blurStyle={b4} />
-      <TechStackSection blurStyle={b5} />
-      <ProcessSection blurStyle={b6} />
-      <FAQSection blurStyle={b7} />
+      <ServicesSection blurStyle={blur.b1} />
+      <ProjectsSection blurStyle={blur.b2} />
+      <AboutSection blurStyle={blur.b3} />
+      <TestimonialsSection blurStyle={blur.b4} />
+      <TechStackSection blurStyle={blur.b5} />
+      <ProcessSection blurStyle={blur.b6} />
+      <FAQSection blurStyle={blur.b7} />
       <ContactFormSection />
     </div>
   )

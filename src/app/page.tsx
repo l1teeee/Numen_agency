@@ -6,12 +6,12 @@ import { ChatBubble } from "@/components/ui/chat-bubble";
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Numen Agency",
-  url: "https://numenagency.com",
-  logo: "https://numenagency.com/favicon.png",
-  email: "hola@numenagency.com",
+  name: "Numen",
+  url: "https://delta-numen.com",
+  logo: "https://delta-numen.com/favicon.png",
+  email: "contact@delta-numen.com",
   description:
-    "Boutique digital product studio from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools.",
+    "Numen is a boutique digital product studio from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools.",
   foundingDate: "2024",
   areaServed: "Worldwide",
   address: {
@@ -53,11 +53,6 @@ const jsonLd = {
       { "@type": "Offer", itemOffered: { "@type": "Service", name: "Digital Strategy" } },
     ],
   },
-  sameAs: [
-    "https://twitter.com/numenagency",
-    "https://linkedin.com/company/numenagency",
-    "https://github.com/numenagency",
-  ],
 };
 
 export default function Home() {

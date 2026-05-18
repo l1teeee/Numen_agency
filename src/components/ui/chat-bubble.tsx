@@ -64,7 +64,7 @@ export function ChatBubble() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Something went wrong. Email us at hola@numenagency.com.' },
+        { role: 'assistant', content: 'Something went wrong. Email us at contact@delta-numen.com.' },
       ])
     } finally {
       setLoading(false)
@@ -91,7 +91,7 @@ export function ChatBubble() {
   const showSuggestions = messages.length === 1 && !loading
 
   return (
-    <div ref={containerRef} className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div ref={containerRef} className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
       <AnimatePresence>
         {open && (
           <motion.div

@@ -90,8 +90,7 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 overflow-hidden"
           variants={staggerContainer}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+          animate={isInView ? "visible" : "hidden"}
         >
           {services.map((s, i) => (
             <motion.div
@@ -105,14 +104,14 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 alt={s.title}
                 loading="lazy"
                 style={{ objectPosition: 'center 18%' }}
-                className="absolute inset-0 h-full w-full object-contain scale-[0.82] origin-top transition-transform duration-700 group-hover:scale-[0.87] invert brightness-[0.88] dark:invert-0 dark:brightness-100"
+                className="absolute inset-0 h-full w-full object-contain scale-[0.82] origin-top transition-transform duration-700 group-hover:scale-[0.87] invert brightness-[0.88] dark:invert-0 dark:brightness-100 hidden sm:block"
               />
 
               {/* gradient: transparent top → soft mid */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background/20" />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background/20 hidden sm:block" />
 
               {/* strong gradient behind text area only */}
-              <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-background via-background/90 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-background via-background/90 to-transparent hidden sm:block" />
 
               {/* content overlay */}
               <div className="relative z-10 flex h-full flex-col justify-between p-5">
@@ -139,7 +138,7 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 const projects = [
   {
     name: 'VieLinks',
-    category: 'Platform · 2024',
+    category: 'Platform · 2026',
     desc: 'Your entire online presence, one link. VieLinks lets digital professionals centralize their portfolio, social profiles, and work history into a single shareable page — clean, fast, and fully customizable.',
     stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'],
     href: 'https://vielinks.com',
@@ -182,8 +181,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           className="mt-6 flex flex-1 flex-col gap-3 lg:mb-24 lg:flex-row"
           variants={staggerContainer}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+          animate={isInView ? "visible" : "hidden"}
         >
           <motion.div variants={staggerItem} className="flex flex-col flex-none lg:flex-1 lg:flex-[3]">
             <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col justify-between rounded-2xl bg-background p-6 ring-1 ring-foreground/[0.08]">
@@ -191,7 +189,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{
-                  background: 'linear-gradient(to right, #d394ff, #f0dcff, #c97cff)',
+                  background: 'linear-gradient(to right, #C8553A, #e8896e, #C8553A)',
                   WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                   WebkitMaskComposite: 'xor',
                   mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -212,7 +210,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                     )}
                   </div>
                 </div>
-                <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#d394ff]" />
+                <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
               </div>
               {/* Desktop only: photo spread */}
               <div className="hidden lg:flex items-center justify-center">
@@ -289,14 +287,14 @@ const team = [
     name: 'Julian Mendez',
     role: 'Full-Stack Developer & Co-founder',
     desc: 'Leads architecture, backend systems, and infrastructure. Obsessed with clean code, performance, and shipping products that actually scale.',
-    linkedin: 'https://linkedin.com/in/julianmendez',
+    linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/',
   },
   {
     initials: 'IR',
     name: 'Igmer Rodriguez',
     role: 'Full-Stack Developer & Co-founder',
     desc: 'Drives frontend engineering and product design. Turns complex UX challenges into fast, accessible, pixel-perfect interfaces.',
-    linkedin: 'https://linkedin.com/in/igmerrodriguez',
+    linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/',
   },
 ]
 
@@ -320,7 +318,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 <span className="text-foreground/25">great digital products.</span>
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-foreground/40">
-                Numen Agency was founded with one mission: build digital products that actually work.
+                Numen was founded with one mission: build digital products that actually work.
                 We combine design thinking with engineering precision to deliver software that scales
                 and experiences that people love.
               </p>
@@ -484,8 +482,7 @@ export function TestimonialsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2"
             variants={staggerContainer}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.05 }}
+            animate={isInView ? "visible" : "hidden"}
           >
             {testimonials.map((t) => (
               <motion.div key={t.name} variants={staggerItem} className="flex flex-col gap-3 rounded-2xl border border-foreground/[0.08] p-4">
@@ -532,20 +529,20 @@ export function TestimonialsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 // ─── Tech Stack ──────────────────────────────────────────────
 const stackCategories = [
   {
-    label: 'Frontend',
+    capability: 'UI Layer',
     items: [
       { name: 'Next.js', icon: 'nextdotjs' },
       { name: 'React', icon: 'react' },
       { name: 'TypeScript', icon: 'typescript' },
       { name: 'Tailwind CSS', icon: 'tailwindcss' },
-      { name: 'Vite', icon: 'vite' },
       { name: 'Framer Motion', icon: 'framer' },
       { name: 'GSAP', icon: 'greensock' },
+      { name: 'Vite', icon: 'vite' },
       { name: 'Radix UI', icon: 'radixui' },
     ],
   },
   {
-    label: 'Backend & DB',
+    capability: 'Data',
     items: [
       { name: 'Node.js', icon: 'nodedotjs' },
       { name: 'Supabase', icon: 'supabase' },
@@ -555,26 +552,26 @@ const stackCategories = [
     ],
   },
   {
-    label: 'Payments & AI',
+    capability: 'Intelligence',
     items: [
-      { name: 'Stripe', icon: 'stripe' },
-      { name: 'PayPal', icon: 'paypal' },
       { name: 'OpenAI', icon: 'openai' },
       { name: 'Anthropic', icon: 'anthropic' },
     ],
   },
   {
-    label: 'Design',
+    capability: 'Revenue',
     items: [
-      { name: 'Figma', icon: 'figma' },
+      { name: 'Stripe', icon: 'stripe' },
+      { name: 'PayPal', icon: 'paypal' },
     ],
   },
   {
-    label: 'DevOps & Tools',
+    capability: 'Workflow',
     items: [
       { name: 'Vercel', icon: 'vercel' },
       { name: 'GitHub', icon: 'github' },
       { name: 'Docker', icon: 'docker' },
+      { name: 'Figma', icon: 'figma' },
       { name: 'Notion', icon: 'notion' },
       { name: 'Linear', icon: 'linear' },
     ],
@@ -584,58 +581,58 @@ const stackCategories = [
 export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
+
+  const uiLayer = stackCategories.find((c) => c.capability === 'UI Layer')!
+  const data = stackCategories.find((c) => c.capability === 'Data')!
+
   return (
     <section ref={ref} id="stack" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
+
+        {/* Section label */}
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
         </div>
 
-        <div className="mt-6 grid flex-1 grid-cols-1 gap-8 lg:grid-cols-2">
-          <motion.div {...fadeUp(0.05)}>
-            <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
-              Tools we trust<br />
-              <span className="text-foreground/25">to build with.</span>
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-foreground/40">
-              We carefully select every tool for reliability, developer experience, and long-term
-              scalability. No hype — only tools that actually deliver in production.
-            </p>
-          </motion.div>
+        {/* Headline */}
+        <motion.h2 {...fadeUp(0.05)} className="mt-8 text-3xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
+          Tools we trust<br />
+          <span className="text-foreground/25">to build with.</span>
+        </motion.h2>
 
-          <motion.div
-            className="space-y-4 overflow-hidden"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-          >
-            {stackCategories.map((cat) => (
-              <motion.div key={cat.label} variants={staggerItem}>
-                <span className="mb-2 block text-xs uppercase tracking-widest text-foreground/25">
-                  {cat.label}
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {cat.items.map((item) => (
-                    <span
-                      key={item.name}
-                      className="flex items-center gap-2 rounded-2xl border border-foreground/[0.08] px-3 py-1.5 transition-colors duration-200 hover:border-foreground/[0.16]"
-                    >
-                      <img
-                        src={`https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/${item.icon}.svg`}
-                        alt={item.name}
-                        loading="lazy"
-                      className="h-3 w-3 dark:invert opacity-60"
-                      />
-                      <span className="text-xs text-foreground/60">{item.name}</span>
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+        {/* Two columns: UI Layer | Data */}
+        <motion.div
+          className="mt-8 grid flex-1 grid-cols-1 gap-6 overflow-hidden lg:mb-20 lg:mt-10 lg:grid-cols-2 lg:gap-10"
+          variants={staggerContainer}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+        >
+          {[uiLayer, data].map((cat) => (
+            <motion.div key={cat.capability} variants={staggerItem} className="flex flex-col">
+              <span className="mb-4 text-[9px] font-medium uppercase tracking-widest text-foreground/30">
+                {cat.capability}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {cat.items.map((item) => (
+                  <span
+                    key={item.name}
+                    className="flex items-center gap-2 rounded-xl border border-foreground/8 bg-foreground/2 px-3 py-2.5 text-xs text-foreground/50 transition-all duration-200 hover:border-foreground/18 hover:bg-foreground/4 hover:text-foreground/80"
+                  >
+                    <img
+                      src={`https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/${item.icon}.svg`}
+                      alt=""
+                      loading="lazy"
+                      className="h-3.5 w-3.5 opacity-60 dark:invert"
+                    />
+                    {item.name}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
       </motion.div>
     </section>
   )
@@ -665,8 +662,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           className="mt-6 grid flex-1 grid-cols-2 gap-2 overflow-hidden lg:grid-cols-3 lg:[grid-template-rows:repeat(3,minmax(0,1fr))]"
           variants={staggerContainer}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+          animate={isInView ? "visible" : "hidden"}
         >
           {/* 01 Discovery — full width mobile, cols 1-2 row 1 desktop */}
           <motion.div
@@ -764,7 +760,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 // ─── FAQ ─────────────────────────────────────────────────────
 const faqs = [
   {
-    q: 'What does Numen Agency do?',
+    q: 'What does Numen do?',
     a: 'We are a boutique digital product studio that designs and builds full-stack web applications, SaaS products, and AI-powered tools. From zero-to-one MVPs to production-grade platforms — we handle design, development, and strategy end to end.',
   },
   {
@@ -789,7 +785,7 @@ const faqs = [
   },
   {
     q: 'How do I start a project with you?',
-    a: "Fill out the contact form below or email hola@numenagency.com. We'll schedule a 30-minute discovery call to understand your goals, then send a detailed proposal within a few days.",
+    a: "Fill out the contact form below or email contact@delta-numen.com. We'll schedule a 30-minute discovery call to understand your goals, then send a detailed proposal within a few days.",
   },
 ]
 
@@ -831,8 +827,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             style={{ scrollbarWidth: 'none' }}
             variants={staggerContainer}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
+            animate={isInView ? "visible" : "hidden"}
           >
             {faqs.map((faq, i) => (
               <motion.div key={i} variants={staggerItem} className="border-b border-foreground/[0.06]">
@@ -871,7 +866,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
 // ─── Contact Form + Footer ───────────────────────────────────
 const infoItems = [
-  { label: 'Email', value: 'hola@numenagency.com' },
+  { label: 'Email', value: 'contact@delta-numen.com' },
   { label: 'Based in', value: 'El Salvador · Remote worldwide' },
   { label: 'Availability', value: 'Open to new projects' },
 ]
@@ -933,8 +928,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
               className="space-y-3"
               variants={staggerContainer}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
+              animate={isInView ? "visible" : "hidden"}
             >
               {infoItems.map((item) => (
                 <motion.div
@@ -1033,7 +1027,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
 
                 {status === 'error' && (
                   <p className="text-center text-xs text-red-400/70">
-                    Something went wrong. Please try again or email us directly.
+                    Something went wrong. Please try again or email us at contact@delta-numen.com.
                   </p>
                 )}
                 <Button
@@ -1049,7 +1043,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
           </motion.div>
         </div>
         <div className="mt-3 shrink-0 flex flex-col items-center justify-between gap-2 border-t border-foreground/[0.08] py-4 sm:flex-row">
-          <span className="text-xs text-foreground/20">© 2025 Numen Agency. All rights reserved.</span>
+          <span className="text-xs text-foreground/20">© 2025 Numen. All rights reserved.</span>
           <div className="flex gap-5">
             {['Twitter', 'Instagram', 'LinkedIn', 'GitHub'].map((s) => (
               <Link key={s} href="#" className="text-xs text-foreground/20 transition-colors duration-150 hover:text-foreground/60">{s}</Link>
@@ -1065,7 +1059,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-foreground/[0.08] bg-background">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-6 sm:flex-row lg:px-8">
-        <span className="text-xs text-foreground/20">© 2025 Numen Agency. All rights reserved.</span>
+        <span className="text-xs text-foreground/20">© 2025 Numen. All rights reserved.</span>
         <div className="flex gap-6">
           {['Twitter', 'Instagram', 'LinkedIn', 'GitHub'].map((s) => (
             <Link

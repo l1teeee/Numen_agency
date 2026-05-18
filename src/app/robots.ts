@@ -25,7 +25,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://numenagency.com/sitemap.xml',
-    host: 'https://numenagency.com',
+    sitemap: 'https://delta-numen.com/sitemap.xml',
+    host: 'https://delta-numen.com',
   }
 }

@@ -36,7 +36,7 @@ export function HeroSection() {
           {...enter(0.1)}
           className="mb-8 text-xs uppercase tracking-[0.3em] text-foreground/25"
         >
-          Numen Agency
+          Numen
         </motion.span>
 
         <motion.h1

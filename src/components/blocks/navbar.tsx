@@ -9,13 +9,18 @@ import { AnimatedThemeToggle } from '@/components/ui/animated-theme-toggle'
 const EASE = [0.22, 1, 0.36, 1] as const
 
 const links = [
-  { label: 'Services', href: '#services' },
-  { label: 'Work',     href: '#work'     },
-  { label: 'About',   href: '#about'    },
-  { label: 'Stack',   href: '#stack'    },
+  { label: 'Services',     href: '#services'     },
+  { label: 'Work',         href: '#work'         },
+  { label: 'About',        href: '#about'        },
+  { label: 'Testimonials', href: '#testimonials' },
+  { label: 'Stack',        href: '#stack'        },
+  { label: 'Process',      href: '#process'      },
+  { label: 'FAQ',          href: '#faq'          },
 ]
 
-const allIds = [...links.map((l) => l.href.slice(1)), 'contact']
+const contactLink = { label: "Let's Talk", href: '#contact' }
+const allLinks = [...links, contactLink]
+const allIds = allLinks.map((l) => l.href.slice(1))
 
 export function Navbar() {
   const [open,    setOpen]    = useState(false)
@@ -60,11 +65,11 @@ export function Navbar() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
           transition={{ duration: 0.35, ease: EASE }}
-          className="fixed top-5 left-1/2 z-50 -translate-x-1/2"
+          className="fixed top-5 left-1/2 z-[100] -translate-x-1/2"
         >
           {/* Desktop */}
-          <div className="hidden items-center gap-1 rounded-full border border-foreground/[0.08] bg-background/70 px-2 py-2 backdrop-blur-xl sm:flex">
-            <span className="px-4 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40">
+          <div className="hidden items-center gap-1 rounded-full border border-foreground/[0.08] bg-background/70 px-2 py-2 backdrop-blur-xl lg:flex">
+            <span className="px-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40">
               Numen
             </span>
             <div className="mx-1 h-3.5 w-px bg-foreground/[0.08]" />
@@ -74,7 +79,7 @@ export function Navbar() {
                   key={l.href}
                   href={l.href}
                   onClick={(e) => scrollTo(e, l.href)}
-                  className={`px-4 py-2 text-xs transition-colors duration-200 hover:text-foreground ${
+                  className={`px-3 py-2 text-xs transition-colors duration-200 hover:text-foreground ${
                     active === l.href ? 'text-foreground' : 'text-foreground/40'
                   }`}
                 >
@@ -85,16 +90,18 @@ export function Navbar() {
             <div className="mx-1 h-3.5 w-px bg-foreground/[0.08]" />
             <AnimatedThemeToggle className="mr-1" />
             <a
-              href="#contact"
-              onClick={(e) => scrollTo(e, '#contact')}
-              className="rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background transition-opacity duration-200 hover:opacity-80"
+              href={contactLink.href}
+              onClick={(e) => scrollTo(e, contactLink.href)}
+              className={`rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background transition-opacity duration-200 hover:opacity-80 ${
+                active === contactLink.href ? 'opacity-100' : 'opacity-90'
+              }`}
             >
-              Let&apos;s Talk
+              {contactLink.label}
             </a>
           </div>
 
           {/* Mobile */}
-          <div className="relative flex sm:hidden">
+          <div className="relative flex lg:hidden">
             <div className="flex items-center gap-3 rounded-full border border-foreground/[0.08] bg-background/70 px-4 py-2.5 backdrop-blur-xl">
               <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40">
                 Numen
@@ -118,7 +125,7 @@ export function Navbar() {
                   transition={{ duration: 0.2, ease: EASE }}
                   className="absolute left-1/2 top-full mt-2 w-44 -translate-x-1/2 rounded-2xl border border-foreground/[0.08] bg-background/80 p-1.5 backdrop-blur-xl"
                 >
-                  {[...links, { label: "Let's Talk", href: '#contact' }].map((l) => (
+                  {allLinks.map((l) => (
                     <a
                       key={l.href}
                       href={l.href}
