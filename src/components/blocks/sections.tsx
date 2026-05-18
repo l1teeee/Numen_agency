@@ -330,8 +330,8 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <div className="grid h-full grid-cols-2 grid-rows-2 gap-3">
               {[
                 { value: '10+', label: 'Projects delivered' },
-                { value: '3+', label: 'Years of experience' },
-                { value: '2', label: 'Products live in production' },
+                { value: '10+', label: 'Years of experience' },
+                { value: '3', label: 'Products live in production' },
                 { value: '24h', label: 'Max response time' },
               ].map((stat, i) => (
                 <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="flex flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-6 text-center transition-colors duration-200 hover:border-foreground/[0.18] hover:bg-foreground/[0.02]">
