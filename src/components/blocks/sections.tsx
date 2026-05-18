@@ -450,35 +450,29 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
 
-  const uiLayer = stackCategories.find((c) => c.capability === 'UI Layer')!
-  const data = stackCategories.find((c) => c.capability === 'Data')!
-
   return (
     <section ref={ref} id="stack" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
 
-        {/* Section label */}
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
           <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
           <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </div>
 
-        {/* Headline */}
         <motion.h2 {...fadeUp(0.05)} className="mt-8 text-3xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
           Tools we trust<br />
           <span className="text-foreground/25">to build with.</span>
         </motion.h2>
 
-        {/* Two columns: UI Layer | Data */}
         <motion.div
-          className="mt-8 grid flex-1 grid-cols-1 gap-6 overflow-hidden lg:mb-20 lg:mt-10 lg:grid-cols-2 lg:gap-10"
+          className="mt-8 grid grid-cols-1 gap-6 overflow-auto lg:mb-20 lg:mt-10 lg:grid-cols-2 lg:gap-8"
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {[uiLayer, data].map((cat) => (
+          {stackCategories.map((cat) => (
             <motion.div key={cat.capability} variants={staggerItem} className="flex flex-col">
-              <span className="mb-4 text-[9px] font-medium uppercase tracking-widest text-foreground/30">
+              <span className="mb-3 text-[9px] font-medium uppercase tracking-widest text-foreground/30">
                 {cat.capability}
               </span>
               <div className="flex flex-wrap gap-2">
