@@ -285,15 +285,15 @@ const team = [
   {
     initials: 'JM',
     name: 'Julian Mendez',
-    role: 'Full-Stack Developer & Co-founder',
-    desc: 'Leads architecture, backend systems, and infrastructure. Obsessed with clean code, performance, and shipping products that actually scale.',
+    role: 'Software Engineer & Founder',
+    desc: 'Founder of Numen. Leads product vision, design direction, and project execution — from concept to launch.',
     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/',
   },
   {
     initials: 'IR',
     name: 'Igmer Rodriguez',
-    role: 'Full-Stack Developer & Co-founder',
-    desc: 'Drives frontend engineering and product design. Turns complex UX challenges into fast, accessible, pixel-perfect interfaces.',
+    role: 'Software Engineer & Co-founder',
+    desc: 'Handles domain services, infrastructure, and deployment. Keeps the systems running so the products can ship.',
     linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/',
   },
 ]

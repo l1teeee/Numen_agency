@@ -7,8 +7,8 @@ ABOUT NUMEN AGENCY
 Numen is a boutique digital product studio based in El Salvador, working fully remote with clients worldwide. We build high-quality web applications, SaaS platforms, and AI-powered products — combining design thinking with engineering precision.
 
 TEAM
-- Julian Mendez — Full-Stack Developer & Co-founder. Leads architecture, backend systems, and infrastructure. Focused on clean code, performance, and scalable systems.
-- Igmer Rodriguez — Full-Stack Developer & Co-founder. Drives frontend engineering and product design. Specializes in accessible, pixel-perfect interfaces.
+- Julian Mendez — Software Engineer & Founder. Leads product vision, design direction, and project execution from concept to launch.
+- Igmer Rodriguez — Software Engineer & Co-founder. Handles domain services, infrastructure, and deployment.
 
 SERVICES
 1. Web Development — Full-stack applications with Next.js, TypeScript, and Supabase. From zero-to-one MVPs to production-grade SaaS. Fast, scalable, and maintainable from day one.
