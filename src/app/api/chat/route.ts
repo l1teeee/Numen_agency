@@ -75,12 +75,8 @@ export async function POST(req: NextRequest) {
     messages: Array<{ role: 'user' | 'assistant'; content: string }>
   }
 
-  const hasKey = !!process.env.NUMEN_OPENAI_KEY
-  const hasModel = !!process.env.NUMEN_OPENAI_MODEL
-  console.log('[chat] env:', { hasKey, hasModel, keys: Object.keys(process.env).filter(k => k.startsWith('NUMEN')) })
-
-  if (!hasKey || !hasModel) {
-    return NextResponse.json({ error: 'AI not configured', debug: { hasKey, hasModel } }, { status: 500 })
+  if (!process.env.NUMEN_OPENAI_KEY || !process.env.NUMEN_OPENAI_MODEL) {
+    return NextResponse.json({ error: 'AI not configured' }, { status: 500 })
   }
 
   const lastUserMessage = messages.findLast((m) => m.role === 'user')
@@ -97,7 +93,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const completion = await client.chat.completions.create({
-      model: process.env.NUMEN_OPENAI_MODEL as string,
+      model: process.env.NUMEN_OPENAI_MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         ...messages,
