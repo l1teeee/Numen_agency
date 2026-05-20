@@ -56,14 +56,14 @@ export function HeroSection() {
           {...enter(0.2)}
           className="max-w-3xl text-5xl font-semibold tracking-tight text-foreground md:text-6xl lg:text-7xl"
         >
-          We Build Digital Products
+          From Idea to Production in Weeks.
         </motion.h1>
 
         <motion.p
           {...enter(0.32)}
           className="mt-5 max-w-md text-base leading-relaxed text-foreground/40"
         >
-          Design-driven development for startups and founders that demand excellence. We turn ideas into products people actually use.
+          Numen is a digital product studio from El Salvador. We build full-stack apps, SaaS platforms, and AI-powered tools — with the speed of a startup and the craft of a senior team.
         </motion.p>
 
         <motion.div {...enter(0.44)} className="mt-10 flex items-center gap-3">

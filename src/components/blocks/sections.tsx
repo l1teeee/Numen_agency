@@ -319,6 +319,7 @@ const team = [
     role: 'Software Engineer & Founder',
     desc: 'Founder of Numen. Leads product vision, design direction, and project execution — from concept to launch.',
     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/',
+    img: '/team/julian.jpg',
   },
   {
     initials: 'IR',
@@ -326,6 +327,7 @@ const team = [
     role: 'Software Engineer & Co-founder',
     desc: 'Handles domain services, infrastructure, and deployment. Keeps the systems running so the products can ship.',
     linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/',
+    img: '/team/igmer.jpg',
   },
 ]
 
@@ -386,8 +388,16 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   {...LIFT}
                   className="flex flex-col rounded-2xl border border-foreground/8 p-4 transition-colors duration-200 hover:border-foreground/16"
                 >
-                  <div className="mb-3 flex h-20 w-full items-end justify-end overflow-hidden rounded-xl bg-foreground/[0.04] p-2">
-                    <span className="select-none text-4xl font-bold text-foreground/[0.07]">{member.initials}</span>
+                  {member.img ? (
+                    <img
+                      src={member.img}
+                      alt={member.name}
+                      className="mb-3 h-20 w-full rounded-xl object-cover object-top"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; (e.currentTarget.nextElementSibling as HTMLElement | null)?.style.setProperty('display', 'flex') }}
+                    />
+                  ) : null}
+                  <div className={`mb-3 flex h-20 w-full items-center justify-center rounded-xl bg-linear-to-br from-foreground/8 to-foreground/4${member.img ? ' hidden' : ''}`}>
+                    <span className="select-none text-2xl font-bold text-foreground/20">{member.initials}</span>
                   </div>
                   <p className="text-sm font-semibold text-foreground">{member.name}</p>
                   <p className="mt-0.5 text-[10px] text-foreground/30">{member.role}</p>
@@ -522,7 +532,7 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                     className="flex items-center gap-2 rounded-xl border border-foreground/8 bg-foreground/2 px-3 py-2.5 text-xs text-foreground/50 transition-all duration-200 hover:border-foreground/18 hover:bg-foreground/4 hover:text-foreground/80"
                   >
                     <img
-                      src={`https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/${item.icon}.svg`}
+                      src={`/icons/${item.icon}.svg`}
                       alt=""
                       loading="lazy"
                       className="h-3.5 w-3.5 opacity-60 dark:invert"
@@ -707,7 +717,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 const faqs = [
   {
     q: 'What does Numen do?',
-    a: 'We are a boutique digital product studio that designs and builds full-stack web applications, SaaS products, and AI-powered tools. From zero-to-one MVPs to production-grade platforms — we handle design, development, and strategy end to end.',
+    a: 'Numen is a digital product agency that designs and builds full-stack web applications, SaaS platforms, and AI-powered tools. We work end to end — from discovery and design to development and launch.',
   },
   {
     q: 'How much does a project cost?',
@@ -916,10 +926,11 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
               <form onSubmit={submit} className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-foreground/30">Name *</label>
+                    <label htmlFor="name" className="text-xs text-foreground/30">Name *</label>
                     <div className="relative">
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
                       <input
+                        id="name"
                         name="name"
                         required
                         value={form.name}
@@ -930,10 +941,11 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs text-foreground/30">Email *</label>
+                    <label htmlFor="email" className="text-xs text-foreground/30">Email *</label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
                       <input
+                        id="email"
                         name="email"
                         type="email"
                         required
@@ -947,7 +959,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs text-foreground/30">Budget range</label>
+                  <label htmlFor="budget" className="text-xs text-foreground/30">Budget range</label>
                   <div className="relative">
                     <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
                     <SelectCustom
@@ -962,10 +974,11 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs text-foreground/30">Tell us about your project *</label>
+                  <label htmlFor="message" className="text-xs text-foreground/30">Tell us about your project *</label>
                   <div className="relative">
                     <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
                     <textarea
+                      id="message"
                       name="message"
                       required
                       rows={3}
@@ -995,7 +1008,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
           </motion.div>
         </div>
         <div className="mt-3 shrink-0 flex items-center border-t border-foreground/8 py-4">
-          <span className="text-xs text-foreground/20">© 2025 Numen. All rights reserved.</span>
+          <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen. All rights reserved.</span>
         </div>
       </motion.div>
     </section>
@@ -1006,7 +1019,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-foreground/[0.08] bg-background">
       <div className="mx-auto flex max-w-5xl items-center px-6 py-6 lg:px-8">
-        <span className="text-xs text-foreground/20">© 2025 Numen. All rights reserved.</span>
+        <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen. All rights reserved.</span>
       </div>
     </footer>
   )
