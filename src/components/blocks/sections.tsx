@@ -613,7 +613,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           {/* 01 Discovery — cols 1-2 row 1 desktop */}
           <motion.div
             variants={staggerItem}
-            className="col-span-2 group flex min-h-[6rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
+            className="col-span-2 group flex min-h-[6rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:flex-row lg:min-h-0 lg:col-start-1 lg:col-end-3 lg:row-start-1"
           >
             <div className="flex flex-1 flex-col justify-between p-4 lg:p-5 lg:w-1/2 lg:flex-none">
               <span className="text-[10px] font-medium text-foreground/30">01</span>
@@ -632,7 +632,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           {/* 02 Design — col 3 rows 1-2 desktop */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
+            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:min-h-0 lg:col-start-3 lg:row-start-1 lg:row-end-3"
           >
             <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[4]">
               <img src="/ux.png" alt="Design" loading="lazy"
@@ -649,7 +649,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           {/* 03 Build — col 2 row 2 desktop */}
           <motion.div
             variants={staggerItem}
-            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
+            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:min-h-0 lg:col-start-2 lg:row-start-2"
           >
             <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[3]">
               <img src="/build.png" alt="Build" loading="lazy"
@@ -665,7 +665,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           {/* 04 Launch — col 1 rows 2-3 desktop */}
           <motion.div
             variants={staggerItem}
-            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:mb-14 lg:min-h-0 lg:flex-col lg:[grid-column-start:1] lg:[grid-column-end:2] lg:[grid-row-start:2] lg:[grid-row-end:4]"
+            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:mb-14 lg:min-h-0 lg:flex-col lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-4"
           >
             <div className="relative w-2/5 overflow-hidden lg:w-auto lg:min-h-0 lg:flex-[4]">
               <img src="/launch.png" alt="Launch" loading="lazy"
@@ -682,7 +682,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           {/* 05 Scale — cols 2-3 row 3 desktop */}
           <motion.div
             variants={staggerItem}
-            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:mb-14 lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
+            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:mb-14 lg:min-h-0 lg:col-start-2 lg:col-end-4 lg:row-start-3"
           >
             <div className="relative w-2/5 overflow-hidden lg:h-auto lg:w-2/5">
               <img src="/scale.png" alt="Scale" loading="lazy"
