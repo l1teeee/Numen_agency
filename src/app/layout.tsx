@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Numen",
   },
   description:
-    "Numen is a boutique digital product studio from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools with Next.js, TypeScript, and Supabase.",
+    "Numen is a digital product agency from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools with Next.js, TypeScript, and Supabase.",
   keywords: [
     "digital product studio",
     "web development agency",
@@ -51,14 +51,17 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.png",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png" },
+    ],
     shortcut: "/favicon.png",
     apple: "/favicon.png",
   },
   openGraph: {
     title: "Numen — Digital Product Studio",
     description:
-      "Boutique digital product studio. Full-stack apps, product design, and AI integration from El Salvador.",
+      "Digital product agency from El Salvador. Full-stack apps, product design, and AI integration.",
     url: BASE_URL,
     siteName: "Numen",
     type: "website",
@@ -76,7 +79,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Numen — Digital Product Studio",
     description:
-      "Boutique digital product studio. Full-stack apps, product design, and AI integration.",
+      "Digital product agency from El Salvador. Full-stack apps, product design, and AI integration.",
     images: ["/og.png"],
   },
   alternates: {
