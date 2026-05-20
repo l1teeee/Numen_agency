@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, type LucideIcon } from 'lucide-react'
@@ -13,25 +13,30 @@ interface BlurStyle { filter: MotionValue<string> }
 const EASE = [0.22, 1, 0.36, 1] as const
 
 const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 60, scale: 0.97 },
+  initial: { opacity: 0, y: 20, scale: 0.97 },
   whileInView: { opacity: 1, y: 0, scale: 1 },
   viewport: { once: true, amount: 0.08 },
-  transition: { type: 'spring' as const, stiffness: 60, damping: 14, delay },
+  transition: { type: 'spring' as const, stiffness: 150, damping: 22, delay },
 })
 
 const staggerContainer = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.2, delayChildren: 0.12 } },
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
 }
 
 const staggerItem = {
-  hidden: { opacity: 0, y: 60, scale: 0.97 },
+  hidden: { opacity: 0, y: 20, scale: 0.97 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { type: 'spring' as const, stiffness: 60, damping: 14 },
+    transition: { type: 'spring' as const, stiffness: 150, damping: 22 },
   },
+}
+
+const LIFT = {
+  whileHover: { y: -4, transition: { type: 'spring' as const, stiffness: 400, damping: 25 } },
+  whileTap: { scale: 0.98, transition: { duration: 0.1 } },
 }
 
 const blurLeave = {
@@ -43,6 +48,24 @@ const blurLeave = {
 
 const INPUT =
   'w-full rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] px-4 py-3 text-sm text-foreground placeholder:text-foreground/20 focus:border-foreground/20 focus:outline-none transition-colors duration-200'
+
+function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.5 })
+  const [val, setVal] = useState(0)
+  useEffect(() => {
+    if (!inView) return
+    const start = performance.now()
+    const dur = 1400
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / dur, 1)
+      setVal(Math.round((1 - (1 - p) ** 3) * to))
+      if (p < 1) requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  }, [inView, to])
+  return <span ref={ref}>{val}{suffix}</span>
+}
 
 // ─── Services ────────────────────────────────────────────────
 const services = [
@@ -83,7 +106,10 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
     <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What We Do</span>
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What We Do</span>
+          </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>02</span>
         </div>
         <motion.div
@@ -96,6 +122,7 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div
               key={s.num}
               variants={staggerItem}
+              {...LIFT}
               className={`group relative overflow-hidden rounded-2xl border border-foreground/[0.08] transition-colors duration-300 hover:border-foreground/[0.14]${i >= 2 ? ' lg:mb-14' : ''}`}
             >
               {/* full-card background image */}
@@ -174,7 +201,10 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
     <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Selected Work</span>
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Selected Work</span>
+          </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
         </div>
         <motion.div
@@ -184,7 +214,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
-          <motion.div variants={staggerItem} className="flex flex-col flex-none lg:flex-1 lg:flex-[3]">
+          <motion.div variants={staggerItem} {...LIFT} className="flex flex-col flex-none lg:flex-3">
             <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:justify-between lg:gap-0 lg:p-6">
               {/* gradient ring on hover — CSS mask creates a hollow 1px donut */}
               <div
@@ -239,7 +269,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           </motion.div>
           <motion.div variants={staggerContainer} className="flex flex-col gap-2 lg:flex-[2]">
             {rest.map((p, i) => (
-              <motion.div key={p.name} variants={staggerItem} className="flex-1">
+              <motion.div key={p.name} variants={staggerItem} {...LIFT} className="flex-1">
                 <Link href={p.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
                   <div className="flex items-start justify-between">
                     <div>
@@ -306,7 +336,10 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
     <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>About Numen</span>
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>About Numen</span>
+          </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
         </div>
 
@@ -330,13 +363,13 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
             <div className="grid h-full grid-cols-2 grid-rows-2 gap-3">
               {[
-                { value: '10+', label: 'Projects delivered' },
-                { value: '10+', label: 'Years of experience' },
-                { value: '3', label: 'Products live in production' },
-                { value: '24h', label: 'Max response time' },
+                { to: 10, suffix: '+', label: 'Projects delivered' },
+                { to: 10, suffix: '+', label: 'Years of experience' },
+                { to: 3,  suffix: '',  label: 'Products live in production' },
+                { to: 24, suffix: 'h', label: 'Max response time' },
               ].map((stat, i) => (
-                <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="flex flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-3 text-center transition-colors duration-200 hover:border-foreground/[0.18] hover:bg-foreground/[0.02] lg:p-6">
-                  <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} {...LIFT} className="flex flex-col items-center justify-center rounded-2xl border border-foreground/8 p-3 text-center transition-colors duration-200 hover:border-foreground/18 hover:bg-foreground/2 lg:p-6">
+                  <p className="text-3xl font-bold text-foreground"><CountUp to={stat.to} suffix={stat.suffix} /></p>
                   <p className="mt-1 text-xs text-foreground/40">{stat.label}</p>
                 </motion.div>
               ))}
@@ -350,7 +383,8 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 <motion.div
                   key={member.name}
                   {...fadeUp(0.12 + i * 0.08)}
-                  className="flex flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-200 hover:border-foreground/[0.16]"
+                  {...LIFT}
+                  className="flex flex-col rounded-2xl border border-foreground/8 p-4 transition-colors duration-200 hover:border-foreground/16"
                 >
                   <div className="mb-3 flex h-20 w-full items-end justify-end overflow-hidden rounded-xl bg-foreground/[0.04] p-2">
                     <span className="select-none text-4xl font-bold text-foreground/[0.07]">{member.initials}</span>
@@ -379,13 +413,13 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 { title: 'Outcome-focused', desc: 'We measure success by results — conversion rates, retention, revenue — not by hours billed.' },
                 { title: 'Zero lock-in', desc: 'Clean code, full documentation, and a clean handoff. You own everything we build, always.' },
               ].map((v) => (
-                <div key={v.title} className="flex items-start gap-3 rounded-2xl border border-foreground/[0.08] px-4 py-3">
+                <motion.div key={v.title} whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }} className="flex items-start gap-3 rounded-2xl border border-foreground/8 px-4 py-3">
                   <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/20" />
                   <div>
                     <p className="text-xs font-semibold text-foreground">{v.title}</p>
                     <p className="mt-0.5 text-[10px] leading-relaxed text-foreground/40">{v.desc}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
@@ -456,7 +490,10 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
 
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
+          </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </div>
 
@@ -478,8 +515,10 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               </span>
               <div className="flex flex-wrap gap-2">
                 {cat.items.map((item) => (
-                  <span
+                  <motion.span
                     key={item.name}
+                    whileHover={{ scale: 1.07, y: -2, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
+                    whileTap={{ scale: 0.96 }}
                     className="flex items-center gap-2 rounded-xl border border-foreground/8 bg-foreground/2 px-3 py-2.5 text-xs text-foreground/50 transition-all duration-200 hover:border-foreground/18 hover:bg-foreground/4 hover:text-foreground/80"
                   >
                     <img
@@ -489,7 +528,7 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                       className="h-3.5 w-3.5 opacity-60 dark:invert"
                     />
                     {item.name}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </motion.div>
@@ -525,7 +564,10 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
     <section ref={ref} id="process" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>How We Work</span>
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>How We Work</span>
+          </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
         </div>
 
@@ -543,6 +585,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <motion.div
                 key={s.num}
                 variants={staggerItem}
+                whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
                 className="flex gap-3 rounded-2xl border border-foreground/8 bg-foreground/4 p-4"
               >
                 <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-foreground/8 bg-foreground/4">
@@ -700,7 +743,10 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
     <section ref={ref} id="faq" className="sticky top-0 z-60 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>FAQ</span>
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>FAQ</span>
+          </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </div>
 
@@ -810,7 +856,10 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
     <section ref={ref} id="contact" className="sticky top-0 z-[70] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-0 lg:pt-10 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
+          </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
         </div>
 
@@ -945,13 +994,8 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
             )}
           </motion.div>
         </div>
-        <div className="mt-3 shrink-0 flex flex-col items-center justify-between gap-2 border-t border-foreground/[0.08] py-4 sm:flex-row">
+        <div className="mt-3 shrink-0 flex items-center border-t border-foreground/8 py-4">
           <span className="text-xs text-foreground/20">© 2025 Numen. All rights reserved.</span>
-          <div className="flex gap-5">
-            {['Twitter', 'Instagram', 'LinkedIn', 'GitHub'].map((s) => (
-              <Link key={s} href="#" className="text-xs text-foreground/20 transition-colors duration-150 hover:text-foreground/60">{s}</Link>
-            ))}
-          </div>
         </div>
       </motion.div>
     </section>
@@ -961,19 +1005,8 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
 export function SiteFooter() {
   return (
     <footer className="border-t border-foreground/[0.08] bg-background">
-      <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-6 py-6 sm:flex-row lg:px-8">
+      <div className="mx-auto flex max-w-5xl items-center px-6 py-6 lg:px-8">
         <span className="text-xs text-foreground/20">© 2025 Numen. All rights reserved.</span>
-        <div className="flex gap-6">
-          {['Twitter', 'Instagram', 'LinkedIn', 'GitHub'].map((s) => (
-            <Link
-              key={s}
-              href="#"
-              className="text-xs text-foreground/20 transition-colors duration-150 hover:text-foreground/60"
-            >
-              {s}
-            </Link>
-          ))}
-        </div>
       </div>
     </footer>
   )

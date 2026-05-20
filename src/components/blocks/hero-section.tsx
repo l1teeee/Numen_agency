@@ -24,6 +24,19 @@ export function HeroSection() {
         animate={{ opacity: [0.4, 1, 0.4] }}
         transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
       />
+      {/* Atmospheric orb — slow drift, brand-warm glow */}
+      <motion.div
+        className="pointer-events-none absolute rounded-full blur-[120px]"
+        style={{ width: 560, height: 560, top: '0%', left: '10%', background: 'radial-gradient(circle, rgba(200,85,58,0.07) 0%, transparent 70%)' }}
+        animate={{ x: [0, 60, -30, 0], y: [0, 50, 20, 0], scale: [1, 1.12, 0.94, 1] }}
+        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="pointer-events-none absolute rounded-full blur-[100px]"
+        style={{ width: 400, height: 400, bottom: '5%', right: '8%', background: 'radial-gradient(circle, rgba(200,85,58,0.05) 0%, transparent 70%)' }}
+        animate={{ x: [0, -40, 20, 0], y: [0, -30, 15, 0], scale: [1, 1.08, 0.97, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+      />
       {/* Radial vignette */}
       <div
         className="absolute inset-0"
@@ -65,7 +78,7 @@ export function HeroSection() {
             asChild
             size="lg"
             variant="ghost"
-            className="rounded-full border border-foreground/[0.08] px-8 text-foreground/50 hover:border-foreground/[0.16] hover:bg-transparent hover:text-foreground"
+            className="rounded-full border border-foreground/8 px-8 text-foreground/50 hover:border-foreground/16 hover:bg-transparent hover:text-foreground"
           >
             <Link href="#contact">Let&apos;s Talk</Link>
           </Button>
@@ -77,9 +90,15 @@ export function HeroSection() {
         {...enter(0.6)}
         className="absolute inset-x-0 bottom-0 px-8 py-6 lg:px-16"
       >
-        <div className="flex items-center justify-between border-t border-foreground/[0.08] pt-5">
+        <div className="flex items-center justify-between border-t border-foreground/8 pt-5">
           <span className="text-xs text-foreground/20">01</span>
-          <span className="text-xs text-foreground/20">Scroll to explore ↓</span>
+          <motion.span
+            className="text-xs text-foreground/20"
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            Scroll to explore ↓
+          </motion.span>
         </div>
       </motion.div>
     </section>
