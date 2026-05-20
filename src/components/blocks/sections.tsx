@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus } from 'lucide-react'
+import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, type LucideIcon } from 'lucide-react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
 import { PhotoSpread } from '@/components/ui/gallery'
@@ -81,13 +81,13 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
     <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What We Do</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>02</span>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>What We Do</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>02</span>
         </div>
         <motion.div
-          className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 overflow-hidden"
+          className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0"
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -172,19 +172,20 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const [featured, ...rest] = projects
   return (
     <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Selected Work</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Selected Work</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
         </div>
         <motion.div
-          className="mt-6 flex flex-1 flex-col gap-3 lg:mb-24 lg:flex-row"
+          className="mt-6 flex flex-1 flex-col gap-3 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mb-24 lg:overflow-visible lg:pb-0 lg:flex-row"
+          style={{ scrollbarWidth: 'none' }}
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
           <motion.div variants={staggerItem} className="flex flex-col flex-none lg:flex-1 lg:flex-[3]">
-            <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col justify-between rounded-2xl bg-background p-6 ring-1 ring-foreground/[0.08]">
+            <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-4 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:justify-between lg:gap-0 lg:p-6">
               {/* gradient ring on hover — CSS mask creates a hollow 1px donut */}
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -201,7 +202,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 <div>
                   <span className="text-xs text-foreground/30">{featured.category}</span>
                   <div className="mt-1 flex items-center gap-2">
-                    <h3 className="text-xl font-semibold text-foreground">{featured.name}</h3>
+                    <h3 className="text-base font-semibold text-foreground lg:text-xl">{featured.name}</h3>
                     {featured.status && (
                       <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
                         <span className={`inline-block h-1.5 w-1.5 rounded-full ${featured.dot}`} />
@@ -226,10 +227,10 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 />
               </div>
               <div>
-                <p className="mb-4 text-sm leading-relaxed text-foreground/40">{featured.desc}</p>
-                <div className="flex flex-wrap gap-2">
+                <p className="mb-3 text-[13px] leading-relaxed text-foreground/40">{featured.desc}</p>
+                <div className="flex flex-wrap gap-1.5">
                   {featured.stack.map((t) => (
-                    <span key={t} className="rounded-full border border-foreground/[0.08] px-3 py-1 text-xs text-foreground/40">{t}</span>
+                    <span key={t} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-[11px] text-foreground/40 lg:px-3 lg:py-1 lg:text-xs">{t}</span>
                   ))}
                 </div>
                 <p className="mt-3 text-[11px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/40">{featured.href.replace('https://', '')}</p>
@@ -239,7 +240,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           <motion.div variants={staggerContainer} className="flex flex-col gap-3 lg:flex-[2]">
             {rest.map((p, i) => (
               <motion.div key={p.name} variants={staggerItem} className="flex-1">
-                <Link href={p.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-5 transition-colors duration-300 hover:border-foreground/[0.16]">
+                <Link href={p.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
                   <div className="flex items-start justify-between">
                     <div>
                       <span className="text-xs text-foreground/30">{p.category}</span>
@@ -303,13 +304,13 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.5, once: false })
   return (
     <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>About Numen</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>About Numen</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
         </div>
 
-        <div className="mt-6 flex flex-1 flex-col gap-4 overflow-hidden">
+        <div className="mt-6 flex flex-1 flex-col gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0">
           {/* Top row: headline + stats */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
             <motion.div {...fadeUp(0)}>
@@ -334,7 +335,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 { value: '3', label: 'Products live in production' },
                 { value: '24h', label: 'Max response time' },
               ].map((stat, i) => (
-                <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="flex flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-6 text-center transition-colors duration-200 hover:border-foreground/[0.18] hover:bg-foreground/[0.02]">
+                <motion.div key={stat.label} {...fadeUp(0.1 + i * 0.07)} className="flex flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-3 text-center transition-colors duration-200 hover:border-foreground/[0.18] hover:bg-foreground/[0.02] lg:p-6">
                   <p className="text-3xl font-bold text-foreground">{stat.value}</p>
                   <p className="mt-1 text-xs text-foreground/40">{stat.label}</p>
                 </motion.div>
@@ -344,7 +345,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
           {/* Bottom row: team cards + principles */}
           <div className="grid grid-cols-1 gap-6 lg:mb-24 lg:grid-cols-2 lg:gap-10">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {team.map((member, i) => (
                 <motion.div
                   key={member.name}
@@ -452,20 +453,20 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
   return (
     <section ref={ref} id="stack" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
 
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Our Stack</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </div>
 
-        <motion.h2 {...fadeUp(0.05)} className="mt-8 text-3xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
+        <motion.h2 {...fadeUp(0.05)} className="mt-6 text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
           Tools we trust<br />
           <span className="text-foreground/25">to build with.</span>
         </motion.h2>
 
         <motion.div
-          className="mt-8 grid grid-cols-1 gap-6 overflow-auto lg:mb-20 lg:mt-10 lg:grid-cols-2 lg:gap-8"
+          className="mt-6 grid grid-cols-1 gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mb-20 lg:mt-10 lg:grid-cols-2 lg:gap-8 lg:overflow-auto lg:pb-0"
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
@@ -509,24 +510,64 @@ const steps = [
   { num: '05', title: 'Scale',     desc: 'Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.', img: '/scale.png' },
 ]
 
+const stepIcons: Record<string, LucideIcon> = {
+  '01': Search,
+  '02': PenTool,
+  '03': Code2,
+  '04': Rocket,
+  '05': TrendingUp,
+}
+
 export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
   return (
     <section ref={ref} id="process" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>How We Work</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>How We Work</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
         </div>
 
+        {/* Mobile: icon-led list, no images */}
         <motion.div
-          className="mt-6 grid flex-1 grid-cols-2 gap-2 overflow-hidden lg:grid-cols-3 lg:[grid-template-rows:repeat(3,minmax(0,1fr))]"
+          className="mt-5 flex flex-col gap-2.5 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:hidden"
+          style={{ scrollbarWidth: 'none' }}
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
-          {/* 01 Discovery — full width mobile, cols 1-2 row 1 desktop */}
+          {steps.map((s) => {
+            const Icon = stepIcons[s.num]
+            return (
+              <motion.div
+                key={s.num}
+                variants={staggerItem}
+                className="flex gap-3 rounded-2xl border border-foreground/8 bg-foreground/4 p-4"
+              >
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-foreground/8 bg-foreground/4">
+                  <Icon className="size-4 text-foreground/55" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-baseline gap-2">
+                    <h3 className="text-sm font-semibold text-foreground">{s.title}</h3>
+                    <span className="text-[10px] text-foreground/25">{s.num}</span>
+                  </div>
+                  <p className="mt-1 text-[12px] leading-relaxed text-foreground/50">{s.desc}</p>
+                </div>
+              </motion.div>
+            )
+          })}
+        </motion.div>
+
+        {/* Desktop: bento grid with images */}
+        <motion.div
+          className="mt-6 hidden flex-1 grid-cols-2 gap-2 overflow-hidden lg:grid lg:grid-cols-3 lg:grid-rows-3"
+          variants={staggerContainer}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+        >
+          {/* 01 Discovery — cols 1-2 row 1 desktop */}
           <motion.div
             variants={staggerItem}
             className="col-span-2 group flex min-h-[6rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:flex-row lg:min-h-0 lg:[grid-column-start:1] lg:[grid-column-end:3] lg:[grid-row-start:1]"
@@ -545,7 +586,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             </div>
           </motion.div>
 
-          {/* 02 Design — col 1 mobile row 2, col 3 rows 1-2 desktop */}
+          {/* 02 Design — col 3 rows 1-2 desktop */}
           <motion.div
             variants={staggerItem}
             className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:3] lg:[grid-row-start:1] lg:[grid-row-end:3]"
@@ -562,7 +603,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             </div>
           </motion.div>
 
-          {/* 03 Build — col 2 mobile row 2, col 2 row 2 desktop */}
+          {/* 03 Build — col 2 row 2 desktop */}
           <motion.div
             variants={staggerItem}
             className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:min-h-0 lg:[grid-column-start:2] lg:[grid-row-start:2]"
@@ -578,7 +619,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             </div>
           </motion.div>
 
-          {/* 04 Launch — full width mobile, col 1 rows 2-3 desktop */}
+          {/* 04 Launch — col 1 rows 2-3 desktop */}
           <motion.div
             variants={staggerItem}
             className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:mb-14 lg:min-h-0 lg:flex-col lg:[grid-column-start:1] lg:[grid-column-end:2] lg:[grid-row-start:2] lg:[grid-row-end:4]"
@@ -595,7 +636,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             </div>
           </motion.div>
 
-          {/* 05 Scale — full width mobile, cols 2-3 row 3 desktop */}
+          {/* 05 Scale — cols 2-3 row 3 desktop */}
           <motion.div
             variants={staggerItem}
             className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/[0.08] bg-black transition-colors duration-300 hover:border-foreground/[0.16] lg:mb-14 lg:min-h-0 lg:[grid-column-start:2] lg:[grid-column-end:4] lg:[grid-row-start:3]"
@@ -657,27 +698,27 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const [open, setOpen] = useState<number | null>(null)
   return (
     <section ref={ref} id="faq" className="sticky top-0 z-60 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-10 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>FAQ</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>FAQ</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </div>
 
-        <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2 lg:gap-12 lg:mb-24">
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:gap-12 lg:overflow-hidden lg:pb-0 lg:mb-24 lg:grid-cols-2">
           {/* Left: large headline + CTA */}
           <motion.div {...fadeUp(0)} className="flex flex-col justify-between">
             <div>
-              <h2 className="text-4xl font-semibold tracking-tight text-foreground lg:text-6xl">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground lg:text-6xl">
                 Common<br />questions,<br />
                 <span className="text-foreground/25">answered.</span>
               </h2>
-              <p className="mt-5 max-w-xs text-sm leading-relaxed text-foreground/40">
+              <p className="mt-3 max-w-xs text-sm leading-relaxed text-foreground/40 lg:mt-5">
                 Not finding what you&apos;re looking for? Use the AI assistant at the bottom right or send us a message.
               </p>
             </div>
             <Link
               href="#contact"
-              className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-75 lg:mt-0"
+              className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-75 lg:mt-0"
             >
               Start a project <ArrowUpRight size={14} />
             </Link>
@@ -767,10 +808,10 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
 
   return (
     <section ref={ref} id="contact" className="sticky top-0 z-[70] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-10 pb-0 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-6">
-          <span className={`text-xs uppercase tracking-widest transition-colors duration-500 ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
-          <span className={`text-xs transition-colors duration-500 ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-0 lg:pt-10 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>Start a Project</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">

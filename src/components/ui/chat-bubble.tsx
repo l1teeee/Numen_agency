@@ -99,7 +99,7 @@ export function ChatBubble() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.96 }}
             transition={{ duration: 0.25, ease: EASE }}
-            className="flex w-80 flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-background/95 shadow-2xl shadow-black/60 backdrop-blur-xl"
+            className="flex w-[calc(100vw-48px)] max-w-80 flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-background/95 shadow-2xl shadow-black/60 backdrop-blur-xl"
           >
             {/* Header */}
             <div className="flex shrink-0 items-center justify-between border-b border-foreground/[0.08] px-5 py-4">
@@ -220,7 +220,7 @@ export function ChatBubble() {
         aria-label="Open chat"
       >
         {!open && (
-          <span className="absolute inset-0 animate-ping rounded-full bg-foreground/20" />
+          <span className="absolute inset-0 motion-safe:animate-ping rounded-full bg-foreground/20" />
         )}
         <AnimatePresence mode="wait">
           {open ? (
