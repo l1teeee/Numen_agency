@@ -178,14 +178,14 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
         </div>
         <motion.div
-          className="mt-6 flex flex-1 flex-col gap-3 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mb-24 lg:overflow-visible lg:pb-0 lg:flex-row"
+          className="mt-4 flex flex-1 flex-col gap-2 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mt-6 lg:mb-24 lg:gap-3 lg:overflow-visible lg:pb-0 lg:flex-row"
           style={{ scrollbarWidth: 'none' }}
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
           <motion.div variants={staggerItem} className="flex flex-col flex-none lg:flex-1 lg:flex-[3]">
-            <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-4 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:justify-between lg:gap-0 lg:p-6">
+            <Link href={featured.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:justify-between lg:gap-0 lg:p-6">
               {/* gradient ring on hover — CSS mask creates a hollow 1px donut */}
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -227,17 +227,17 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 />
               </div>
               <div>
-                <p className="mb-3 text-[13px] leading-relaxed text-foreground/40">{featured.desc}</p>
+                <p className="mb-2 line-clamp-2 text-[13px] leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{featured.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {featured.stack.map((t) => (
                     <span key={t} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-[11px] text-foreground/40 lg:px-3 lg:py-1 lg:text-xs">{t}</span>
                   ))}
                 </div>
-                <p className="mt-3 text-[11px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/40">{featured.href.replace('https://', '')}</p>
+                <p className="mt-3 hidden text-[11px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/40 lg:block">{featured.href.replace('https://', '')}</p>
               </div>
             </Link>
           </motion.div>
-          <motion.div variants={staggerContainer} className="flex flex-col gap-3 lg:flex-[2]">
+          <motion.div variants={staggerContainer} className="flex flex-col gap-2 lg:flex-[2]">
             {rest.map((p, i) => (
               <motion.div key={p.name} variants={staggerItem} className="flex-1">
                 <Link href={p.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
@@ -263,13 +263,13 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                     </div>
                   )}
                   <div className={p.img ? '' : 'mt-auto'}>
-                    <p className="mb-3 text-xs leading-relaxed text-foreground/40">{p.desc}</p>
+                    <p className="mb-2 line-clamp-2 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{p.desc}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {p.stack.map((t) => (
                         <span key={t} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-xs text-foreground/40">{t}</span>
                       ))}
                     </div>
-                    <p className="mt-2 text-[10px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/35">{p.href.replace('https://', '')}</p>
+                    <p className="mt-2 hidden text-[10px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/35 lg:block">{p.href.replace('https://', '')}</p>
                   </div>
                 </Link>
               </motion.div>
