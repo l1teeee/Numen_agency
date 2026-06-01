@@ -5,24 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Menu } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { AnimatedThemeToggle } from '@/components/ui/animated-theme-toggle'
+import { useLang } from '@/lib/lang'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-const links = [
-  { label: 'Services',     href: '#services'     },
-  { label: 'Work',         href: '#work'         },
-  { label: 'About',        href: '#about'        },
-  { label: 'Stack',        href: '#stack'        },
-  { label: 'Process',      href: '#process'      },
-  { label: 'FAQ',          href: '#faq'          },
-]
+const allIds = ['services', 'work', 'about', 'stack', 'process', 'faq', 'contact']
 
-const contactLink = { label: "Let's Talk", href: '#contact' }
-const allLinks = [...links, contactLink]
-const allIds = allLinks.map((l) => l.href.slice(1))
-
-// Traverse offsetParent chain to get the element's natural absolute top in px,
-// unaffected by sticky clamping (getBoundingClientRect returns 0 when stuck).
 function getAbsoluteTop(el: HTMLElement): number {
   let top = 0
   let curr: HTMLElement | null = el
@@ -38,16 +26,18 @@ export function Navbar() {
   const [visible, setVisible] = useState(false)
   const [active,  setActive]  = useState('')
   const lenis = useLenis()
+  const { lang, setLang, t } = useLang()
 
-  // Show navbar after scrolling past the hero
+  const links = t.nav.links
+  const contactLink = { label: t.nav.contact, href: '#contact' }
+  const allLinks = [...links, contactLink]
+
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 60)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Deterministic active state for sticky sections:
-  // sections stick at top:0 in DOM order; the last one with rect.top ≤ 1 is frontmost.
   const updateActive = useCallback(() => {
     let activeId = ''
     for (const id of allIds) {
@@ -73,12 +63,21 @@ export function Navbar() {
     const target = document.querySelector(href) as HTMLElement | null
     if (!target) return
     if (lenis) {
-      // Pass absolute pixel position so Lenis works correctly for already-stuck sections
       lenis.scrollTo(getAbsoluteTop(target), { duration: 1.4 })
     } else {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
+
+  const LangToggle = () => (
+    <button
+      onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+      className="rounded-full border border-foreground/8 px-2.5 py-1 text-[10px] font-semibold text-foreground/40 transition-colors duration-200 hover:border-foreground/16 hover:text-foreground/70"
+      aria-label="Switch language"
+    >
+      {lang === 'en' ? 'ES' : 'EN'}
+    </button>
+  )
 
   return (
     <AnimatePresence>
@@ -112,6 +111,8 @@ export function Navbar() {
             </nav>
             <div className="mx-1 h-3.5 w-px bg-foreground/8" />
             <AnimatedThemeToggle className="mr-1" />
+            <LangToggle />
+            <div className="mx-1 h-3.5 w-px bg-foreground/8" />
             <a
               href={contactLink.href}
               onClick={(e) => scrollTo(e, contactLink.href)}
@@ -130,6 +131,7 @@ export function Navbar() {
                 Numen
               </span>
               <AnimatedThemeToggle />
+              <LangToggle />
               <button
                 onClick={() => setOpen((p) => !p)}
                 className="text-foreground/40 transition-colors hover:text-foreground"
