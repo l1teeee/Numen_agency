@@ -20,12 +20,13 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Numen — Digital Product Studio",
-    template: "%s | Numen",
+    default: "Numen Agency — Digital Product Studio",
+    template: "%s | Numen Agency",
   },
   description:
-    "Numen is a digital product agency from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools with Next.js, TypeScript, and Supabase.",
+    "Numen Agency is a digital product agency from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools with Next.js, TypeScript, and Supabase.",
   keywords: [
+    "Numen Agency",
     "digital product studio",
     "web development agency",
     "SaaS development",
@@ -37,9 +38,9 @@ export const metadata: Metadata = {
     "full-stack development",
     "Supabase",
   ],
-  authors: [{ name: "Numen", url: BASE_URL }],
-  creator: "Numen",
-  publisher: "Numen",
+  authors: [{ name: "Numen Agency", url: BASE_URL }],
+  creator: "Numen Agency",
+  publisher: "Numen Agency",
   robots: {
     index: true,
     follow: true,
@@ -59,11 +60,11 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "Numen — Digital Product Studio",
+    title: "Numen Agency — Digital Product Studio",
     description:
       "Digital product agency from El Salvador. Full-stack apps, product design, and AI integration.",
     url: BASE_URL,
-    siteName: "Numen",
+    siteName: "Numen Agency",
     type: "website",
     locale: "en_US",
     images: [
@@ -71,13 +72,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Numen — Digital Product Studio",
+        alt: "Numen Agency — Digital Product Studio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Numen — Digital Product Studio",
+    title: "Numen Agency — Digital Product Studio",
     description:
       "Digital product agency from El Salvador. Full-stack apps, product design, and AI integration.",
     images: ["/og.png"],

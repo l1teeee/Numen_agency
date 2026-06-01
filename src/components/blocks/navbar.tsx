@@ -92,7 +92,7 @@ export function Navbar() {
           {/* Desktop */}
           <div className="hidden items-center gap-1 rounded-full border border-foreground/8 bg-background/70 px-2 py-2 backdrop-blur-xl lg:flex">
             <span className="px-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40">
-              Numen
+              Numen Agency
             </span>
             <div className="mx-1 h-3.5 w-px bg-foreground/8" />
             <nav className="flex items-center">

@@ -911,7 +911,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
           </motion.div>
         </div>
         <div className="mt-3 shrink-0 flex items-center border-t border-foreground/8 py-4">
-          <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen. {tc.footer}</span>
+          <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen Agency. {tc.footer}</span>
         </div>
       </motion.div>
     </section>
@@ -923,7 +923,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-foreground/[0.08] bg-background">
       <div className="mx-auto flex max-w-5xl items-center px-6 py-6 lg:px-8">
-        <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen. {t.contact.footer}</span>
+        <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen Agency. {t.contact.footer}</span>
       </div>
     </footer>
   )
