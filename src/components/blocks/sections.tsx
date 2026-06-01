@@ -92,10 +92,10 @@ const services = [
   },
   {
     num: '04',
-    title: 'Digital Strategy',
-    desc: 'Architecture planning, tech stack selection, and growth roadmaps. We make the right decisions before a line of code is written so you never have to rebuild from scratch.',
-    tags: ['Architecture', 'Roadmapping', 'Tech Audits', 'Consulting'],
-    img: '/strategy.png',
+    title: 'DevOps & Infrastructure',
+    desc: 'Production-ready deployments across AWS, GCP, and Kubernetes. Multi-cloud SRE setups, CI/CD automation, service mesh configuration, and secure infrastructure-as-code with Terraform. Zero-downtime deployments, monitoring, and incident response.',
+    tags: ['Kubernetes', 'AWS EKS', 'Google GKE', 'Istio', 'Terraform', 'Docker', 'GitHub Actions'],
+    img: '/launch.png',
   },
 ]
 
@@ -123,7 +123,7 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               key={s.num}
               variants={staggerItem}
               {...LIFT}
-              className={`group relative overflow-hidden rounded-2xl border border-foreground/[0.08] transition-colors duration-300 hover:border-foreground/[0.14]${i >= 2 ? ' lg:mb-14' : ''}`}
+              className={`group relative overflow-hidden rounded-2xl border border-foreground/8 transition-colors duration-300 hover:border-foreground/[0.14]${i >= 2 ? ' lg:mb-14' : ''}`}
             >
               {/* full-card background image */}
               <img
@@ -135,10 +135,10 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               />
 
               {/* gradient: transparent top → soft mid */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background/20 hidden sm:block" />
+              <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/30 to-background/20 hidden sm:block" />
 
               {/* strong gradient behind text area only */}
-              <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-background via-background/90 to-transparent hidden sm:block" />
+              <div className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-background via-background/90 to-transparent hidden sm:block" />
 
               {/* content overlay */}
               <div className="relative z-10 flex h-full flex-col justify-between p-5">
@@ -166,7 +166,7 @@ const projects = [
   {
     name: 'VieLinks',
     category: 'Platform · 2026',
-    desc: 'Your entire online presence, one link. VieLinks lets digital professionals centralize their portfolio, social profiles, and work history into a single shareable page — clean, fast, and fully customizable.',
+    desc: 'Social media management SaaS with OAuth integrations (Meta, Instagram, LinkedIn). Multi-channel publishing, real-time metrics dashboard, and automated workflow orchestration. Used by digital professionals worldwide.',
     stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'],
     href: 'https://vielinks.com',
     status: 'Live',
@@ -489,6 +489,19 @@ const stackCategories = [
       { name: 'Linear', icon: 'linear' },
     ],
   },
+  {
+    capability: 'Infrastructure & DevOps',
+    items: [
+      { name: 'Kubernetes', icon: 'kubernetes' },
+      { name: 'AWS', icon: 'amazonaws' },
+      { name: 'Google Cloud', icon: 'googlecloud' },
+      { name: 'Terraform', icon: 'terraform' },
+      { name: 'Istio', icon: 'istio' },
+      { name: 'GitHub Actions', icon: 'githubactions' },
+      { name: 'Prometheus', icon: 'prometheus' },
+      { name: 'Grafana', icon: 'grafana' },
+    ],
+  },
 ]
 
 export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
@@ -554,7 +567,7 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 const steps = [
   { num: '01', title: 'Discovery', desc: 'We start by understanding your goals, users, and constraints. Deep dive into the problem space before writing a single line of code.', img: '/discovery.png' },
   { num: '02', title: 'Design',    desc: 'Wireframes, prototypes and design systems built in Figma. We validate ideas early so nothing is left to chance during development.',     img: '/ux.png' },
-  { num: '03', title: 'Build',     desc: 'Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos to keep you in the loop.',                  img: '/build.png' },
+  { num: '03', title: 'Build',     desc: 'Full-stack development with CI/CD pipelines, infrastructure automation, and production monitoring from day one.',                  img: '/build.png' },
   { num: '04', title: 'Launch',    desc: 'Deploy with confidence. We set up monitoring, analytics and documentation, then stay close for the first weeks post-launch.',            img: '/launch.png' },
   { num: '05', title: 'Scale',     desc: 'Continuous iteration, performance tuning, and growth features. We stay by your side long after launch to make sure the product thrives.', img: '/scale.png' },
 ]
@@ -668,7 +681,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <div className="flex flex-col justify-end p-4">
               <span className="text-[10px] font-medium text-foreground/30">03</span>
               <h3 className="mt-1 text-sm font-semibold text-foreground">Build</h3>
-              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Full-stack development with our proven stack. Clean code, thorough testing, and weekly demos.</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">Full-stack development with CI/CD pipelines, infrastructure automation, and production monitoring from day one.</p>
             </div>
           </motion.div>
 
@@ -824,8 +837,9 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 }
 
 // ─── Contact Form + Footer ───────────────────────────────────
-const infoItems = [
-  { label: 'Email', value: 'contact@delta-numen.com' },
+const infoItems: { label: string; value: string; href?: string }[] = [
+  { label: 'Email', value: 'contact@delta-numen.com', href: 'mailto:contact@delta-numen.com' },
+  { label: 'WhatsApp', value: '+503 6046 3566', href: 'https://wa.me/50360463566' },
   { label: 'Based in', value: 'El Salvador · Remote worldwide' },
   { label: 'Availability', value: 'Open to new projects' },
 ]
@@ -893,13 +907,24 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
               animate={isInView ? "visible" : "hidden"}
             >
               {infoItems.map((item) => (
-                <motion.div
-                  key={item.label}
-                  variants={staggerItem}
-                  className="flex items-center gap-4 rounded-2xl border border-foreground/[0.08] px-5 py-4"
-                >
-                  <span className="w-20 shrink-0 text-xs text-foreground/30">{item.label}</span>
-                  <span className="text-sm text-foreground/60">{item.value}</span>
+                <motion.div key={item.label} variants={staggerItem}>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4 rounded-2xl border border-foreground/8 px-5 py-4 transition-colors duration-200 hover:border-foreground/20"
+                    >
+                      <span className="w-20 shrink-0 text-xs text-foreground/30">{item.label}</span>
+                      <span className="flex-1 text-sm text-foreground/60 transition-colors duration-200 group-hover:text-foreground/80">{item.value}</span>
+                      <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground/60" />
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-4 rounded-2xl border border-foreground/8 px-5 py-4">
+                      <span className="w-20 shrink-0 text-xs text-foreground/30">{item.label}</span>
+                      <span className="text-sm text-foreground/60">{item.value}</span>
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </motion.div>
