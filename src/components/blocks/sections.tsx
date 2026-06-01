@@ -388,15 +388,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   {...LIFT}
                   className="flex flex-col rounded-2xl border border-foreground/8 p-4 transition-colors duration-200 hover:border-foreground/16"
                 >
-                  {member.img ? (
-                    <img
-                      src={member.img}
-                      alt={member.name}
-                      className="mb-3 h-20 w-full rounded-xl object-cover object-top"
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; (e.currentTarget.nextElementSibling as HTMLElement | null)?.style.setProperty('display', 'flex') }}
-                    />
-                  ) : null}
-                  <div className={`mb-3 flex h-20 w-full items-center justify-center rounded-xl bg-linear-to-br from-foreground/8 to-foreground/4${member.img ? ' hidden' : ''}`}>
+                  <div className="mb-3 flex h-20 w-full items-center justify-center rounded-xl bg-linear-to-br from-foreground/8 to-foreground/4">
                     <span className="select-none text-2xl font-bold text-foreground/20">{member.initials}</span>
                   </div>
                   <p className="text-sm font-semibold text-foreground">{member.name}</p>
