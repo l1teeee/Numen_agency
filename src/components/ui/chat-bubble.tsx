@@ -2,11 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send } from 'lucide-react'
+import { MessageCircle, X, Send, Mail, MessageSquare } from 'lucide-react'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-type Message = { role: 'user' | 'assistant'; content: string }
+type Message = { role: 'user' | 'assistant'; content: string; showContact?: boolean }
 
 const INITIAL: Message[] = [
   {
@@ -21,6 +21,42 @@ const SUGGESTIONS = [
   'How do I start a project?',
   'Tell me about your process',
 ]
+
+function parseReply(raw: string): { content: string; showContact: boolean } {
+  const showContact = /\[CONTACT\]/i.test(raw)
+  const content = raw.replace(/\[CONTACT\]/gi, '').trim()
+  return { content, showContact }
+}
+
+function ContactLinks() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: EASE }}
+      className="mt-2.5 flex flex-col gap-1.5"
+    >
+      <a
+        href="mailto:contact@delta-numen.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/8 px-3 py-2 text-[11px] font-medium text-white/80 transition-colors duration-150 hover:border-white/30 hover:bg-white/14 hover:text-white"
+      >
+        <Mail size={11} className="shrink-0" />
+        contact@delta-numen.com
+      </a>
+      <a
+        href="https://wa.me/50360463566"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/8 px-3 py-2 text-[11px] font-medium text-white/80 transition-colors duration-150 hover:border-white/30 hover:bg-white/14 hover:text-white"
+      >
+        <MessageSquare size={11} className="shrink-0" />
+        WhatsApp · +503 6046 3566
+      </a>
+    </motion.div>
+  )
+}
 
 export function ChatBubble() {
   const [open, setOpen] = useState(false)
@@ -54,13 +90,11 @@ export function ChatBubble() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: msgs }),
+        body: JSON.stringify({ messages: msgs.map(({ role, content }) => ({ role, content })) }),
       })
       const data = await res.json()
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: data.reply ?? 'Something went wrong. Please try again.' },
-      ])
+      const { content, showContact } = parseReply(data.reply ?? 'Something went wrong. Please try again.')
+      setMessages((prev) => [...prev, { role: 'assistant', content, showContact }])
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -91,7 +125,7 @@ export function ChatBubble() {
   const showSuggestions = messages.length === 1 && !loading
 
   return (
-    <div ref={containerRef} className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
+    <div ref={containerRef} className="fixed bottom-6 right-6 z-100 flex flex-col items-end gap-3">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -99,13 +133,13 @@ export function ChatBubble() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.96 }}
             transition={{ duration: 0.25, ease: EASE }}
-            className="flex w-[calc(100vw-48px)] max-w-80 flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] bg-background/95 shadow-2xl shadow-black/60 backdrop-blur-xl"
+            className="flex w-[calc(100vw-48px)] max-w-80 flex-col overflow-hidden rounded-2xl border border-foreground/8 bg-background/95 shadow-2xl shadow-black/60 backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="flex shrink-0 items-center justify-between border-b border-foreground/[0.08] px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between border-b border-foreground/8 px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/[0.08] text-xs font-medium text-foreground/40">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/8 text-xs font-medium text-foreground/40">
                     N
                   </div>
                   <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-emerald-400" />
@@ -125,32 +159,35 @@ export function ChatBubble() {
             </div>
 
             {/* Messages */}
-            <div className="flex max-h-64 flex-col gap-3 overflow-y-auto px-4 py-4">
+            <div className="flex max-h-72 flex-col gap-3 overflow-y-auto px-4 py-4">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                   {msg.role === 'assistant' && (
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[9px] font-medium text-foreground/40">
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/8 text-[9px] font-medium text-foreground/40">
                       N
                     </div>
                   )}
-                  <div
-                    className={`max-w-[210px] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
-                      msg.role === 'user'
-                        ? 'rounded-tr-sm bg-foreground text-background'
-                        : 'rounded-tl-sm bg-foreground/[0.06] text-foreground/70'
-                    }`}
-                  >
-                    {msg.content}
+                  <div className={`flex flex-col max-w-52 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <div
+                      className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                        msg.role === 'user'
+                          ? 'rounded-tr-sm bg-foreground text-background'
+                          : 'rounded-tl-sm bg-foreground/6 text-foreground/70'
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                    {msg.role === 'assistant' && msg.showContact && <ContactLinks />}
                   </div>
                 </div>
               ))}
 
               {loading && (
                 <div className="flex gap-2.5">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/[0.08] text-[9px] font-medium text-foreground/40">
+                  <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/8 text-[9px] font-medium text-foreground/40">
                     N
                   </div>
-                  <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-foreground/[0.06] px-3.5 py-3">
+                  <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-foreground/6 px-3.5 py-3">
                     <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-foreground/30 [animation-delay:0ms]" />
                     <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-foreground/30 [animation-delay:150ms]" />
                     <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-foreground/30 [animation-delay:300ms]" />
@@ -169,14 +206,14 @@ export function ChatBubble() {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2, ease: EASE }}
-                  className="flex flex-wrap gap-1.5 overflow-hidden border-t border-foreground/[0.06] px-4 py-3"
+                  className="flex flex-wrap gap-1.5 overflow-hidden border-t border-foreground/6 px-4 py-3"
                 >
                   {SUGGESTIONS.map((s) => (
                     <button
                       key={s}
                       type="button"
                       onClick={() => quickSend(s)}
-                      className="rounded-full border border-foreground/[0.12] bg-foreground/[0.03] px-3 py-1.5 text-[11px] text-foreground/50 transition-colors duration-150 hover:border-foreground/[0.22] hover:text-foreground/80"
+                      className="rounded-full border border-foreground/12 bg-foreground/3 px-3 py-1.5 text-[11px] text-foreground/50 transition-colors duration-150 hover:border-foreground/22 hover:text-foreground/80"
                     >
                       {s}
                     </button>
@@ -188,7 +225,7 @@ export function ChatBubble() {
             {/* Input */}
             <form
               onSubmit={send}
-              className="flex shrink-0 items-center gap-2 border-t border-foreground/[0.08] px-4 py-3"
+              className="flex shrink-0 items-center gap-2 border-t border-foreground/8 px-4 py-3"
             >
               <input
                 ref={inputRef}
