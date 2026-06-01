@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { translations, type Lang, type Translations } from './translations'
 
 interface LangContextValue {
@@ -17,6 +18,7 @@ const LangContext = createContext<LangContextValue>({
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>('en')
+  const [flashKey, setFlashKey] = useState(0)
 
   useEffect(() => {
     const stored = localStorage.getItem('numen-lang') as Lang | null
@@ -24,13 +26,26 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const setLang = (l: Lang) => {
-    setLangState(l)
+    setFlashKey((k) => k + 1)
+    // Swap text after a brief delay so the flash covers the snap
+    setTimeout(() => setLangState(l), 80)
     localStorage.setItem('numen-lang', l)
   }
 
   return (
     <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>
       {children}
+      {/* Full-screen overlay that flashes on lang change, giving a soft transition feel */}
+      {flashKey > 0 && (
+        <motion.div
+          key={flashKey}
+          initial={{ opacity: 0.18 }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 0.45, ease: 'easeOut' }}
+          className="pointer-events-none fixed inset-0 z-9999 bg-background"
+          style={{ willChange: 'opacity' }}
+        />
+      )}
     </LangContext.Provider>
   )
 }
