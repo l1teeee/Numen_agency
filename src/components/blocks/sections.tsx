@@ -8,6 +8,7 @@ import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
 import { PhotoSpread } from '@/components/ui/gallery'
+import { companyStats } from '@/lib/company-stats'
 import { useLang } from '@/lib/lang'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 
@@ -48,17 +49,20 @@ const INPUT =
 function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.5 })
-  const [val, setVal] = useState(0)
+  const [val, setVal] = useState(to)
   useEffect(() => {
     if (!inView) return
-    const start = performance.now()
     const dur = 1400
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / dur, 1)
-      setVal(Math.round((1 - (1 - p) ** 3) * to))
-      if (p < 1) requestAnimationFrame(tick)
-    }
-    requestAnimationFrame(tick)
+    let frame = requestAnimationFrame((start) => {
+      setVal(0)
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / dur, 1)
+        setVal(Math.round((1 - (1 - p) ** 3) * to))
+        if (p < 1) frame = requestAnimationFrame(tick)
+      }
+      frame = requestAnimationFrame(tick)
+    })
+    return () => cancelAnimationFrame(frame)
   }, [inView, to])
   return <span ref={ref}>{val}{suffix}</span>
 }
@@ -80,13 +84,6 @@ const projectsMeta = [
 const teamMeta = [
   { initials: 'JM', name: 'Julian Mendez',  role: 'Software Engineer & Founder',     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
   { initials: 'IR', name: 'Igmer Rodriguez', role: 'Software Engineer & Co-founder', linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/' },
-]
-
-const statsMeta = [
-  { to: 10, suffix: '+' },
-  { to: 10, suffix: '+' },
-  { to: 3,  suffix: '' },
-  { to: 24, suffix: 'h' },
 ]
 
 const stackCategories = [
@@ -170,7 +167,7 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
   return (
     <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
@@ -235,7 +232,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
   return (
     <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
@@ -353,7 +350,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
   return (
     <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
@@ -374,14 +371,23 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <p className="mt-3 text-sm leading-relaxed text-foreground/30">{ta.p2}</p>
             </motion.div>
 
-            <div className="grid h-full grid-cols-2 grid-rows-2 gap-3">
-              {statsMeta.map((s, i) => (
-                <motion.div key={ta.stats[i].label} {...fadeUp(0.1 + i * 0.07)} {...LIFT} className="flex flex-col items-center justify-center rounded-2xl border border-foreground/8 p-3 text-center transition-colors duration-200 hover:border-foreground/18 hover:bg-foreground/2 lg:p-6">
-                  <p className="text-3xl font-bold text-foreground"><CountUp to={s.to} suffix={s.suffix} /></p>
-                  <p className="mt-1 text-xs text-foreground/40">{ta.stats[i].label}</p>
+            <dl className="grid h-full grid-cols-2 grid-rows-2 gap-3">
+              {companyStats.map((s, i) => (
+                <motion.div
+                  key={s.key}
+                  {...fadeUp(0.1 + i * 0.07)}
+                  {...LIFT}
+                  className="flex flex-col items-center justify-center rounded-2xl border border-foreground/8 p-3 text-center transition-colors duration-200 hover:border-foreground/18 hover:bg-foreground/2 lg:p-6"
+                  data-stat-name={s.schemaName}
+                  data-stat-value={s.display}
+                >
+                  <dt className="order-2 mt-1 text-xs text-foreground/40">{ta.stats[i].label}</dt>
+                  <dd className="order-1 text-3xl font-bold text-foreground" aria-label={`${s.display} ${ta.stats[i].label}`}>
+                    <CountUp to={s.value} suffix={s.suffix} />
+                  </dd>
                 </motion.div>
               ))}
-            </div>
+            </dl>
           </div>
 
           {/* Bottom row: team cards + principles */}
@@ -442,7 +448,7 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
   return (
     <section ref={ref} id="stack" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
 
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
@@ -506,7 +512,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
   return (
     <section ref={ref} id="process" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
@@ -659,7 +665,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
   return (
     <section ref={ref} id="faq" className="sticky top-0 z-60 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:py-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
@@ -768,7 +774,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
 
   return (
     <section ref={ref} id="contact" className="sticky top-0 z-[70] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-0 lg:pt-10 lg:px-8" style={blurStyle}>
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-0 lg:pt-24 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />

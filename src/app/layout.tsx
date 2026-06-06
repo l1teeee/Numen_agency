@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Numen Agency",
   },
   description:
-    "Numen Agency is a digital product agency from El Salvador. We build full-stack web apps, SaaS platforms, and AI-powered tools with Next.js, TypeScript, and Supabase.",
+    "Numen Agency is a digital product agency from El Salvador with 12+ projects delivered and 6 products live in production. We build full-stack web apps, SaaS platforms, and AI-powered tools.",
   keywords: [
     "Numen Agency",
     "digital product studio",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Numen Agency — Digital Product Studio",
     description:
-      "Digital product agency from El Salvador. Full-stack apps, product design, and AI integration.",
+      "Digital product agency from El Salvador with 12+ projects delivered and 6 products live in production.",
     url: BASE_URL,
     siteName: "Numen Agency",
     type: "website",
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Numen Agency — Digital Product Studio",
     description:
-      "Digital product agency from El Salvador. Full-stack apps, product design, and AI integration.",
+      "Digital product agency from El Salvador with 12+ projects delivered and 6 products live in production.",
     images: ["/og.png"],
   },
   alternates: {
