@@ -741,7 +741,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.3, once: false })
-  const [form, setForm] = useState({ name: '', email: '', budget: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', budget: '', message: '', website: '' })
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
   const { t } = useLang()
   const tc = t.contact
@@ -866,6 +866,17 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
               </div>
             ) : (
               <form onSubmit={submit} className="space-y-3">
+                {/* Honeypot — invisible to users, bots fill it and get silently rejected */}
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={handle}
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  autoComplete="off"
+                  style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, overflow: 'hidden', opacity: 0 }}
+                />
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="name" className="text-xs text-foreground/30">{tc.nameLabel}</label>

@@ -58,10 +58,10 @@ InkyTap Quiz (app.inkytap.com): Create and share quizzes on any topic. No accoun
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PRICING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Under $5k: Landing pages, small integrations, focused feature builds.
-$5k to $15k: MVPs and functional web apps with core feature sets.
-$15k to $50k: Full-featured SaaS and complex multi-module applications.
-$50k and above: Enterprise-scale platforms and long-term product partnerships.
+Under $1k: Small integrations, fixes, or landing page components.
+$1k to $5k: Landing pages and focused feature builds.
+$5k to $10k: MVPs and functional web apps with core feature sets.
+$10k and above: Full-featured SaaS, complex multi-module applications, and long-term product partnerships.
 After a discovery call we provide a transparent estimate with no surprises.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -139,7 +139,7 @@ const INJECTION_PATTERNS = [
 
   // Unlock / jailbreak keywords
   /jailbreak/i,
-  /\bDAN\b/i,   // "Do Anything Now" — fixed: added i flag
+  /\bDAN\b/i,
   /developer\s+mode/i,
   /sudo\s+mode/i,
   /unrestricted\s+mode/i,
@@ -159,7 +159,7 @@ const INJECTION_PATTERNS = [
   /translate\s+.{0,60}ignore\s+(all|previous|prior|your)\s+instructions/i,
   /in\s+(base64|hex|rot13|binary)\s*[:,.]/i,
 
-  // Hypothetical framing + no-rules payload (targeted — avoids false positives)
+  // Hypothetical framing + no-rules payload
   /hypothetically.{0,50}(no rules|no restrictions|no guidelines|without (rules|instructions|constraints)|ignore (rules|instructions))/i,
   /imagine.{0,50}(no rules|no restrictions|no constraints|no limitations|without (rules|instructions))/i,
   /suppose.{0,50}(no rules|no restrictions|without (instructions|constraints)|free to (say|answer|do|respond))/i,
@@ -167,27 +167,48 @@ const INJECTION_PATTERNS = [
   /let['']?s\s+(say|pretend|imagine)\s+you\s+(have no|had no|are without).{0,40}(rules|restrictions|instructions)/i,
 ]
 
-const MAX_MESSAGES = 30
+const MAX_MESSAGES      = 30
 const MIN_MESSAGE_LENGTH = 1
 const MAX_MESSAGE_LENGTH = 1500
 const BLOCKED_REPLY = "I'm only able to help with questions about Numen, our services, team, and projects. Is there something about us I can help you with?"
 
+// ─── Allowed origins ──────────────────────────────────────────
+const ALLOWED_ORIGINS = new Set([
+  'https://delta-numen.com',
+  'https://www.delta-numen.com',
+])
+
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false
+  if (ALLOWED_ORIGINS.has(origin)) return true
+  if (/^http:\/\/localhost(:\d+)?$/.test(origin)) return true
+  return false
+}
+
 // ─── Rate limiting ────────────────────────────────────────────
-// Uses Upstash Redis when env vars are present (production-grade, cross-instance).
-// Falls back to an in-memory map when they are not (dev / cold-start best-effort).
-let upstashLimiter: Ratelimit | null = null
+let redis: Redis | null = null
+let minuteLimiter: Ratelimit | null = null
+let dailyLimiter:  Ratelimit | null = null
+
 if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-  upstashLimiter = new Ratelimit({
-    redis: new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    }),
+  redis = new Redis({
+    url:   process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
+  })
+  minuteLimiter = new Ratelimit({
+    redis,
     limiter: Ratelimit.slidingWindow(15, '1 m'),
+    prefix: 'rl:chat:min',
+    analytics: false,
+  })
+  dailyLimiter = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(200, '24 h'),
+    prefix: 'rl:chat:day',
     analytics: false,
   })
 }
 
-// In-memory fallback (resets per cold start on serverless)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
 
 function inMemoryRateLimited(ip: string): boolean {
@@ -202,13 +223,17 @@ function inMemoryRateLimited(ip: string): boolean {
 }
 
 async function isRateLimited(ip: string): Promise<boolean> {
-  if (upstashLimiter) {
-    const { success } = await upstashLimiter.limit(ip)
-    return !success
+  if (minuteLimiter && dailyLimiter) {
+    const [min, day] = await Promise.all([
+      minuteLimiter.limit(ip),
+      dailyLimiter.limit(ip),
+    ])
+    return !min.success || !day.success
   }
   return inMemoryRateLimited(ip)
 }
 
+// ─── Message validation ───────────────────────────────────────
 type ValidRole = 'user' | 'assistant'
 interface ChatMessage { role: ValidRole; content: string }
 
@@ -223,8 +248,8 @@ function isValidMessage(m: unknown): m is ChatMessage {
 
 function normalizeText(text: string): string {
   return text
-    .normalize('NFKC')                        // converts ｉｇｎｏｒｅ → ignore
-    .replace(/[​-‍﻿]/g, '')   // strips zero-width spaces
+    .normalize('NFKC')
+    .replace(/[​-‍﻿]/g, '')
 }
 
 function containsInjection(text: string): boolean {
@@ -233,7 +258,6 @@ function containsInjection(text: string): boolean {
 }
 
 function stripMarkdown(text: string): string {
-  // Extract [CONTACT] token before stripping so it survives cleanup
   const hasContact = /\[CONTACT\]/i.test(text)
   const cleaned = text
     .replace(/\[CONTACT\]/gi, '')
@@ -252,6 +276,18 @@ function stripMarkdown(text: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  // Origin check
+  const origin = req.headers.get('origin')
+  if (!isAllowedOrigin(origin)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  // Content-Type check
+  const ct = req.headers.get('content-type') ?? ''
+  if (!ct.includes('application/json')) {
+    return NextResponse.json({ error: 'Invalid content type' }, { status: 415 })
+  }
+
   if (!process.env.NUMEN_OPENAI_KEY || !process.env.NUMEN_OPENAI_MODEL) {
     return NextResponse.json({ error: 'AI not configured' }, { status: 500 })
   }
@@ -276,7 +312,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  // Strip invalid roles (prevent injected system messages) and enforce limits
   const messages: ChatMessage[] = rawMessages
     .filter(isValidMessage)
     .slice(-MAX_MESSAGES)
@@ -285,7 +320,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No valid messages' }, { status: 400 })
   }
 
-  // Check ALL user messages for injection, not just the last one
   const hasInjection = messages
     .filter((m) => m.role === 'user')
     .some((m) => containsInjection(m.content))
