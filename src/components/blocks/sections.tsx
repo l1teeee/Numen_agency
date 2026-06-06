@@ -4,10 +4,12 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, type LucideIcon } from 'lucide-react'
+import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
 import { PhotoSpread } from '@/components/ui/gallery'
 import { useLang } from '@/lib/lang'
+import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 
 interface BlurStyle { filter: MotionValue<string> }
 
@@ -652,6 +654,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.4, once: false })
   const [open, setOpen] = useState<number | null>(null)
   const { t } = useLang()
+  const lenis = useLenis()
   const tf = t.faq
 
   return (
@@ -677,7 +680,9 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               </p>
             </div>
             <Link
-              href="#contact"
+              href={SECTION_HREFS.contact}
+              scroll={false}
+              onClick={(e) => handleSectionLinkClick(e, SECTION_HREFS.contact, lenis)}
               className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-75 lg:mt-0"
             >
               {tf.cta} <ArrowUpRight size={14} />
@@ -818,6 +823,32 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 {tc.headline1}<br />
                 <span className="text-foreground/25">{tc.headline2}</span>
               </h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {infoItems.map((item) =>
+                  item.href ? (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 rounded-full border border-foreground/10 px-3 py-1.5 text-[11px] text-foreground/50 transition-colors hover:border-foreground/20 hover:text-foreground/70"
+                    >
+                      {item.label === 'Email'
+                        ? <Mail className="h-3 w-3 shrink-0" />
+                        : <MessageSquare className="h-3 w-3 shrink-0" />}
+                      <span>{item.value}</span>
+                    </a>
+                  ) : (
+                    <div
+                      key={item.label}
+                      className="flex items-center gap-1.5 rounded-full border border-foreground/10 px-3 py-1.5 text-[11px] text-foreground/50"
+                    >
+                      <span className="text-foreground/30">{item.label}:</span>
+                      <span>{item.value}</span>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
             {status === 'sent' ? (
               <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-8 text-center">

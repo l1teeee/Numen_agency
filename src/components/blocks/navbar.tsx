@@ -6,19 +6,23 @@ import { X, Menu } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { AnimatedThemeToggle } from '@/components/ui/animated-theme-toggle'
 import { useLang } from '@/lib/lang'
+import type { Lang } from '@/lib/translations'
+import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-const allIds = ['services', 'work', 'about', 'stack', 'process', 'faq', 'contact']
+const allIds = Object.keys(SECTION_HREFS)
 
-function getAbsoluteTop(el: HTMLElement): number {
-  let top = 0
-  let curr: HTMLElement | null = el
-  while (curr) {
-    top += curr.offsetTop
-    curr = curr.offsetParent as HTMLElement | null
-  }
-  return top
+function LangToggle({ lang, setLang }: { lang: Lang; setLang: (lang: Lang) => void }) {
+  return (
+    <button
+      onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+      className="rounded-full border border-foreground/8 px-2.5 py-1 text-[10px] font-semibold text-foreground/40 transition-colors duration-200 hover:border-foreground/16 hover:text-foreground/70"
+      aria-label="Switch language"
+    >
+      {lang === 'en' ? 'ES' : 'EN'}
+    </button>
+  )
 }
 
 export function Navbar() {
@@ -29,7 +33,7 @@ export function Navbar() {
   const { lang, setLang, t } = useLang()
 
   const links = t.nav.links
-  const contactLink = { label: t.nav.contact, href: '#contact' }
+  const contactLink = { label: t.nav.contact, href: SECTION_HREFS.contact }
   const allLinks = [...links, contactLink]
 
   useEffect(() => {
@@ -58,26 +62,9 @@ export function Navbar() {
   }, [updateActive])
 
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault()
     setOpen(false)
-    const target = document.querySelector(href) as HTMLElement | null
-    if (!target) return
-    if (lenis) {
-      lenis.scrollTo(getAbsoluteTop(target), { duration: 1.4 })
-    } else {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    handleSectionLinkClick(e, href, lenis)
   }
-
-  const LangToggle = () => (
-    <button
-      onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
-      className="rounded-full border border-foreground/8 px-2.5 py-1 text-[10px] font-semibold text-foreground/40 transition-colors duration-200 hover:border-foreground/16 hover:text-foreground/70"
-      aria-label="Switch language"
-    >
-      {lang === 'en' ? 'ES' : 'EN'}
-    </button>
-  )
 
   return (
     <AnimatePresence>
@@ -111,7 +98,7 @@ export function Navbar() {
             </nav>
             <div className="mx-1 h-3.5 w-px bg-foreground/8" />
             <AnimatedThemeToggle className="mr-1" />
-            <LangToggle />
+            <LangToggle lang={lang} setLang={setLang} />
             <div className="mx-1 h-3.5 w-px bg-foreground/8" />
             <a
               href={contactLink.href}
@@ -131,7 +118,7 @@ export function Navbar() {
                 Numen
               </span>
               <AnimatedThemeToggle />
-              <LangToggle />
+              <LangToggle lang={lang} setLang={setLang} />
               <button
                 onClick={() => setOpen((p) => !p)}
                 className="text-foreground/40 transition-colors hover:text-foreground"

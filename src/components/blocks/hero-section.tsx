@@ -3,7 +3,9 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
+import { useLenis } from 'lenis/react'
 import { useLang } from '@/lib/lang'
+import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -15,6 +17,7 @@ const enter = (delay = 0) => ({
 
 export function HeroSection() {
   const { t } = useLang()
+  const lenis = useLenis()
   const h = t.hero
 
   return (
@@ -74,7 +77,13 @@ export function HeroSection() {
             size="lg"
             className="rounded-full bg-foreground px-8 text-background hover:bg-foreground/90"
           >
-            <Link href="#work">{h.cta1}</Link>
+            <Link
+              href={SECTION_HREFS.work}
+              scroll={false}
+              onClick={(e) => handleSectionLinkClick(e, SECTION_HREFS.work, lenis)}
+            >
+              {h.cta1}
+            </Link>
           </Button>
           <Button
             asChild
@@ -82,7 +91,13 @@ export function HeroSection() {
             variant="ghost"
             className="rounded-full border border-foreground/8 px-8 text-foreground/50 hover:border-foreground/16 hover:bg-transparent hover:text-foreground"
           >
-            <Link href="#contact">{h.cta2}</Link>
+            <Link
+              href={SECTION_HREFS.contact}
+              scroll={false}
+              onClick={(e) => handleSectionLinkClick(e, SECTION_HREFS.contact, lenis)}
+            >
+              {h.cta2}
+            </Link>
           </Button>
         </motion.div>
       </div>
