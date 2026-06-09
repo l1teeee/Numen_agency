@@ -50,16 +50,22 @@ const en = {
         desc: 'Social media management SaaS with OAuth integrations (Meta, Instagram, LinkedIn). Multi-channel publishing, real-time metrics dashboard, and automated workflow orchestration. Used by digital professionals worldwide.',
       },
       {
+        name: 'ScoutIA',
+        category: 'Platform · 2026',
+        desc: 'Local business prospecting workspace — search by zone and category, review signals, save prospects, and organize follow-up from one place.',
+      },
+      {
         name: 'InkyTap',
         category: 'Web App · 2026',
         desc: '"Historias para descubrir." A curated story library for Spanish readers — browse 15+ genres from fiction to biography, filter by reading time, and find your next great read.',
       },
-      {
-        name: 'InkyTap Quiz',
-        category: 'Web App · 2026',
-        desc: '"Desafía tu conocimiento." Create and share quizzes on any topic — no account needed to play. Covers hobbies, history, and exam prep.',
-      },
     ],
+  },
+  liveProjects: {
+    label: 'Live Now',
+    headline1: 'Products live',
+    headline2: 'in production.',
+    subtext: 'Every project below is deployed, serving real users, and actively maintained by our team.',
   },
   about: {
     label: 'About Numen',
@@ -228,16 +234,22 @@ const es: typeof en = {
         desc: 'SaaS de gestión de redes sociales con integraciones OAuth (Meta, Instagram, LinkedIn). Publicación multicanal, dashboard de métricas en tiempo real y orquestación de flujos automatizados. Usado por profesionales digitales en todo el mundo.',
       },
       {
+        name: 'ScoutIA',
+        category: 'Plataforma · 2026',
+        desc: 'Workspace de prospección de negocios locales — busca por zona y categoría, revisa señales, guarda prospectos y organiza el seguimiento desde un solo lugar.',
+      },
+      {
         name: 'InkyTap',
         category: 'App Web · 2026',
         desc: '"Historias para descubrir." Una biblioteca curada para lectores hispanohablantes — explora más de 15 géneros, filtra por tiempo de lectura y encuentra tu próxima gran historia.',
       },
-      {
-        name: 'InkyTap Quiz',
-        category: 'App Web · 2026',
-        desc: '"Desafía tu conocimiento." Crea y comparte quizzes sobre cualquier tema — sin necesidad de cuenta para jugar. Cubre hobbies, historia y preparación para exámenes.',
-      },
     ],
+  },
+  liveProjects: {
+    label: 'En Producción',
+    headline1: 'Productos activos',
+    headline2: 'en producción.',
+    subtext: 'Cada proyecto a continuación está desplegado, sirve a usuarios reales y es mantenido activamente por nuestro equipo.',
   },
   about: {
     label: 'Sobre Numen',

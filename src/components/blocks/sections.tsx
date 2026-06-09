@@ -76,9 +76,14 @@ const servicesMeta = [
 ]
 
 const projectsMeta = [
-  { href: 'https://vielinks.com',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
-  { href: 'https://inkytap.com',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase', 'PayPal', 'Framer Motion'], img: '/inkytap/principal.png' },
-  { href: 'https://app.inkytap.com',  status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase'] },
+  { href: 'https://vielinks.com',          name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
+  { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'], img: '/scoutia/inicio.png' },
+  { href: 'https://inkytap.com',           name: 'InkyTap',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase', 'PayPal', 'Framer Motion'] },
+]
+
+const liveProjectsMeta = [
+  ...projectsMeta,
+  { href: 'https://app.inkytap.com',       name: 'InkyTap Quiz', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase'] },
 ]
 
 const teamMeta = [
@@ -277,7 +282,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               </div>
               <div className="hidden lg:flex items-center justify-center">
                 <PhotoSpread
-                  images={['/vielink/dashboard.png', '/vielink/principal.png', '/vielink/know.png']}
+                  images={['/vielink/vielink2.png', '/vielink/inici vie.png', '/vielink/vielink3.png']}
                   width={170}
                   height={280}
                   centerWidth={260}
@@ -321,7 +326,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                         className="h-full w-full object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
                       </div>
                     )}
-                    <div className={'img' in pm && pm.img ? '' : 'mt-auto'}>
+                    <div className="mt-auto">
                       <p className="mb-2 line-clamp-2 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{pt.desc}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {pm.stack.map((s) => (
@@ -334,6 +339,90 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 </motion.div>
               )
             })}
+            <motion.div variants={staggerItem} {...LIFT} className="flex-1 min-h-14">
+              <Link
+                href="/projects"
+                className="group flex h-full min-h-14 items-center justify-center rounded-2xl border border-dashed border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/20 lg:p-5"
+              >
+                <div className="flex items-center gap-2 text-sm text-foreground/30 transition-colors duration-300 group-hover:text-foreground/70">
+                  <span>See all projects</span>
+                  <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+              </Link>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </section>
+  )
+}
+
+// ─── Live Projects ───────────────────────────────────────────
+export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
+  const { t } = useLang()
+  const tl = t.liveProjects
+
+  return (
+    <section ref={ref} id="live-projects" className="sticky top-0 z-[25] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tl.label}</span>
+          </div>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+        </div>
+
+        <motion.div
+          className="mt-6 flex flex-1 flex-col gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-visible lg:pb-0 lg:mt-8"
+          variants={staggerContainer}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+        >
+          <motion.div variants={staggerItem}>
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-5xl">
+              {tl.headline1}<br />
+              <span className="text-foreground/25">{tl.headline2}</span>
+            </h2>
+            <p className="mt-3 max-w-lg text-sm leading-relaxed text-foreground/40">{tl.subtext}</p>
+          </motion.div>
+
+          <motion.div
+            className="grid grid-cols-2 gap-3 lg:grid-cols-4"
+            variants={staggerContainer}
+          >
+            {liveProjectsMeta.map((pm) => (
+              <motion.div key={pm.href} variants={staggerItem} {...LIFT}>
+                <Link
+                  href={pm.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex h-full flex-col gap-3 rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16]"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span className="relative flex h-1.5 w-1.5 shrink-0">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                      </span>
+                      <span className="text-[10px] text-foreground/30">{pm.status}</span>
+                    </div>
+                    <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{pm.name}</p>
+                    <p className="mt-0.5 text-[11px] text-foreground/30">{pm.href.replace('https://', '')}</p>
+                  </div>
+                  <div className="mt-auto flex flex-wrap gap-1">
+                    {pm.stack.slice(0, 2).map((s) => (
+                      <span key={s} className="rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">{s}</span>
+                    ))}
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
       </motion.div>
