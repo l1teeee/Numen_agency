@@ -43,6 +43,7 @@ const en = {
   },
   projects: {
     label: 'Selected Work',
+    seeAll: 'See all projects',
     items: [
       {
         name: 'VieLinks',
@@ -227,6 +228,7 @@ const es: typeof en = {
   },
   projects: {
     label: 'Proyectos Seleccionados',
+    seeAll: 'Ver todos los proyectos',
     items: [
       {
         name: 'VieLinks',

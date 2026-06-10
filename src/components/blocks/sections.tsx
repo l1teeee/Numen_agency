@@ -239,9 +239,15 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
     <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tp.label}</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+              <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tp.label}</span>
+            </div>
+            <Link href="/projects" className={`flex items-center gap-1 text-[10px] transition-colors duration-200 hover:text-foreground/70 lg:text-xs ${isInView ? 'text-foreground/30' : 'text-foreground/15'}`}>
+              <span>{tp.seeAll}</span>
+              <ArrowUpRight className="size-3" />
+            </Link>
           </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
         </div>
@@ -339,17 +345,6 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 </motion.div>
               )
             })}
-            <motion.div variants={staggerItem} {...LIFT} className="flex-1 min-h-14">
-              <Link
-                href="/projects"
-                className="group flex h-full min-h-14 items-center justify-center rounded-2xl border border-dashed border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/20 lg:p-5"
-              >
-                <div className="flex items-center gap-2 text-sm text-foreground/30 transition-colors duration-300 group-hover:text-foreground/70">
-                  <span>See all projects</span>
-                  <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
-              </Link>
-            </motion.div>
           </motion.div>
         </motion.div>
       </motion.div>
