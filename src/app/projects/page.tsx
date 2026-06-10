@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ProjectsPage() {
   return (
     <div className="bg-background">
-      <Navbar />
+      <Navbar alwaysVisible />
       <main className="flex min-h-screen flex-col">
         <LiveProjectsSection />
       </main>

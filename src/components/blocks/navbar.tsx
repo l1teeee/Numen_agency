@@ -25,7 +25,7 @@ function LangToggle({ lang, setLang }: { lang: Lang; setLang: (lang: Lang) => vo
   )
 }
 
-export function Navbar() {
+export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
   const [open,    setOpen]    = useState(false)
   const [visible, setVisible] = useState(false)
   const [active,  setActive]  = useState('')
@@ -37,10 +37,11 @@ export function Navbar() {
   const allLinks = [...links, contactLink]
 
   useEffect(() => {
+    if (alwaysVisible) { setVisible(true); return }
     const onScroll = () => setVisible(window.scrollY > 60)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [alwaysVisible])
 
   const updateActive = useCallback(() => {
     let activeId = ''
