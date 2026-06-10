@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Menu } from 'lucide-react'
 import { useLenis } from 'lenis/react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { AnimatedThemeToggle } from '@/components/ui/animated-theme-toggle'
 import { useLang } from '@/lib/lang'
 import type { Lang } from '@/lib/translations'
@@ -31,6 +33,8 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
   const [active,  setActive]  = useState('')
   const lenis = useLenis()
   const { lang, setLang, t } = useLang()
+  const pathname = usePathname()
+  const isHome = pathname === '/'
 
   const links = t.nav.links
   const contactLink = { label: t.nav.contact, href: SECTION_HREFS.contact }
@@ -64,7 +68,7 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
 
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setOpen(false)
-    handleSectionLinkClick(e, href, lenis)
+    if (isHome) handleSectionLinkClick(e, href, lenis)
   }
 
   return (
@@ -79,15 +83,15 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
         >
           {/* Desktop */}
           <div className="hidden items-center gap-1 rounded-full border border-foreground/8 bg-background/70 px-2 py-2 backdrop-blur-xl lg:flex">
-            <span className="shrink-0 whitespace-nowrap px-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40">
+            <Link href="/" className="shrink-0 whitespace-nowrap px-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40 transition-colors duration-200 hover:text-foreground/70">
               Numen Agency
-            </span>
+            </Link>
             <div className="mx-1 h-3.5 w-px bg-foreground/8" />
             <nav className="flex items-center">
               {links.map((l) => (
                 <a
                   key={l.href}
-                  href={l.href}
+                  href={isHome ? l.href : `/${l.href}`}
                   onClick={(e) => scrollTo(e, l.href)}
                   className={`px-3 py-2 text-xs transition-colors duration-200 hover:text-foreground ${
                     active === l.href ? 'text-foreground' : 'text-foreground/40'
@@ -102,7 +106,7 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
             <LangToggle lang={lang} setLang={setLang} />
             <div className="mx-1 h-3.5 w-px bg-foreground/8" />
             <a
-              href={contactLink.href}
+              href={isHome ? contactLink.href : `/${contactLink.href}`}
               onClick={(e) => scrollTo(e, contactLink.href)}
               className={`rounded-full bg-foreground px-4 py-2 text-xs font-semibold text-background transition-opacity duration-200 hover:opacity-80 ${
                 active === contactLink.href ? 'opacity-100' : 'opacity-90'
@@ -115,9 +119,9 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
           {/* Mobile */}
           <div className="relative flex lg:hidden">
             <div className="flex items-center gap-3 rounded-full border border-foreground/8 bg-background/70 px-4 py-2.5 backdrop-blur-xl">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40">
+              <Link href="/" className="text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40 transition-colors duration-200 hover:text-foreground/70">
                 Numen
-              </span>
+              </Link>
               <AnimatedThemeToggle />
               <LangToggle lang={lang} setLang={setLang} />
               <button
@@ -141,7 +145,7 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
                   {allLinks.map((l) => (
                     <a
                       key={l.href}
-                      href={l.href}
+                      href={isHome ? l.href : `/${l.href}`}
                       onClick={(e) => scrollTo(e, l.href)}
                       className={`block rounded-xl px-4 py-2.5 text-sm transition-colors hover:bg-foreground/5 hover:text-foreground ${
                         active === l.href ? 'text-foreground' : 'text-foreground/40'
