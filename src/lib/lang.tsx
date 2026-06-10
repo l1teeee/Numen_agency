@@ -27,21 +27,19 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
 
   const setLang = (l: Lang) => {
     setFlashKey((k) => k + 1)
-    // Swap text after a brief delay so the flash covers the snap
-    setTimeout(() => setLangState(l), 80)
+    setTimeout(() => setLangState(l), 180)
     localStorage.setItem('numen-lang', l)
   }
 
   return (
     <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>
       {children}
-      {/* Full-screen overlay that flashes on lang change, giving a soft transition feel */}
       {flashKey > 0 && (
         <motion.div
           key={flashKey}
-          initial={{ opacity: 0.18 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 0.45, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.38, 0] }}
+          transition={{ duration: 0.65, times: [0, 0.32, 1], ease: ['easeIn', 'easeOut'] }}
           className="pointer-events-none fixed inset-0 z-9999 bg-background"
           style={{ willChange: 'opacity' }}
         />

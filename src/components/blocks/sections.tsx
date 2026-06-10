@@ -655,7 +655,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <div>
                 <h3 className="mb-1 text-sm font-semibold text-foreground">{tp.steps[0].title}</h3>
                 <p className="text-xs leading-relaxed text-foreground/50">{tp.steps[0].desc}</p>
-                {tp.steps[0].extra && <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[0].extra}</p>}
+                {tp.steps[0].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[0].extra}</p>}
               </div>
             </div>
             <div className="relative h-24 overflow-hidden lg:h-auto lg:w-1/2">
@@ -677,7 +677,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <span className="text-[10px] font-medium text-foreground/30">02</span>
               <h3 className="mt-1 text-sm font-semibold text-foreground">{tp.steps[1].title}</h3>
               <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">{tp.steps[1].desc}</p>
-              {tp.steps[1].extra && <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[1].extra}</p>}
+              {tp.steps[1].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[1].extra}</p>}
             </div>
           </motion.div>
 
@@ -710,7 +710,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <span className="text-[10px] font-medium text-foreground/30">04</span>
               <h3 className="mt-1 text-sm font-semibold text-foreground">{tp.steps[3].title}</h3>
               <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">{tp.steps[3].desc}</p>
-              {tp.steps[3].extra && <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[3].extra}</p>}
+              {tp.steps[3].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[3].extra}</p>}
             </div>
           </motion.div>
 
@@ -728,7 +728,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <div>
                 <h3 className="mb-1 text-sm font-semibold text-foreground">{tp.steps[4].title}</h3>
                 <p className="text-xs leading-relaxed text-foreground/50">{tp.steps[4].desc}</p>
-                {tp.steps[4].extra && <p className="mt-2 hidden text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[4].extra}</p>}
+                {tp.steps[4].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[4].extra}</p>}
               </div>
             </div>
           </motion.div>
