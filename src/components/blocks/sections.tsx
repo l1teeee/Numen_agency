@@ -1038,6 +1038,12 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 >
                   {status === 'loading' ? tc.sendingBtn : tc.sendBtn}
                 </Button>
+                <Link
+                  href="/blog"
+                  className="block text-center text-xs text-foreground/25 transition-colors hover:text-foreground/50"
+                >
+                  {tc.blogCta}
+                </Link>
               </form>
             )}
           </motion.div>

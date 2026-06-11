@@ -181,6 +181,7 @@ const en = {
     successTitle: 'Message sent!',
     successDesc: "We'll get back to you within 24 hours.",
     errorMsg: 'Something went wrong. Please try again or email us at contact@delta-numen.com.',
+    blogCta: 'Need to learn more first? We have a blog for you →',
     footer: 'All rights reserved.',
   },
 }
@@ -366,6 +367,7 @@ const es: typeof en = {
     successTitle: '¡Mensaje enviado!',
     successDesc: 'Te responderemos en 24 horas.',
     errorMsg: 'Algo salió mal. Intenta de nuevo o escríbenos a contact@delta-numen.com.',
+    blogCta: '¿Necesitas saber un poco más? Tenemos un blog para que no te pierdas →',
     footer: 'Todos los derechos reservados.',
   },
 }
