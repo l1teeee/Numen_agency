@@ -1054,8 +1054,14 @@ export function SiteFooter() {
   const { t } = useLang()
   return (
     <footer className="border-t border-foreground/[0.08] bg-background">
-      <div className="mx-auto flex max-w-5xl items-center px-6 py-6 lg:px-8">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 lg:px-8">
         <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen Agency. {t.contact.footer}</span>
+        <Link
+          href="/blog"
+          className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
+        >
+          Blog →
+        </Link>
       </div>
     </footer>
   )

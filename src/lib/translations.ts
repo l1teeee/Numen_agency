@@ -13,9 +13,9 @@ const en = {
     contact: "Let's Talk",
   },
   hero: {
-    headline: 'From Idea to Production in Weeks.',
+    headline: 'Web Development Agency from El Salvador.',
     subline:
-      'Numen is a digital product studio from El Salvador. We build full-stack apps, SaaS platforms, and AI-powered tools — with the speed of a startup and the craft of a senior team.',
+      'Numen is a digital product agency from El Salvador. We build full-stack apps, SaaS platforms, and AI-powered tools — with the speed of a startup and the craft of a senior team.',
     cta1: 'View Our Work',
     cta2: "Let's Talk",
     scroll: 'Scroll to explore ↓',
@@ -24,11 +24,11 @@ const en = {
     label: 'What We Do',
     items: [
       {
-        title: 'Web Development',
+        title: 'Full-Stack Web Development',
         desc: 'Full-stack applications built with Next.js, TypeScript, and Supabase. From zero-to-one MVPs to production-grade SaaS — fast, scalable, and maintainable from day one.',
       },
       {
-        title: 'Product Design',
+        title: 'Digital Product Design',
         desc: 'End-to-end design in Figma: user flows, wireframes, interactive prototypes, and production-ready design systems. Pixel-perfect and accessible across every screen.',
       },
       {
@@ -198,9 +198,9 @@ const es: typeof en = {
     contact: 'Hablemos',
   },
   hero: {
-    headline: 'De la Idea a Producción en Semanas.',
+    headline: 'Agencia Digital de Desarrollo Web en El Salvador.',
     subline:
-      'Numen es un estudio de producto digital de El Salvador. Construimos apps full-stack, plataformas SaaS y herramientas con IA — con la velocidad de una startup y la calidad de un equipo senior.',
+      'Numen es una agencia digital de El Salvador. Construimos apps full-stack, plataformas SaaS y herramientas con IA — con la velocidad de una startup y la calidad de un equipo senior.',
     cta1: 'Ver Nuestro Trabajo',
     cta2: 'Hablemos',
     scroll: 'Explora ↓',
@@ -209,15 +209,15 @@ const es: typeof en = {
     label: 'Qué Hacemos',
     items: [
       {
-        title: 'Desarrollo Web',
+        title: 'Desarrollo Web Full-Stack en El Salvador',
         desc: 'Aplicaciones full-stack con Next.js, TypeScript y Supabase. Desde MVPs hasta SaaS de producción — rápidos, escalables y mantenibles desde el primer día.',
       },
       {
-        title: 'Diseño de Producto',
+        title: 'Diseño de Productos Digitales',
         desc: 'Diseño end-to-end en Figma: flujos de usuario, wireframes, prototipos interactivos y sistemas de diseño listos para producción. Pixel-perfect y accesible en cada pantalla.',
       },
       {
-        title: 'Integración de IA',
+        title: 'Integración de IA en Productos',
         desc: 'Integra inteligencia en tu producto — IA conversacional, búsqueda semántica, automatización de contenido y recomendaciones inteligentes — impulsadas por los últimos modelos frontier.',
       },
       {
