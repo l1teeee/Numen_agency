@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
@@ -58,11 +59,12 @@ function Photo({
       draggable={false}
     >
       <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-lg">
-        <img
+        <Image
+          fill
           src={src}
           alt=""
-          draggable={false}
-          className="h-full w-full rounded-2xl object-cover invert dark:invert-0"
+          sizes="260px"
+          className="rounded-2xl object-cover invert dark:invert-0"
         />
       </div>
     </motion.div>

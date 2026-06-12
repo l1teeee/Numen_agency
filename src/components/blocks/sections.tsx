@@ -8,6 +8,7 @@ import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
 import { PhotoSpread } from '@/components/ui/gallery'
+import Image from 'next/image'
 import { companyStats } from '@/lib/company-stats'
 import { useLang } from '@/lib/lang'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
@@ -195,12 +196,13 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 {...LIFT}
                 className={`group relative overflow-hidden rounded-2xl border border-foreground/8 transition-colors duration-300 hover:border-foreground/[0.14]${i >= 2 ? ' lg:mb-14' : ''}`}
               >
-                <img
+                <Image
+                  fill
                   src={s.img}
                   alt={text.title}
-                  loading="lazy"
+                  sizes="(max-width: 640px) 0px, (max-width: 1024px) 50vw, 25vw"
                   style={{ objectPosition: 'center 18%' }}
-                  className="absolute inset-0 h-full w-full object-contain scale-[0.82] origin-top transition-transform duration-700 group-hover:scale-[0.87] invert brightness-[0.88] dark:invert-0 dark:brightness-100 hidden sm:block"
+                  className="object-contain scale-[0.82] origin-top transition-transform duration-700 group-hover:scale-[0.87] invert brightness-[0.88] dark:invert-0 dark:brightness-100 hidden sm:block"
                 />
                 <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/30 to-background/20 hidden sm:block" />
                 <div className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-background via-background/90 to-transparent hidden sm:block" />
@@ -327,9 +329,10 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                       <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                     </div>
                     {'img' in pm && pm.img && (
-                      <div className="hidden my-4 overflow-hidden rounded-xl lg:block lg:flex-1">
-                        <img src={pm.img as string} alt={pt.name} loading="lazy"
-                        className="h-full w-full object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
+                      <div className="relative hidden my-4 overflow-hidden rounded-xl lg:block lg:flex-1">
+                        <Image fill src={pm.img as string} alt={pt.name}
+                          sizes="(max-width: 1024px) 0px, 33vw"
+                          className="object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
                       </div>
                     )}
                     <div className="mt-auto">
@@ -659,8 +662,9 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               </div>
             </div>
             <div className="relative h-24 overflow-hidden lg:h-auto lg:w-1/2">
-              <img src="/discovery.png" alt="Discovery" loading="lazy"
-              className="absolute inset-0 h-full w-full object-contain p-4 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
+              <Image fill src="/discovery.png" alt="Discovery"
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-contain p-4 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
             </div>
           </motion.div>
 
@@ -670,8 +674,9 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:min-h-0 lg:col-start-3 lg:row-start-1 lg:row-end-3"
           >
             <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[4]">
-              <img src="/ux.png" alt="Design" loading="lazy"
-                className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+              <Image fill src="/ux.png" alt="Design"
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
             <div className="flex flex-col justify-end p-4 lg:flex-[2]">
               <span className="text-[10px] font-medium text-foreground/30">02</span>
@@ -687,8 +692,9 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:min-h-0 lg:col-start-2 lg:row-start-2"
           >
             <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[3]">
-              <img src="/build.png" alt="Build" loading="lazy"
-                className="absolute inset-0 h-full w-full object-contain p-2 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
+              <Image fill src="/build.png" alt="Build"
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-contain p-2 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
             </div>
             <div className="flex flex-col justify-end p-4">
               <span className="text-[10px] font-medium text-foreground/30">03</span>
@@ -703,8 +709,9 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:mb-14 lg:min-h-0 lg:flex-col lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-4"
           >
             <div className="relative w-2/5 overflow-hidden lg:w-auto lg:min-h-0 lg:flex-[4]">
-              <img src="/launch.png" alt="Launch" loading="lazy"
-                className="absolute inset-0 h-full w-full object-contain p-2 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+              <Image fill src="/launch.png" alt="Launch"
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-contain p-2 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
             <div className="flex flex-1 flex-col justify-center p-4 lg:flex-[2] lg:justify-end">
               <span className="text-[10px] font-medium text-foreground/30">04</span>
@@ -720,8 +727,9 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:mb-14 lg:min-h-0 lg:col-start-2 lg:col-end-4 lg:row-start-3"
           >
             <div className="relative w-2/5 overflow-hidden lg:h-auto lg:w-2/5">
-              <img src="/scale.png" alt="Scale" loading="lazy"
-                className="absolute inset-0 h-full w-full object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
+              <Image fill src="/scale.png" alt="Scale"
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
             </div>
             <div className="flex flex-1 flex-col justify-center p-4 lg:justify-between lg:w-3/5">
               <span className="text-[10px] font-medium text-foreground/30">05</span>
