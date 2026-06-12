@@ -184,6 +184,20 @@ const en = {
     blogCta: 'Need to learn more first? We have a blog for you →',
     footer: 'All rights reserved.',
   },
+  blog: {
+    label: 'Blog',
+    headline: 'Resources for founders and tech teams.',
+    subtext: 'Articles on web development, product design, AI integration, and infrastructure — written from El Salvador for LATAM and the world.',
+    readTime: 'read',
+    readArticle: 'Read article →',
+    cta: 'Have a project in mind? Let\'s talk.',
+    ctaBtn: 'Start a project',
+    backToBlog: '← Back to blog',
+    readyTitle: 'Ready to start your project?',
+    readyDesc: 'Numen Agency builds digital products from El Salvador for the world. We respond within 24 hours.',
+    startProject: 'Start a project',
+    moreArticles: 'See more articles',
+  },
 }
 
 const es: typeof en = {
@@ -369,6 +383,20 @@ const es: typeof en = {
     errorMsg: 'Algo salió mal. Intenta de nuevo o escríbenos a contact@delta-numen.com.',
     blogCta: '¿Necesitas saber un poco más? Tenemos un blog para que no te pierdas →',
     footer: 'Todos los derechos reservados.',
+  },
+  blog: {
+    label: 'Blog',
+    headline: 'Recursos para founders y equipos tech.',
+    subtext: 'Artículos sobre desarrollo web, diseño de productos, integración de IA e infraestructura — escritos desde El Salvador para LATAM y el mundo.',
+    readTime: 'lectura',
+    readArticle: 'Leer artículo →',
+    cta: '¿Tienes un proyecto en mente? Hablemos.',
+    ctaBtn: 'Iniciar un proyecto',
+    backToBlog: '← Volver al blog',
+    readyTitle: '¿Listo para empezar tu proyecto?',
+    readyDesc: 'En Numen Agency construimos productos digitales desde El Salvador para el mundo. Respondemos en menos de 24 horas.',
+    startProject: 'Iniciar un proyecto',
+    moreArticles: 'Ver más artículos',
   },
 }
 

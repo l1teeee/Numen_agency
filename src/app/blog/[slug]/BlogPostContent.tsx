@@ -1,16 +1,15 @@
 'use client'
 
-import { useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { useLenis } from 'lenis/react'
 import { Navbar } from '@/components/blocks/navbar'
 import type { BlogPost } from '@/lib/blog-posts'
+import { useLang } from '@/lib/lang'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-SV', {
+function formatDate(dateStr: string, locale: string) {
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString(locale, {
     year: 'numeric', month: 'long', day: 'numeric',
   })
 }
@@ -61,7 +60,7 @@ function renderContent(content: string): React.ReactNode[] {
     if (block.startsWith('```')) {
       const codeContent = block.replace(/^```[^\n]*\n/, '').replace(/```$/, '')
       return (
-        <pre key={i} className="mb-4 overflow-x-auto rounded-lg border border-foreground/8 bg-foreground/[0.03] p-4 text-xs leading-relaxed text-foreground/70">
+        <pre key={i} className="mb-4 overflow-x-auto rounded-lg border border-foreground/8 bg-foreground/3 p-4 text-xs leading-relaxed text-foreground/70">
           <code>{codeContent}</code>
         </pre>
       )
@@ -75,12 +74,13 @@ function renderContent(content: string): React.ReactNode[] {
 }
 
 export function BlogPostContent({ post }: { post: BlogPost }) {
-  const lenis = useLenis()
+  const { lang, t } = useLang()
+  const locale = lang === 'en' ? 'en-US' : 'es-SV'
 
-  useEffect(() => {
-    lenis?.scrollTo(0, { immediate: true })
-    lenis?.resize()
-  }, [lenis])
+  const title = lang === 'en' && post.en ? post.en.title : post.title
+  const description = lang === 'en' && post.en ? post.en.description : post.description
+  const category = lang === 'en' && post.en ? post.en.category : post.category
+  const content = lang === 'en' && post.en ? post.en.content : post.content
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,7 +95,7 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
             href="/blog"
             className="mb-10 inline-flex items-center gap-2 text-xs text-foreground/30 transition-colors hover:text-foreground/60"
           >
-            ← Volver al blog
+            {t.blog.backToBlog}
           </Link>
         </motion.div>
 
@@ -107,15 +107,15 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
         >
           <div className="mb-4 flex items-center gap-3">
             <span className="rounded-full border border-foreground/10 px-3 py-0.5 text-xs text-foreground/40">
-              {post.category}
+              {category}
             </span>
-            <span className="text-xs text-foreground/25">{post.readTime} de lectura</span>
-            <span className="text-xs text-foreground/25">{formatDate(post.date)}</span>
+            <span className="text-xs text-foreground/25">{post.readTime} {t.blog.readTime}</span>
+            <span className="text-xs text-foreground/25">{formatDate(post.date, locale)}</span>
           </div>
           <h1 className="text-3xl font-semibold leading-tight tracking-tight text-foreground md:text-4xl">
-            {post.title}
+            {title}
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-foreground/40">{post.description}</p>
+          <p className="mt-4 text-base leading-relaxed text-foreground/40">{description}</p>
         </motion.div>
 
         <motion.div
@@ -124,7 +124,7 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.2 }}
         >
-          {renderContent(post.content)}
+          {renderContent(content)}
         </motion.div>
 
         <motion.div
@@ -134,24 +134,23 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
           transition={{ duration: 0.5, ease: EASE, delay: 0.3 }}
         >
           <p className="mb-2 text-sm font-medium text-foreground">
-            ¿Listo para empezar tu proyecto?
+            {t.blog.readyTitle}
           </p>
           <p className="mb-6 text-sm text-foreground/40">
-            En Numen Agency construimos productos digitales desde El Salvador para el mundo.
-            Respondemos en menos de 24 horas.
+            {t.blog.readyDesc}
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/#contact"
               className="inline-flex items-center rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
             >
-              Iniciar un proyecto
+              {t.blog.startProject}
             </Link>
             <Link
               href="/blog"
               className="inline-flex items-center rounded-full border border-foreground/10 px-6 py-2.5 text-sm text-foreground/50 transition-colors hover:border-foreground/20 hover:text-foreground"
             >
-              Ver más artículos
+              {t.blog.moreArticles}
             </Link>
           </div>
         </motion.div>
