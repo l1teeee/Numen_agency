@@ -11,6 +11,18 @@ function LenisScrollReset() {
   const pathname = usePathname()
 
   useEffect(() => {
+    const hash = window.location.hash
+    if (hash && hash.length > 1) {
+      const timer = setTimeout(() => {
+        const target = document.querySelector(hash) as HTMLElement | null
+        if (target && lenis) {
+          lenis.scrollTo(target, { duration: 1.2 })
+        } else {
+          lenis?.scrollTo(0, { immediate: true })
+        }
+      }, 80)
+      return () => clearTimeout(timer)
+    }
     lenis?.scrollTo(0, { immediate: true })
   }, [pathname, lenis])
 

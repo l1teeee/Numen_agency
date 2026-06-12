@@ -48,10 +48,6 @@ export function scrollToSection(href: string, scroller?: SectionScroller | null)
     target.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  if (window.location.hash !== href) {
-    window.history.pushState(null, '', href)
-  }
-
   return true
 }
 
