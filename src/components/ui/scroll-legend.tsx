@@ -60,7 +60,7 @@ export function ScrollLegend({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'fixed left-5 top-1/2 -translate-y-1/2 z-40 transition-[opacity,transform] duration-300',
+        'fixed left-5 top-1/2 -translate-y-1/2 z-90 transition-[opacity,transform] duration-300',
         visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none',
         className,
       )}
