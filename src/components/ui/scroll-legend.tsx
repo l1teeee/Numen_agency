@@ -5,7 +5,7 @@ import { useLenis } from 'lenis/react'
 import { cn } from '@/lib/utils'
 import { useLang } from '@/lib/lang'
 
-const SECTION_IDS = ['services', 'work', 'about', 'stack', 'process', 'faq'] as const
+const SECTION_IDS = ['services', 'work', 'about', 'stack', 'process', 'faq', 'contact'] as const
 
 export function ScrollLegend({ className }: { className?: string }) {
   const [activeSection, setActiveSection] = useState<string>('')
@@ -21,6 +21,7 @@ export function ScrollLegend({ className }: { className?: string }) {
     { id: 'stack',    name: t.nav.links[3].label },
     { id: 'process',  name: t.nav.links[4].label },
     { id: 'faq',      name: t.nav.links[5].label },
+    { id: 'contact',  name: t.contact.label },
   ]
 
   useEffect(() => {
@@ -60,38 +61,38 @@ export function ScrollLegend({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'fixed left-5 top-1/2 -translate-y-1/2 z-90 transition-[opacity,transform] duration-300',
-        visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none',
+        'fixed right-5 top-1/2 -translate-y-1/2 z-90 transition-[opacity,transform] duration-300',
+        visible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2 pointer-events-none',
         className,
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {items.map((item) => {
           const isActive = activeSection === item.id
           return (
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="relative flex items-center gap-3 group"
+              className="relative flex flex-row-reverse items-center gap-4 group"
               aria-label={`Go to ${item.name}`}
             >
               <div
                 className={cn(
                   'h-px rounded-full transition-all duration-300',
                   isActive
-                    ? 'w-6 bg-foreground'
-                    : 'w-3.5 bg-foreground/25 group-hover:w-5 group-hover:bg-foreground/40',
+                    ? 'w-10 bg-foreground'
+                    : 'w-5 bg-foreground/25 group-hover:w-8 group-hover:bg-foreground/40',
                 )}
               />
               <span
                 className={cn(
-                  'text-[11px] font-medium whitespace-nowrap transition-all duration-200',
+                  'text-[13px] font-medium whitespace-nowrap transition-all duration-200',
                   isActive ? 'text-foreground' : 'text-foreground/40',
                   isHovered
                     ? 'opacity-100 translate-x-0'
-                    : 'opacity-0 -translate-x-1 pointer-events-none',
+                    : 'opacity-0 translate-x-1 pointer-events-none',
                 )}
               >
                 {item.name}

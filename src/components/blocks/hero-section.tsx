@@ -107,10 +107,10 @@ export function HeroSection() {
         {...enter(0.6)}
         className="absolute inset-x-0 bottom-0 px-8 py-6 lg:px-16"
       >
-        <div className="flex items-center justify-between border-t border-foreground/8 pt-5">
+        <div className="relative flex items-center border-t border-foreground/8 pt-5">
           <span className="text-xs text-foreground/20">01</span>
           <motion.span
-            className="text-xs text-foreground/20"
+            className="absolute left-1/2 -translate-x-1/2 text-xs text-foreground/20"
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
