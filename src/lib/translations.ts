@@ -184,24 +184,6 @@ const en = {
     blogCta: 'Need to learn more first? We have a blog for you →',
     footer: 'All rights reserved.',
   },
-  chat: {
-    title: 'Numen AI',
-    subtitle: 'Ask about our services',
-    initialMessage:
-      "Hi! I'm Numen's AI assistant. Ask me anything about our services, process, or pricing, or write in Spanish if you prefer.",
-    suggestions: [
-      'What services do you offer?',
-      'How much does a project cost?',
-      'How do I start a project?',
-      'Tell me about your process',
-    ],
-    placeholder: 'Ask a question...',
-    openLabel: 'Open chat',
-    closeLabel: 'Close chat',
-    sendLabel: 'Send',
-    fallbackReply: 'Something went wrong. Please try again.',
-    errorReply: 'Something went wrong. Email us at contact@delta-numen.com.',
-  },
   blog: {
     label: 'Blog',
     headline: 'Resources for founders and tech teams.',
@@ -401,24 +383,6 @@ const es: typeof en = {
     errorMsg: 'Algo salió mal. Intenta de nuevo o escríbenos a contact@delta-numen.com.',
     blogCta: '¿Necesitas saber un poco más? Tenemos un blog para que no te pierdas →',
     footer: 'Todos los derechos reservados.',
-  },
-  chat: {
-    title: 'Numen AI',
-    subtitle: 'Pregunta sobre nuestros servicios',
-    initialMessage:
-      'Hola, soy el asistente de IA de Numen. Pregúntame sobre nuestros servicios, proceso o precios.',
-    suggestions: [
-      '¿Qué servicios ofrecen?',
-      '¿Cuánto cuesta un proyecto?',
-      '¿Cómo inicio un proyecto?',
-      'Cuéntame sobre su proceso',
-    ],
-    placeholder: 'Haz una pregunta...',
-    openLabel: 'Abrir chat',
-    closeLabel: 'Cerrar chat',
-    sendLabel: 'Enviar',
-    fallbackReply: 'Algo salió mal. Intenta de nuevo.',
-    errorReply: 'Algo salió mal. Escríbenos a contact@delta-numen.com.',
   },
   blog: {
     label: 'Blog',
