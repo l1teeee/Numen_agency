@@ -1,26 +1,17 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { MessageCircle, X, Send, Mail, MessageSquare } from 'lucide-react'
+import { useLang } from '@/lib/lang'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-type Message = { role: 'user' | 'assistant'; content: string; showContact?: boolean }
+type Message = { role: 'user' | 'assistant'; content: string; showContact?: boolean; initial?: boolean }
 
-const INITIAL: Message[] = [
-  {
-    role: 'assistant',
-    content: "Hi! I'm Numen's AI assistant. Ask me anything about our services, process, or pricing — or write in Spanish if you prefer.",
-  },
-]
-
-const SUGGESTIONS = [
-  'What services do you offer?',
-  'How much does a project cost?',
-  'How do I start a project?',
-  'Tell me about your process',
-]
+function createInitialMessage(content: string): Message {
+  return { role: 'assistant', content, initial: true }
+}
 
 function parseReply(raw: string): { content: string; showContact: boolean } {
   const showContact = /\[CONTACT\]/i.test(raw)
@@ -58,9 +49,30 @@ function ContactLinks() {
   )
 }
 
+function SmoothText({ text, className }: { text: string; className?: string }) {
+  const reduceMotion = useReducedMotion()
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.span
+        key={text}
+        initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
+        animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+        transition={{ duration: reduceMotion ? 0.01 : 0.22, ease: EASE }}
+        className={className}
+      >
+        {text}
+      </motion.span>
+    </AnimatePresence>
+  )
+}
+
 export function ChatBubble() {
+  const { lang, t } = useLang()
+  const chat = t.chat
   const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState<Message[]>(INITIAL)
+  const [messages, setMessages] = useState<Message[]>(() => [createInitialMessage(chat.initialMessage)])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -90,15 +102,22 @@ export function ChatBubble() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: msgs.map(({ role, content }) => ({ role, content })) }),
+        body: JSON.stringify({
+          lang,
+          messages: msgs
+            .filter((msg) => !msg.initial)
+            .map(({ role, content }) => ({ role, content })),
+        }),
       })
-      const data = await res.json()
-      const { content, showContact } = parseReply(data.reply ?? 'Something went wrong. Please try again.')
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error('Chat request failed')
+      const reply = typeof data.reply === 'string' && data.reply.trim() ? data.reply : chat.fallbackReply
+      const { content, showContact } = parseReply(reply)
       setMessages((prev) => [...prev, { role: 'assistant', content, showContact }])
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Something went wrong. Email us at contact@delta-numen.com.' },
+        { role: 'assistant', content: chat.errorReply },
       ])
     } finally {
       setLoading(false)
@@ -145,14 +164,18 @@ export function ChatBubble() {
                   <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">Numen AI</p>
-                  <p className="text-xs text-foreground/30">Ask about our services</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    <SmoothText text={chat.title} />
+                  </p>
+                  <p className="text-xs text-foreground/30">
+                    <SmoothText text={chat.subtitle} />
+                  </p>
                 </div>
               </div>
               <button
                 onClick={() => setOpen(false)}
                 className="text-foreground/30 transition-colors hover:text-foreground"
-                aria-label="Close chat"
+                aria-label={chat.closeLabel}
               >
                 <X size={15} />
               </button>
@@ -160,27 +183,31 @@ export function ChatBubble() {
 
             {/* Messages */}
             <div className="flex max-h-72 flex-col gap-3 overflow-y-auto px-4 py-4">
-              {messages.map((msg, i) => (
-                <div key={i} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                  {msg.role === 'assistant' && (
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/8 text-[9px] font-medium text-foreground/40">
-                      N
+              {messages.map((msg, i) => {
+                const messageContent = msg.initial ? chat.initialMessage : msg.content
+
+                return (
+                  <div key={i} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                    {msg.role === 'assistant' && (
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-foreground/8 text-[9px] font-medium text-foreground/40">
+                        N
+                      </div>
+                    )}
+                    <div className={`flex flex-col max-w-52 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                      <div
+                        className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                          msg.role === 'user'
+                            ? 'rounded-tr-sm bg-foreground text-background'
+                            : 'rounded-tl-sm bg-foreground/6 text-foreground/70'
+                        }`}
+                      >
+                        <SmoothText text={messageContent} className="block" />
+                      </div>
+                      {msg.role === 'assistant' && msg.showContact && <ContactLinks />}
                     </div>
-                  )}
-                  <div className={`flex flex-col max-w-52 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                    <div
-                      className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
-                        msg.role === 'user'
-                          ? 'rounded-tr-sm bg-foreground text-background'
-                          : 'rounded-tl-sm bg-foreground/6 text-foreground/70'
-                      }`}
-                    >
-                      {msg.content}
-                    </div>
-                    {msg.role === 'assistant' && msg.showContact && <ContactLinks />}
                   </div>
-                </div>
-              ))}
+                )
+              })}
 
               {loading && (
                 <div className="flex gap-2.5">
@@ -208,14 +235,14 @@ export function ChatBubble() {
                   transition={{ duration: 0.2, ease: EASE }}
                   className="flex flex-wrap gap-1.5 overflow-hidden border-t border-foreground/6 px-4 py-3"
                 >
-                  {SUGGESTIONS.map((s) => (
+                  {chat.suggestions.map((s) => (
                     <button
                       key={s}
                       type="button"
                       onClick={() => quickSend(s)}
                       className="rounded-full border border-foreground/12 bg-foreground/3 px-3 py-1.5 text-[11px] text-foreground/50 transition-colors duration-150 hover:border-foreground/22 hover:text-foreground/80"
                     >
-                      {s}
+                      <SmoothText text={s} />
                     </button>
                   ))}
                 </motion.div>
@@ -227,19 +254,36 @@ export function ChatBubble() {
               onSubmit={send}
               className="flex shrink-0 items-center gap-2 border-t border-foreground/8 px-4 py-3"
             >
-              <input
-                ref={inputRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask a question..."
-                disabled={loading}
-                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-foreground/20 focus:outline-none disabled:opacity-40"
-              />
+              <div className="relative flex-1">
+                <input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder=""
+                  aria-label={chat.placeholder}
+                  disabled={loading}
+                  className="w-full bg-transparent text-sm text-foreground focus:outline-none disabled:opacity-40"
+                />
+                <AnimatePresence mode="wait" initial={false}>
+                  {!input && (
+                    <motion.span
+                      key={chat.placeholder}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.2, ease: EASE }}
+                      className="pointer-events-none absolute inset-y-0 left-0 flex items-center text-sm text-foreground/20"
+                    >
+                      {chat.placeholder}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
               <button
                 type="submit"
                 disabled={!input.trim() || loading}
                 className="text-foreground/30 transition-colors hover:text-foreground disabled:opacity-20"
-                aria-label="Send"
+                aria-label={chat.sendLabel}
               >
                 <Send size={15} />
               </button>
@@ -254,7 +298,7 @@ export function ChatBubble() {
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
         className="relative flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg shadow-white/10"
-        aria-label="Open chat"
+        aria-label={open ? chat.closeLabel : chat.openLabel}
       >
         {!open && (
           <span className="absolute inset-0 motion-safe:animate-ping rounded-full bg-foreground/20" />

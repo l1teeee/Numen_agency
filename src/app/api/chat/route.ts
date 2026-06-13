@@ -167,10 +167,21 @@ const INJECTION_PATTERNS = [
   /let['']?s\s+(say|pretend|imagine)\s+you\s+(have no|had no|are without).{0,40}(rules|restrictions|instructions)/i,
 ]
 
+type ChatLang = 'en' | 'es'
+
+const LANGUAGE_INSTRUCTIONS: Record<ChatLang, string> = {
+  en: 'The visitor selected English in the website UI. Reply entirely in English unless the visitor explicitly asks for Spanish. This selected UI language overrides the generic language-detection rule.',
+  es: 'The visitor selected Spanish in the website UI. Reply entirely in Spanish unless the visitor explicitly asks for English. This selected UI language overrides the generic language-detection rule.',
+}
+
+const BLOCKED_REPLIES: Record<ChatLang, string> = {
+  en: "I'm only able to help with questions about Numen, our services, team, and projects. Is there something about us I can help you with?",
+  es: 'Solo puedo ayudarte con preguntas sobre Numen, nuestros servicios, equipo y proyectos. ¿Hay algo sobre el estudio en lo que pueda ayudarte?',
+}
+
 const MAX_MESSAGES      = 30
 const MIN_MESSAGE_LENGTH = 1
 const MAX_MESSAGE_LENGTH = 1500
-const BLOCKED_REPLY = "I'm only able to help with questions about Numen, our services, team, and projects. Is there something about us I can help you with?"
 
 // ─── Allowed origins ──────────────────────────────────────────
 const ALLOWED_ORIGINS = new Set([
@@ -302,11 +313,13 @@ export async function POST(req: NextRequest) {
   }
 
   let rawMessages: unknown[]
+  let selectedLang: ChatLang = 'en'
   try {
     const body = await req.json()
     if (!Array.isArray(body?.messages)) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
     }
+    selectedLang = body.lang === 'es' ? 'es' : 'en'
     rawMessages = body.messages
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
@@ -325,7 +338,7 @@ export async function POST(req: NextRequest) {
     .some((m) => containsInjection(m.content))
 
   if (hasInjection) {
-    return NextResponse.json({ reply: BLOCKED_REPLY })
+    return NextResponse.json({ reply: BLOCKED_REPLIES[selectedLang] })
   }
 
   const client = new OpenAI({
@@ -338,6 +351,7 @@ export async function POST(req: NextRequest) {
       model: process.env.NUMEN_OPENAI_MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: LANGUAGE_INSTRUCTIONS[selectedLang] },
         ...messages,
       ],
       max_tokens: 400,

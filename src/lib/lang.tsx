@@ -1,7 +1,7 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { createContext, useContext, useState, useEffect, useRef } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { translations, type Lang, type Translations } from './translations'
 
 interface LangContextValue {
@@ -19,16 +19,40 @@ const LangContext = createContext<LangContextValue>({
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>('en')
   const [flashKey, setFlashKey] = useState(0)
+  const reduceMotion = useReducedMotion()
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   useEffect(() => {
     const stored = localStorage.getItem('numen-lang') as Lang | null
-    if (stored === 'en' || stored === 'es') setLangState(stored)
+    if (stored !== 'en' && stored !== 'es') return
+    const timer = setTimeout(() => setLangState(stored), 0)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(clearTimeout)
+    }
   }, [])
 
   const setLang = (l: Lang) => {
-    setFlashKey((k) => k + 1)
-    setTimeout(() => setLangState(l), 180)
+    if (l === lang) return
+    timersRef.current.forEach(clearTimeout)
+    timersRef.current = []
     localStorage.setItem('numen-lang', l)
+
+    if (reduceMotion) {
+      setLangState(l)
+      return
+    }
+
+    setFlashKey((k) => k + 1)
+    timersRef.current = [
+      setTimeout(() => setLangState(l), 120),
+      setTimeout(() => {
+        timersRef.current = []
+      }, 380),
+    ]
   }
 
   return (
@@ -38,8 +62,8 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
         <motion.div
           key={flashKey}
           initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.38, 0] }}
-          transition={{ duration: 0.65, times: [0, 0.32, 1], ease: ['easeIn', 'easeOut'] }}
+          animate={{ opacity: [0, 0.24, 0] }}
+          transition={{ duration: 0.38, times: [0, 0.35, 1], ease: ['easeIn', 'easeOut'] }}
           className="pointer-events-none fixed inset-0 z-9999 bg-background"
           style={{ willChange: 'opacity' }}
         />
