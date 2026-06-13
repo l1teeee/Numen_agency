@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { MessageCircle, X, Send, Mail, MessageSquare } from 'lucide-react'
 import { useLang } from '@/lib/lang'
-import chatCopy from '@/lib/chat-copy.json'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -70,8 +69,8 @@ function SmoothText({ text, className }: { text: string; className?: string }) {
 }
 
 export function ChatBubble() {
-  const { lang } = useLang()
-  const chat = chatCopy[lang]
+  const { t } = useLang()
+  const chat = t.chat
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>(() => [createInitialMessage(chat.initialMessage)])
   const [input, setInput] = useState('')
