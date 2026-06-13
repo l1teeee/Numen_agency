@@ -2,7 +2,6 @@ import { Navbar } from "@/components/blocks/navbar";
 import { HeroSection } from "@/components/blocks/hero-section";
 import { StickyStack } from "@/components/blocks/sticky-stack";
 import { ChatBubble } from "@/components/ui/chat-bubble";
-import { ScrollLegend } from "@/components/ui/scroll-legend";
 import { companyStats } from "@/lib/company-stats";
 import { translations } from "@/lib/translations";
 
@@ -159,8 +158,7 @@ export default function Home() {
       />
       <div className="bg-background">
         <Navbar />
-        <ScrollLegend />
-        <HeroSection />
+<HeroSection />
         <StickyStack />
         <ChatBubble />
       </div>
