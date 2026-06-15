@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site'
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -48,7 +49,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: 'Timpibot',          allow: '/' },
       { userAgent: 'Omgilibot',         allow: '/' },
     ],
-    sitemap: 'https://delta-numen.com/sitemap.xml',
-    host: 'https://delta-numen.com',
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   }
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { blogPosts } from '@/lib/blog-posts'
+import { SITE_URL } from '@/lib/site'
 import { BlogPostContent } from './BlogPostContent'
 
 interface Props {
@@ -15,13 +16,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const post = blogPosts.find((p) => p.slug === slug)
   if (!post) return {}
+  const url = `${SITE_URL}/blog/${post.slug}`
   return {
     title: post.title,
     description: post.description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
       type: 'article',
+      url,
       publishedTime: post.date,
     },
   }

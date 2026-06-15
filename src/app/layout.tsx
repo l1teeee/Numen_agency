@@ -2,14 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { SITE_URL } from "@/lib/site";
 
 const font = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
 });
-
-const BASE_URL = "https://delta-numen.com";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -18,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Numen Agency | Agencia Digital El Salvador - Desarrollo Web & SaaS",
     template: "%s | Numen Agency",
@@ -39,7 +38,7 @@ export const metadata: Metadata = {
     "web development agency El Salvador",
     "SaaS development El Salvador",
   ],
-  authors: [{ name: "Numen Agency", url: BASE_URL }],
+  authors: [{ name: "Numen Agency", url: SITE_URL }],
   creator: "Numen Agency",
   publisher: "Numen Agency",
   robots: {
@@ -64,7 +63,7 @@ export const metadata: Metadata = {
     title: "Numen Agency | Agencia Digital El Salvador - Desarrollo Web & SaaS",
     description:
       "Agencia digital en El Salvador. Desarrollo web full-stack, diseño de productos y IA. 12+ proyectos entregados. Del concepto a producción en 4-8 semanas.",
-    url: BASE_URL,
+    url: SITE_URL,
     siteName: "Numen Agency",
     type: "website",
     locale: "es_SV",
@@ -86,11 +85,7 @@ export const metadata: Metadata = {
     images: ["/og.png"],
   },
   alternates: {
-    canonical: BASE_URL,
-    languages: {
-      "es-SV": BASE_URL,
-      "en-US": `${BASE_URL}/en`,
-    },
+    canonical: SITE_URL,
   },
   category: "technology",
 };

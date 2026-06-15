@@ -3,9 +3,8 @@ import { HeroSection } from "@/components/blocks/hero-section";
 import { StickyStack } from "@/components/blocks/sticky-stack";
 import { ChatBubble } from "@/components/ui/chat-bubble";
 import { companyStats } from "@/lib/company-stats";
+import { SITE_URL } from "@/lib/site";
 import { translations } from "@/lib/translations";
-
-const BASE_URL = "https://delta-numen.com";
 
 const faqEs = translations.es.faq.items;
 
@@ -14,17 +13,17 @@ const jsonLd = {
   "@graph": [
     {
       "@type": ["Organization", "LocalBusiness"],
-      "@id": `${BASE_URL}/#organization`,
+      "@id": `${SITE_URL}/#organization`,
       name: "Numen Agency",
       alternateName: "Numen",
-      url: BASE_URL,
+      url: SITE_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${BASE_URL}/favicon.png`,
+        url: `${SITE_URL}/favicon.png`,
         width: 512,
         height: 512,
       },
-      image: `${BASE_URL}/og.png`,
+      image: `${SITE_URL}/og.png`,
       email: "contact@delta-numen.com",
       description:
         "Agencia digital en El Salvador especializada en desarrollo web full-stack, diseño de productos y integración de IA. 12+ proyectos entregados, 6 productos en producción.",
@@ -84,7 +83,7 @@ const jsonLd = {
               name: "Desarrollo Web Full-Stack en El Salvador",
               description:
                 "Aplicaciones full-stack con Next.js, TypeScript y Supabase. Desde MVPs hasta plataformas SaaS de producción.",
-              provider: { "@id": `${BASE_URL}/#organization` },
+              provider: { "@id": `${SITE_URL}/#organization` },
             },
           },
           {
@@ -94,7 +93,7 @@ const jsonLd = {
               name: "Diseño de Productos Digitales",
               description:
                 "Diseño end-to-end en Figma: flujos de usuario, wireframes, prototipos interactivos y sistemas de diseño.",
-              provider: { "@id": `${BASE_URL}/#organization` },
+              provider: { "@id": `${SITE_URL}/#organization` },
             },
           },
           {
@@ -104,7 +103,7 @@ const jsonLd = {
               name: "Integración de IA en Productos",
               description:
                 "IA conversacional, búsqueda semántica, automatización de contenido y recomendaciones inteligentes.",
-              provider: { "@id": `${BASE_URL}/#organization` },
+              provider: { "@id": `${SITE_URL}/#organization` },
             },
           },
           {
@@ -114,7 +113,7 @@ const jsonLd = {
               name: "DevOps e Infraestructura",
               description:
                 "Despliegues en AWS, GCP y Kubernetes. CI/CD, infraestructura como código con Terraform.",
-              provider: { "@id": `${BASE_URL}/#organization` },
+              provider: { "@id": `${SITE_URL}/#organization` },
             },
           },
         ],
@@ -127,16 +126,16 @@ const jsonLd = {
     },
     {
       "@type": "WebSite",
-      "@id": `${BASE_URL}/#website`,
-      url: BASE_URL,
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
       name: "Numen Agency",
       description: "Agencia digital en El Salvador — Desarrollo Web, SaaS e IA",
-      publisher: { "@id": `${BASE_URL}/#organization` },
+      publisher: { "@id": `${SITE_URL}/#organization` },
       inLanguage: ["es-SV", "en-US"],
     },
     {
       "@type": "FAQPage",
-      "@id": `${BASE_URL}/#faq`,
+      "@id": `${SITE_URL}/#faq`,
       mainEntity: faqEs.map((item) => ({
         "@type": "Question",
         name: item.q,
