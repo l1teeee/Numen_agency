@@ -15,15 +15,30 @@ import type { ReactNode } from 'react'
 export type ContactInquiryEmailProps = {
   name: string
   email: string
+  company?: string
+  phone?: string
+  location?: string
+  category?: string
   budget?: string
   message: string
 }
 
 const budgetLabels: Record<string, string> = {
-  under5k: 'Under $5k',
-  '5-15k': '$5k – $15k',
-  '15-50k': '$15k – $50k',
-  '50k+': '$50k+',
+  under1k: 'Under $1k',
+  '1-5k': '$1k - $5k',
+  '5-10k': '$5k - $10k',
+  '10k+': '$10k+',
+}
+
+const categoryLabels: Record<string, string> = {
+  website: 'Website / landing page',
+  ecommerce: 'E-commerce',
+  saas: 'SaaS / platform',
+  ai: 'AI integration',
+  automation: 'Automation',
+  devops: 'DevOps / infrastructure',
+  'product-design': 'Product design',
+  consulting: 'Strategy / consulting',
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -38,34 +53,43 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 export function ContactInquiryEmail({
   name,
   email,
+  company,
+  phone,
+  location,
+  category,
   budget,
   message,
 }: ContactInquiryEmailProps) {
   const formattedBudget = budget ? budgetLabels[budget] ?? budget : 'Not specified'
+  const formattedCategory = category ? categoryLabels[category] ?? category : 'Not specified'
 
   return (
     <Html lang="en">
       <Head />
-      <Preview>New project inquiry from {name}</Preview>
+      <Preview>New lead from {name}</Preview>
       <Body style={body}>
         <Container style={container}>
 
           <Section style={topbar}>
             <Text style={brand}>Numen</Text>
-            <Text style={eyebrow}>New Inquiry</Text>
+            <Text style={eyebrow}>New Lead</Text>
           </Section>
 
           <Section style={intro}>
             <Heading as="h1" style={heading}>
-              New project inquiry
+              New project lead
             </Heading>
             <Text style={copy}>
-              {name} reached out through the contact form.
+              {name} created a new lead through the website form.
             </Text>
           </Section>
 
           <Field label="Name">{name}</Field>
           <Field label="Email">{email}</Field>
+          {company && <Field label="Company">{company}</Field>}
+          {phone && <Field label="Phone / WhatsApp">{phone}</Field>}
+          <Field label="Location">{location || 'Not specified'}</Field>
+          <Field label="Category">{formattedCategory}</Field>
           <Field label="Budget">{formattedBudget}</Field>
           <Field label="Message">{message}</Field>
 
@@ -104,7 +128,7 @@ export function ContactConfirmationEmail({ name }: Pick<ContactInquiryEmailProps
               Thanks, {name}.
             </Heading>
             <Text style={copy}>
-              Your inquiry is in. We will review it and reply within 24 hours.
+              Your project details are in. We will review them and reply within 24 hours.
             </Text>
           </Section>
 

@@ -230,6 +230,48 @@
       },
       "nameLabel": "Name *",
       "emailLabel": "Email *",
+      "companyLabel": "Company",
+      "companyPlaceholder": "Company or brand",
+      "phoneLabel": "Phone / WhatsApp",
+      "phonePlaceholder": "+503 0000 0000",
+      "locationLabel": "Location *",
+      "locationPlaceholder": "San Salvador, El Salvador",
+      "categoryLabel": "Project category *",
+      "categoryPlaceholder": "Select a category",
+      "categoryOptions": [
+        {
+          "value": "website",
+          "label": "Website / landing page"
+        },
+        {
+          "value": "ecommerce",
+          "label": "E-commerce"
+        },
+        {
+          "value": "saas",
+          "label": "SaaS / platform"
+        },
+        {
+          "value": "ai",
+          "label": "AI integration"
+        },
+        {
+          "value": "automation",
+          "label": "Automation"
+        },
+        {
+          "value": "devops",
+          "label": "DevOps / infrastructure"
+        },
+        {
+          "value": "product-design",
+          "label": "Product design"
+        },
+        {
+          "value": "consulting",
+          "label": "Strategy / consulting"
+        }
+      ],
       "budgetLabel": "Budget range",
       "budgetPlaceholder": "Select a range",
       "budgetOptions": [
@@ -252,10 +294,10 @@
       ],
       "messageLabel": "Tell us about your project *",
       "messagePlaceholder": "We're looking to build...",
-      "sendBtn": "Send message",
-      "sendingBtn": "Sending...",
-      "successTitle": "Message sent!",
-      "successDesc": "We'll get back to you within 24 hours.",
+      "sendBtn": "Create lead",
+      "sendingBtn": "Creating lead...",
+      "successTitle": "Lead created!",
+      "successDesc": "We received the lead details and will get back to you within 24 hours.",
       "errorMsg": "Something went wrong. Please try again or email us at contact@delta-numen.com.",
       "blogCta": "Need to learn more first? We have a blog for you →",
       "footer": "All rights reserved."
@@ -523,6 +565,48 @@
       },
       "nameLabel": "Nombre *",
       "emailLabel": "Correo *",
+      "companyLabel": "Empresa",
+      "companyPlaceholder": "Empresa o marca",
+      "phoneLabel": "Teléfono / WhatsApp",
+      "phonePlaceholder": "+503 0000 0000",
+      "locationLabel": "Ubicación *",
+      "locationPlaceholder": "San Salvador, El Salvador",
+      "categoryLabel": "Categoría del proyecto *",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "categoryOptions": [
+        {
+          "value": "website",
+          "label": "Sitio web / landing page"
+        },
+        {
+          "value": "ecommerce",
+          "label": "E-commerce"
+        },
+        {
+          "value": "saas",
+          "label": "SaaS / plataforma"
+        },
+        {
+          "value": "ai",
+          "label": "Integración de IA"
+        },
+        {
+          "value": "automation",
+          "label": "Automatización"
+        },
+        {
+          "value": "devops",
+          "label": "DevOps / infraestructura"
+        },
+        {
+          "value": "product-design",
+          "label": "Diseño de producto"
+        },
+        {
+          "value": "consulting",
+          "label": "Estrategia / consultoría"
+        }
+      ],
       "budgetLabel": "Presupuesto estimado",
       "budgetPlaceholder": "Selecciona un rango",
       "budgetOptions": [
@@ -545,10 +629,10 @@
       ],
       "messageLabel": "Cuéntanos sobre tu proyecto *",
       "messagePlaceholder": "Queremos construir...",
-      "sendBtn": "Enviar mensaje",
-      "sendingBtn": "Enviando...",
-      "successTitle": "¡Mensaje enviado!",
-      "successDesc": "Te responderemos en 24 horas.",
+      "sendBtn": "Crear lead",
+      "sendingBtn": "Creando lead...",
+      "successTitle": "Lead creado",
+      "successDesc": "Recibimos los datos del lead y te responderemos en 24 horas.",
       "errorMsg": "Algo salió mal. Intenta de nuevo o escríbenos a contact@delta-numen.com.",
       "blogCta": "¿Necesitas saber un poco más? Tenemos un blog para que no te pierdas →",
       "footer": "Todos los derechos reservados."

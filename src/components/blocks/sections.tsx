@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, type LucideIcon } from 'lucide-react'
+import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, Building2, MapPin, Phone, Tags, UserPlus, type LucideIcon } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
@@ -833,7 +833,17 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.3, once: false })
-  const [form, setForm] = useState({ name: '', email: '', budget: '', message: '', website: '' })
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    company: '',
+    phone: '',
+    location: '',
+    category: '',
+    budget: '',
+    message: '',
+    website: '',
+  })
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
   const { t } = useLang()
   const tc = t.contact
@@ -915,7 +925,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
             </motion.div>
           </div>
 
-          <motion.div {...fadeUp(0.05)} className="flex flex-col">
+          <motion.div {...fadeUp(0.05)} className="flex min-h-0 flex-col">
             <div className="mb-4 lg:hidden">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">
                 {tc.headline1}<br />
@@ -957,7 +967,11 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 <p className="mt-2 text-sm text-foreground/40">{tc.successDesc}</p>
               </div>
             ) : (
-              <form onSubmit={submit} className="space-y-3">
+              <form
+                onSubmit={submit}
+                className="min-h-0 space-y-3 overflow-y-auto pb-4 pr-1 [&::-webkit-scrollbar]:hidden"
+                style={{ scrollbarWidth: 'none' }}
+              >
                 {/* Honeypot — invisible to users, bots fill it and get silently rejected */}
                 <input
                   type="text"
@@ -969,7 +983,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   autoComplete="off"
                   style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, overflow: 'hidden', opacity: 0 }}
                 />
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="name" className="text-xs text-foreground/30">{tc.nameLabel}</label>
                     <div className="relative">
@@ -1003,11 +1017,77 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="company" className="text-xs text-foreground/30">{tc.companyLabel}</label>
+                    <div className="relative">
+                      <Building2 className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <input
+                        id="company"
+                        name="company"
+                        value={form.company}
+                        onChange={handle}
+                        placeholder={tc.companyPlaceholder}
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="phone" className="text-xs text-foreground/30">{tc.phoneLabel}</label>
+                    <div className="relative">
+                      <Phone className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={form.phone}
+                        onChange={handle}
+                        placeholder={tc.phonePlaceholder}
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="location" className="text-xs text-foreground/30">{tc.locationLabel}</label>
+                    <div className="relative">
+                      <MapPin className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <input
+                        id="location"
+                        name="location"
+                        required
+                        value={form.location}
+                        onChange={handle}
+                        placeholder={tc.locationPlaceholder}
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="category" className="text-xs text-foreground/30">{tc.categoryLabel}</label>
+                    <div className="relative">
+                      <Tags className="pointer-events-none absolute left-4 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <SelectCustom
+                        id="category"
+                        name="category"
+                        value={form.category}
+                        onChange={(v) => setForm((p) => ({ ...p, category: v }))}
+                        options={tc.categoryOptions}
+                        placeholder={tc.categoryPlaceholder}
+                        icon={Tags}
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="budget" className="text-xs text-foreground/30">{tc.budgetLabel}</label>
                   <div className="relative">
                     <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
                     <SelectCustom
+                      id="budget"
                       name="budget"
                       value={form.budget}
                       onChange={(v) => setForm((p) => ({ ...p, budget: v }))}
@@ -1044,6 +1124,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   disabled={status === 'loading'}
                   className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
                 >
+                  <UserPlus className="size-4" />
                   {status === 'loading' ? tc.sendingBtn : tc.sendBtn}
                 </Button>
                 <Link
