@@ -193,3 +193,7 @@ html:not(.dark) .bg-foreground\/\[0\.12\]  { background-color: #b8b8b8; }
 
 /* Light mode opacity-60 icons — boost visibility */
 html:not(.dark) .opacity-60 { opacity: 0.8; }
+
+@media (max-width: 1023px) {
+  .service-tags { display: none !important; }
+}
