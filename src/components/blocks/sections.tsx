@@ -211,7 +211,7 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   <div>
                     <h3 className="mb-1.5 text-sm font-semibold text-foreground">{text.title}</h3>
                     <p className="mb-0 lg:mb-3 text-xs leading-relaxed text-foreground/50">{text.desc}</p>
-                    <div className="hidden lg:flex flex-wrap gap-1.5">
+                    <div className="max-lg:hidden flex flex-wrap gap-1.5">
                       {s.tags.map((tag) => (
                         <span key={tag} className="rounded-full border border-foreground/[0.14] bg-background/40 px-2.5 py-0.5 text-[10px] text-foreground/40 backdrop-blur-sm">{tag}</span>
                       ))}
