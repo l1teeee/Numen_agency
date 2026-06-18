@@ -206,11 +206,11 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 />
                 <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/30 to-background/20 hidden sm:block" />
                 <div className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-background via-background/90 to-transparent hidden sm:block" />
-                <div className="relative z-10 flex h-full flex-col justify-between p-5">
+                <div className="relative z-10 flex h-full flex-col justify-end sm:justify-between p-5">
                   <span className="text-[10px] font-medium text-foreground/30">{s.num}</span>
                   <div>
                     <h3 className="mb-1.5 text-sm font-semibold text-foreground">{text.title}</h3>
-                    <p className="mb-3 text-xs leading-relaxed text-foreground/50">{text.desc}</p>
+                    <p className="mb-0 lg:mb-3 text-xs leading-relaxed text-foreground/50">{text.desc}</p>
                     <div className="hidden lg:flex flex-wrap gap-1.5">
                       {s.tags.map((tag) => (
                         <span key={tag} className="rounded-full border border-foreground/[0.14] bg-background/40 px-2.5 py-0.5 text-[10px] text-foreground/40 backdrop-blur-sm">{tag}</span>
