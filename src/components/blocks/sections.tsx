@@ -68,6 +68,32 @@ function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
   return <span ref={ref}>{val}{suffix}</span>
 }
 
+// ─── Live status check ────────────────────────────────────────
+function useProjectStatus() {
+  const [status, setStatus] = useState<Record<string, boolean>>({})
+  useEffect(() => {
+    let active = true
+    fetch('/api/project-status')
+      .then((res) => (res.ok ? res.json() : {}))
+      .then((data) => { if (active) setStatus(data) })
+      .catch(() => {})
+    return () => { active = false }
+  }, [])
+  return status
+}
+
+function StatusDot({ online, size = 'h-1.5 w-1.5' }: { online?: boolean; size?: string }) {
+  if (online === false) {
+    return <span className={`inline-block rounded-full bg-red-400 ${size}`} />
+  }
+  return (
+    <span className={`relative flex shrink-0 ${size}`}>
+      {online && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />}
+      <span className={`relative inline-flex rounded-full ${size} ${online === undefined ? 'bg-foreground/20' : 'bg-emerald-400'}`} />
+    </span>
+  )
+}
+
 // ─── Static non-translatable data ────────────────────────────
 const servicesMeta = [
   { num: '01', tags: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Stripe'],          img: '/programming.png' },
@@ -233,6 +259,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.5, once: false })
   const { t } = useLang()
   const tp = t.projects
+  const status = useProjectStatus()
 
   const [featuredMeta, ...restMeta] = projectsMeta
   const [featuredText, ...restText] = tp.items
@@ -280,8 +307,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                     <h3 className="text-base font-semibold text-foreground lg:text-xl">{featuredText.name}</h3>
                     {featuredMeta.status && (
                       <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
-                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${featuredMeta.dot}`} />
-                        {featuredMeta.status}
+                        <StatusDot online={status[featuredMeta.href]} />
+                        {status[featuredMeta.href] === false ? 'Offline' : featuredMeta.status}
                       </span>
                     )}
                   </div>
@@ -320,8 +347,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                           <h3 className="text-sm font-semibold text-foreground">{pt.name}</h3>
                           {pm.status && (
                             <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-1.5 py-0.5 text-[9px] text-foreground/30">
-                              <span className={`inline-block h-1 w-1 rounded-full ${pm.dot}`} />
-                              {pm.status}
+                              <StatusDot online={status[pm.href]} size="h-1 w-1" />
+                              {status[pm.href] === false ? 'Offline' : pm.status}
                             </span>
                           )}
                         </div>
@@ -361,6 +388,7 @@ export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.5, once: false })
   const { t } = useLang()
   const tl = t.liveProjects
+  const status = useProjectStatus()
 
   return (
     <section ref={ref} id="live-projects" className="sticky top-0 z-[25] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
@@ -401,11 +429,8 @@ export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <span className="relative flex h-1.5 w-1.5 shrink-0">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                      </span>
-                      <span className="text-[10px] text-foreground/30">{pm.status}</span>
+                      <StatusDot online={status[pm.href]} />
+                      <span className="text-[10px] text-foreground/30">{status[pm.href] === false ? 'Offline' : pm.status}</span>
                     </div>
                     <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                   </div>
