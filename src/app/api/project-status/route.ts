@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { MONITORED_URLS } from '@/lib/project-status'
 
+export const dynamic = 'force-dynamic'
+
 const TIMEOUT_MS = 6000
 
 async function isOnline(url: string): Promise<boolean> {
@@ -10,6 +12,7 @@ async function isOnline(url: string): Promise<boolean> {
     const res = await fetch(url, {
       method: 'GET',
       redirect: 'follow',
+      cache: 'no-store',
       signal: controller.signal,
       headers: { 'User-Agent': 'Mozilla/5.0 (compatible; NumenStatusCheck/1.0)' },
     })
