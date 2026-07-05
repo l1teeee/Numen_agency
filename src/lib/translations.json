@@ -72,9 +72,14 @@
           "desc": "Local business prospecting workspace — search by zone and category, review signals, save prospects, and organize follow-up from one place."
         },
         {
-          "name": "InkyTap",
+          "name": "Numen Ledger",
           "category": "Web App · 2026",
-          "desc": "\"Historias para descubrir.\" A curated story library for Spanish readers — browse 15+ genres from fiction to biography, filter by reading time, and find your next great read."
+          "desc": "A budget generator for freelancers and agencies — build itemized quotes, calculate totals instantly, and export a client-ready PDF in seconds."
+        },
+        {
+          "name": "ServiLocal",
+          "category": "Platform · 2026",
+          "desc": "A local services marketplace for El Salvador — post a request, compare proposals from verified professionals, and pay only when the job is done."
         }
       ]
     },
@@ -407,9 +412,14 @@
           "desc": "Workspace de prospección de negocios locales — busca por zona y categoría, revisa señales, guarda prospectos y organiza el seguimiento desde un solo lugar."
         },
         {
-          "name": "InkyTap",
+          "name": "Numen Ledger",
           "category": "App Web · 2026",
-          "desc": "\"Historias para descubrir.\" Una biblioteca curada para lectores hispanohablantes — explora más de 15 géneros, filtra por tiempo de lectura y encuentra tu próxima gran historia."
+          "desc": "Generador de presupuestos para freelancers y agencias — arma cotizaciones por partidas, calcula totales al instante y exporta un PDF listo para el cliente."
+        },
+        {
+          "name": "ServiLocal",
+          "category": "Plataforma · 2026",
+          "desc": "Marketplace de servicios locales para El Salvador — publica una solicitud, compara propuestas de profesionales verificados y paga solo cuando el trabajo esté listo."
         }
       ]
     },

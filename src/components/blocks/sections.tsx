@@ -104,13 +104,13 @@ const servicesMeta = [
 const projectsMeta = [
   { href: 'https://vielinks.com',          name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
   { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-  { href: 'https://inkytap.com',           name: 'InkyTap',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase', 'PayPal', 'Framer Motion'] },
+  { href: 'https://budget-generator-mauve.vercel.app', name: 'Numen Ledger', status: 'Live', dot: 'bg-emerald-400', stack: ['React', 'TypeScript', 'Vite', 'GSAP'] },
+  { href: 'https://servilocal-three.vercel.app', name: 'ServiLocal', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Tkiero'] },
 ]
 
 const liveProjectsMeta = [
   ...projectsMeta,
   { href: 'https://app.inkytap.com',       name: 'InkyTap Quiz', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase'] },
-  { href: 'https://budget-generator-mauve.vercel.app', name: 'Numen Ledger', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase', 'Tailwind CSS'] },
 ]
 
 const teamMeta = [
