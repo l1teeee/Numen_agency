@@ -7,7 +7,6 @@ import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenT
 import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
-import { PhotoSpread } from '@/components/ui/gallery'
 import Image from 'next/image'
 import { companyStats } from '@/lib/company-stats'
 import { useLang } from '@/lib/lang'
@@ -104,13 +103,14 @@ const servicesMeta = [
 
 const projectsMeta = [
   { href: 'https://vielinks.com',          name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
-  { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'], img: '/scoutia/inicio.png' },
+  { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
   { href: 'https://inkytap.com',           name: 'InkyTap',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase', 'PayPal', 'Framer Motion'] },
 ]
 
 const liveProjectsMeta = [
   ...projectsMeta,
   { href: 'https://app.inkytap.com',       name: 'InkyTap Quiz', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase'] },
+  { href: 'https://budget-generator-mauve.vercel.app', name: 'Numen Ledger', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase', 'Tailwind CSS'] },
 ]
 
 const teamMeta = [
@@ -288,7 +288,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           animate={isInView ? "visible" : "hidden"}
         >
           <motion.div variants={staggerItem} {...LIFT} className="flex flex-col flex-none lg:flex-3">
-            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:justify-between lg:gap-0 lg:p-6">
+            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:p-6">
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{
@@ -315,15 +315,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 </div>
                 <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
               </div>
-              <div className="hidden lg:flex items-center justify-center">
-                <PhotoSpread
-                  images={['/vielink/vielink2.png', '/vielink/inici vie.png', '/vielink/vielink3.png']}
-                  width={170}
-                  height={280}
-                  centerWidth={260}
-                />
-              </div>
-              <div>
+              <div className="mt-auto">
                 <p className="mb-2 line-clamp-2 text-[13px] leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{featuredText.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {featuredMeta.stack.map((t) => (
@@ -355,13 +347,6 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                       </div>
                       <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                     </div>
-                    {'img' in pm && pm.img && (
-                      <div className="relative hidden my-4 overflow-hidden rounded-xl lg:block lg:flex-1">
-                        <Image fill src={pm.img as string} alt={pt.name}
-                          sizes="(max-width: 1024px) 0px, 33vw"
-                          className="object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
-                      </div>
-                    )}
                     <div className="mt-auto">
                       <p className="mb-2 line-clamp-2 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{pt.desc}</p>
                       <div className="flex flex-wrap gap-1.5">
