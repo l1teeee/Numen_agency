@@ -196,4 +196,30 @@ html:not(.dark) .opacity-60 { opacity: 0.8; }
 
 @media (max-width: 1023px) {
   .service-tags { display: none !important; }
+
+  /* Mobile: unpin the sticky-stack.
+     On desktop each section is position:sticky inside a 700vh container, so
+     sections pin and stack over each other. On touch that reads as a section
+     "getting stuck" that you have to drag. Here we drop the pinning and let
+     every section flow in normal document order — one screen at a time, plain
+     downward scroll — and stop the inner scroll boxes from trapping the gesture. */
+  .section-stack {
+    height: auto !important;
+  }
+  .section-stack > section {
+    position: relative;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .section-stack > section > * {
+    height: auto;
+  }
+  .section-stack .overflow-y-auto {
+    overflow: visible;
+  }
+  .section-stack > section > * > .flex-1 {
+    flex: none;
+    overflow: visible;
+  }
 }

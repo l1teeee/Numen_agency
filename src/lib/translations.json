@@ -83,6 +83,30 @@
         }
       ]
     },
+    "useCases": {
+      "label": "Brand Concepts",
+      "featured": {
+        "name": "Aeriform",
+        "category": "Architecture / Web concept",
+        "desc": "An editorial web direction for a contemporary architecture studio, pairing centered typography, spatial rhythm, and a quiet, precise interface.",
+        "cta": "Explore live concept"
+      },
+      "comingSoon": "Coming soon",
+      "cards": [
+        {
+          "category": "Hospitality & lifestyle",
+          "title": "A new brand experience"
+        },
+        {
+          "category": "Technology & AI",
+          "title": "A new product story"
+        },
+        {
+          "category": "Fashion & retail",
+          "title": "A new visual identity"
+        }
+      ]
+    },
     "liveProjects": {
       "label": "Live Now",
       "headline1": "Products live",
@@ -420,6 +444,30 @@
           "name": "ServiLocal",
           "category": "Plataforma · 2026",
           "desc": "Marketplace de servicios locales para El Salvador — publica una solicitud, compara propuestas de profesionales verificados y paga solo cuando el trabajo esté listo."
+        }
+      ]
+    },
+    "useCases": {
+      "label": "Conceptos de marca",
+      "featured": {
+        "name": "Aeriform",
+        "category": "Arquitectura / Concepto web",
+        "desc": "Una dirección web editorial para un estudio de arquitectura contemporánea, combinando tipografía centrada, ritmo espacial y una interfaz serena y precisa.",
+        "cta": "Explorar concepto en vivo"
+      },
+      "comingSoon": "Próximamente",
+      "cards": [
+        {
+          "category": "Hospitalidad & lifestyle",
+          "title": "Una nueva experiencia de marca"
+        },
+        {
+          "category": "Tecnología & IA",
+          "title": "Una nueva historia de producto"
+        },
+        {
+          "category": "Moda & retail",
+          "title": "Una nueva identidad visual"
         }
       ]
     },

@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { companyStats } from '@/lib/company-stats'
 import { useLang } from '@/lib/lang'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
+import { HoverPeek } from '@/components/ui/link-preview'
 
 interface BlurStyle { filter: MotionValue<string> }
 
@@ -107,6 +108,10 @@ const projectsMeta = [
   { href: 'https://budget-generator-mauve.vercel.app', name: 'Numen Ledger', status: 'Live', dot: 'bg-emerald-400', stack: ['React', 'TypeScript', 'Vite', 'GSAP'] },
   { href: 'https://servilocal-three.vercel.app', name: 'ServiLocal', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Tkiero'] },
 ]
+
+const useCaseMeta = {
+  href: 'https://aeri-self.vercel.app/',
+}
 
 const liveProjectsMeta = [
   ...projectsMeta,
@@ -367,6 +372,112 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
+// --- Brand Concepts -------------------------------------------
+export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
+  const { t } = useLang()
+  const tu = t.useCases
+
+  // Bento placement per coming-soon tile (desktop only) — one tall, one small,
+  // one wide, so the 3×3 grid reads as an ordered-but-varied square.
+  const conceptSpans = [
+    'lg:col-start-3 lg:row-start-1 lg:row-end-3',   // tall — full-height right column
+    'lg:col-start-1 lg:row-start-3',                // small — bottom-left
+    'lg:col-start-2 lg:col-end-4 lg:row-start-3',   // wide — bottom-right
+  ]
+
+  return (
+    <section ref={ref} id="use-cases" className="sticky top-0 z-[25] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:px-8 lg:pt-24 lg:pb-10" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <h2 className={`text-[10px] font-normal uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tu.label}</h2>
+          </div>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+        </div>
+
+        <motion.div
+          className="mt-4 grid flex-1 grid-cols-1 gap-3 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mt-6 lg:mb-24 lg:grid-cols-3 lg:grid-rows-3 lg:overflow-visible lg:pb-0"
+          style={{ scrollbarWidth: 'none' }}
+          variants={staggerContainer}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+        >
+          {/* Featured concept — bigger tile (2×2), live preview on hover */}
+          <motion.div
+            variants={staggerItem}
+            {...LIFT}
+            className="min-h-[20rem] lg:min-h-0 lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-3"
+          >
+            <HoverPeek url={useCaseMeta.href} peekWidth={320} peekHeight={200}>
+              <Link
+                href={useCaseMeta.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-background p-5 ring-1 ring-foreground/8 lg:p-7"
+              >
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  style={{
+                    background: 'linear-gradient(to right, #C8553A, #e8896e, #C8553A)',
+                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'xor',
+                    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    maskComposite: 'exclude',
+                    padding: '1px',
+                  }}
+                />
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className="text-xs text-foreground/30">{tu.featured.category}</span>
+                    <div className="mt-1 flex items-center gap-2">
+                      <h3 className="text-xl font-semibold text-foreground lg:text-2xl">{tu.featured.name}</h3>
+                      <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
+                        <StatusDot online />
+                        Live
+                      </span>
+                    </div>
+                  </div>
+                  <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
+                </div>
+                <div>
+                  <p className="mb-3 max-w-md text-[13px] leading-relaxed text-foreground/40 lg:text-sm">{tu.featured.desc}</p>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/50 transition-colors duration-200 group-hover:text-[#C8553A] lg:text-xs">
+                    {tu.featured.cta}
+                    <ArrowUpRight className="size-3" />
+                  </span>
+                </div>
+              </Link>
+            </HoverPeek>
+          </motion.div>
+
+          {/* Coming-soon concepts — varied sizes fill the rest of the square */}
+          {tu.cards.map((card, index) => (
+            <motion.article
+              key={card.category}
+              variants={staggerItem}
+              {...LIFT}
+              aria-label={`${card.title}. ${tu.comingSoon}`}
+              className={`group relative flex min-h-40 flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-foreground/[0.14] bg-foreground/[0.02] p-5 transition-colors duration-300 hover:border-foreground/[0.24] lg:min-h-0 ${conceptSpans[index] ?? ''}`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-medium text-foreground/25">0{index + 2}</span>
+                <span className="rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] text-foreground/35">{tu.comingSoon}</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.14em] text-foreground/25 lg:text-xs">{card.category}</span>
+                <h3 className="mt-1 max-w-[16rem] text-sm font-medium leading-snug text-foreground/55 lg:text-base">{card.title}</h3>
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  )
+}
+
 // ─── Live Projects ───────────────────────────────────────────
 export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
@@ -453,7 +564,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ta.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </div>
 
         <div className="mt-6 flex flex-1 flex-col gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0">
@@ -552,7 +663,7 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ts.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
         </div>
 
         <motion.h2 {...fadeUp(0.05)} className="mt-6 text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
@@ -615,7 +726,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tp.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </div>
 
         {/* Mobile: icon-led list */}
@@ -773,7 +884,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tf.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:gap-12 lg:overflow-hidden lg:pb-0 lg:mb-24 lg:grid-cols-2">
@@ -892,7 +1003,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tc.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">
