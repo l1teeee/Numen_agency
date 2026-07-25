@@ -109,9 +109,10 @@ const projectsMeta = [
   { href: 'https://servilocal-three.vercel.app', name: 'ServiLocal', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Tkiero'] },
 ]
 
-const useCaseMeta = {
-  href: 'https://aeri-self.vercel.app/',
-}
+const useCaseMeta = [
+  { href: 'https://aeri-self.vercel.app/' },
+  { href: 'https://savia-cafe-nu.vercel.app/' },
+]
 
 const liveProjectsMeta = [
   ...projectsMeta,
@@ -379,10 +380,14 @@ export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const { t } = useLang()
   const tu = t.useCases
 
-  // Bento placement per coming-soon tile (desktop only) — one tall, one small,
-  // one wide, so the 3×3 grid reads as an ordered-but-varied square.
+  // Bento placement (desktop only) — the two live concepts fill the top two
+  // rows, the coming-soon tiles split the bottom row, so the 3×3 grid reads as
+  // an ordered-but-varied square.
+  const liveSpans = [
+    'lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-3',  // big — 2×2 top-left
+    'lg:col-start-3 lg:row-start-1 lg:row-end-3',               // tall — full-height right column
+  ]
   const conceptSpans = [
-    'lg:col-start-3 lg:row-start-1 lg:row-end-3',   // tall — full-height right column
     'lg:col-start-1 lg:row-start-3',                // small — bottom-left
     'lg:col-start-2 lg:col-end-4 lg:row-start-3',   // wide — bottom-right
   ]
@@ -405,53 +410,56 @@ export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {/* Featured concept — bigger tile (2×2), live preview on hover */}
-          <motion.div
-            variants={staggerItem}
-            {...LIFT}
-            className="min-h-[20rem] lg:min-h-0 lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-3"
-          >
-            <HoverPeek url={useCaseMeta.href} peekWidth={320} peekHeight={200}>
-              <Link
-                href={useCaseMeta.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-background p-5 ring-1 ring-foreground/8 lg:p-7"
-              >
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background: 'linear-gradient(to right, #C8553A, #e8896e, #C8553A)',
-                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    WebkitMaskComposite: 'xor',
-                    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    maskComposite: 'exclude',
-                    padding: '1px',
-                  }}
-                />
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="text-xs text-foreground/30">{tu.featured.category}</span>
-                    <div className="mt-1 flex items-center gap-2">
-                      <h3 className="text-xl font-semibold text-foreground lg:text-2xl">{tu.featured.name}</h3>
-                      <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
-                        <StatusDot online />
-                        Live
-                      </span>
+          {/* Live concepts — bigger tiles, live preview on hover */}
+          {tu.concepts.map((concept, index) => (
+            <motion.div
+              key={concept.name}
+              variants={staggerItem}
+              {...LIFT}
+              className={`min-h-[20rem] lg:min-h-0 ${liveSpans[index] ?? ''}`}
+            >
+              <HoverPeek url={useCaseMeta[index].href} peekWidth={320} peekHeight={200}>
+                <Link
+                  href={useCaseMeta[index].href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-background p-5 ring-1 ring-foreground/8 lg:p-7"
+                >
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{
+                      background: 'linear-gradient(to right, #C8553A, #e8896e, #C8553A)',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      maskComposite: 'exclude',
+                      padding: '1px',
+                    }}
+                  />
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <span className="text-xs text-foreground/30">{concept.category}</span>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <h3 className="text-xl font-semibold text-foreground lg:text-2xl">{concept.name}</h3>
+                        <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
+                          <StatusDot online />
+                          Live
+                        </span>
+                      </div>
                     </div>
+                    <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
                   </div>
-                  <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
-                </div>
-                <div>
-                  <p className="mb-3 max-w-md text-[13px] leading-relaxed text-foreground/40 lg:text-sm">{tu.featured.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/50 transition-colors duration-200 group-hover:text-[#C8553A] lg:text-xs">
-                    {tu.featured.cta}
-                    <ArrowUpRight className="size-3" />
-                  </span>
-                </div>
-              </Link>
-            </HoverPeek>
-          </motion.div>
+                  <div>
+                    <p className="mb-3 max-w-md text-[13px] leading-relaxed text-foreground/40 lg:text-sm">{concept.desc}</p>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/50 transition-colors duration-200 group-hover:text-[#C8553A] lg:text-xs">
+                      {concept.cta}
+                      <ArrowUpRight className="size-3" />
+                    </span>
+                  </div>
+                </Link>
+              </HoverPeek>
+            </motion.div>
+          ))}
 
           {/* Coming-soon concepts — varied sizes fill the rest of the square */}
           {tu.cards.map((card, index) => (
@@ -463,7 +471,7 @@ export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               className={`group relative flex min-h-40 flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-foreground/[0.14] bg-foreground/[0.02] p-5 transition-colors duration-300 hover:border-foreground/[0.24] lg:min-h-0 ${conceptSpans[index] ?? ''}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium text-foreground/25">0{index + 2}</span>
+                <span className="text-[10px] font-medium text-foreground/25">0{index + 3}</span>
                 <span className="rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] text-foreground/35">{tu.comingSoon}</span>
               </div>
               <div>

@@ -85,18 +85,22 @@
     },
     "useCases": {
       "label": "Brand Concepts",
-      "featured": {
-        "name": "Aeriform",
-        "category": "Architecture / Web concept",
-        "desc": "An editorial web direction for a contemporary architecture studio, pairing centered typography, spatial rhythm, and a quiet, precise interface.",
-        "cta": "Explore live concept"
-      },
+      "concepts": [
+        {
+          "name": "Aeriform",
+          "category": "Architecture / Web concept",
+          "desc": "An editorial web direction for a contemporary architecture studio, pairing centered typography, spatial rhythm, and a quiet, precise interface.",
+          "cta": "Explore live concept"
+        },
+        {
+          "name": "Savia Café",
+          "category": "Specialty coffee / Web concept",
+          "desc": "A warm, editorial direction for a specialty coffee roastery — origin storytelling, natural texture, and an unhurried browsing rhythm.",
+          "cta": "Explore live concept"
+        }
+      ],
       "comingSoon": "Coming soon",
       "cards": [
-        {
-          "category": "Hospitality & lifestyle",
-          "title": "A new brand experience"
-        },
         {
           "category": "Technology & AI",
           "title": "A new product story"
@@ -449,18 +453,22 @@
     },
     "useCases": {
       "label": "Conceptos de marca",
-      "featured": {
-        "name": "Aeriform",
-        "category": "Arquitectura / Concepto web",
-        "desc": "Una dirección web editorial para un estudio de arquitectura contemporánea, combinando tipografía centrada, ritmo espacial y una interfaz serena y precisa.",
-        "cta": "Explorar concepto en vivo"
-      },
+      "concepts": [
+        {
+          "name": "Aeriform",
+          "category": "Arquitectura / Concepto web",
+          "desc": "Una dirección web editorial para un estudio de arquitectura contemporánea, combinando tipografía centrada, ritmo espacial y una interfaz serena y precisa.",
+          "cta": "Explorar concepto en vivo"
+        },
+        {
+          "name": "Savia Café",
+          "category": "Café de especialidad / Concepto web",
+          "desc": "Una dirección editorial y cálida para un tostador de café de especialidad — relato de origen, textura natural y un ritmo de navegación sin prisa.",
+          "cta": "Explorar concepto en vivo"
+        }
+      ],
       "comingSoon": "Próximamente",
       "cards": [
-        {
-          "category": "Hospitalidad & lifestyle",
-          "title": "Una nueva experiencia de marca"
-        },
         {
           "category": "Tecnología & IA",
           "title": "Una nueva historia de producto"
