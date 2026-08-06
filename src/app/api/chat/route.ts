@@ -53,7 +53,7 @@ LIVE PROJECTS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 VieLinks (vielinks.com): Social media management SaaS with OAuth integrations for Meta, Instagram, and LinkedIn. Multi-channel publishing, real-time metrics dashboard, and automated workflow orchestration. Built with React 19, Vite, TypeScript, Framer Motion, and GSAP. Live in 2026.
 InkyTap Quiz (app.inkytap.com): Create and share quizzes on any topic. No account needed to play. Covers hobbies, history, and exam prep. Built with Next.js, TypeScript, and Supabase. Live in 2026.
-Numen Ledger (budget-generator-mauve.vercel.app): A budget generator for freelancers and agencies. Build itemized quotes, calculate totals instantly, and export a client-ready PDF. Built with React, TypeScript, Vite, and GSAP. Live in 2026.
+WhatsApp Ops (dashboard-bot-whatsapp.vercel.app): Turns WhatsApp orders into a clear operation. Live order queue, status flow from pending to completed, menu management, searchable history, analytics, and team roles with email invitations. Built with React, TypeScript, Vite, Tailwind CSS, and TanStack Query. Live in 2026.
 ServiLocal (servilocal-three.vercel.app): A local services marketplace for El Salvador. Post a request, compare proposals from verified professionals, and pay only when the job is done. Built with Next.js, TypeScript, and Tailwind CSS. Live in 2026.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

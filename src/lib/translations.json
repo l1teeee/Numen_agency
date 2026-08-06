@@ -72,9 +72,9 @@
           "desc": "Local business prospecting workspace — search by zone and category, review signals, save prospects, and organize follow-up from one place."
         },
         {
-          "name": "Numen Ledger",
-          "category": "Web App · 2026",
-          "desc": "A budget generator for freelancers and agencies — build itemized quotes, calculate totals instantly, and export a client-ready PDF in seconds."
+          "name": "WhatsApp Ops",
+          "category": "Dashboard · 2026",
+          "desc": "Turns WhatsApp orders into a clear operation — a live order queue, status flow from pending to completed, menu management, searchable history, and analytics in a single panel with team roles."
         },
         {
           "name": "ServiLocal",
@@ -440,9 +440,9 @@
           "desc": "Workspace de prospección de negocios locales — busca por zona y categoría, revisa señales, guarda prospectos y organiza el seguimiento desde un solo lugar."
         },
         {
-          "name": "Numen Ledger",
-          "category": "App Web · 2026",
-          "desc": "Generador de presupuestos para freelancers y agencias — arma cotizaciones por partidas, calcula totales al instante y exporta un PDF listo para el cliente."
+          "name": "WhatsApp Ops",
+          "category": "Panel · 2026",
+          "desc": "Convierte los pedidos de WhatsApp en una operación clara — cola de pedidos en vivo, estados de pendiente a completado, gestión de menú, historial buscable y analíticas en un solo panel con roles de equipo."
         },
         {
           "name": "ServiLocal",
