@@ -102,6 +102,19 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
                   onMouseLeave={resetTimer}
                 >
                   <div className="mx-1 h-3.5 w-px shrink-0 bg-foreground/8" />
+                  <Link
+                    href="/projects"
+                    className="shrink-0 whitespace-nowrap px-1 text-xs text-foreground/40 transition-colors duration-200 hover:text-foreground/70"
+                  >
+                    {t.nav.projectsLink}
+                  </Link>
+                  <Link
+                    href="/blog"
+                    className="shrink-0 whitespace-nowrap px-1 text-xs text-foreground/40 transition-colors duration-200 hover:text-foreground/70"
+                  >
+                    {t.blog.label}
+                  </Link>
+                  <div className="mx-1 h-3.5 w-px shrink-0 bg-foreground/8" />
                   <AnimatedThemeToggle className="mr-0.5 shrink-0" />
                   <LangToggle lang={lang} setLang={setLang} />
                   <div className="mx-1 h-3.5 w-px shrink-0 bg-foreground/8" />

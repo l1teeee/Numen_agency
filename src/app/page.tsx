@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/blocks/navbar";
 import { HeroSection } from "@/components/blocks/hero-section";
 import { StickyStack } from "@/components/blocks/sticky-stack";
+import { SiteFooter } from "@/components/blocks/sections";
 import { ChatBubble } from "@/components/ui/chat-bubble";
 import { companyStats } from "@/lib/company-stats";
 import { SITE_URL } from "@/lib/site";
@@ -23,7 +24,7 @@ const jsonLd = {
         width: 512,
         height: 512,
       },
-      image: `${SITE_URL}/og.png`,
+      image: `${SITE_URL}/OPimage.png`,
       email: "contact@delta-numen.com",
       description:
         "Agencia digital en El Salvador especializada en desarrollo web full-stack, diseño de productos y integración de IA. 12+ proyectos entregados, 6 productos en producción.",
@@ -157,8 +158,9 @@ export default function Home() {
       />
       <div className="bg-background">
         <Navbar />
-<HeroSection />
+        <HeroSection />
         <StickyStack />
+        <SiteFooter />
         <ChatBubble />
       </div>
     </>

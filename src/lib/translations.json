@@ -27,7 +27,9 @@
           "href": "#faq"
         }
       ],
-      "contact": "Let's Talk"
+      "contact": "Let's Talk",
+      "projectsLink": "Live Projects",
+      "home": "Home"
     },
     "hero": {
       "headline": "Web Development Agency from El Salvador.",
@@ -395,7 +397,9 @@
           "href": "#faq"
         }
       ],
-      "contact": "Hablemos"
+      "contact": "Hablemos",
+      "projectsLink": "Proyectos en vivo",
+      "home": "Inicio"
     },
     "hero": {
       "headline": "Agencia Digital de Desarrollo Web en El Salvador.",

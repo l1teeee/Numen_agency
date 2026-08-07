@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     alternateLocale: ["en_US"],
     images: [
       {
-        url: "/og.png",
+        url: "/OPimage.png",
         width: 1200,
         height: 630,
         alt: "Numen Agency — Agencia Digital El Salvador",
@@ -84,12 +84,18 @@ export const metadata: Metadata = {
     title: "Numen Agency | Agencia Digital El Salvador - Desarrollo Web & SaaS",
     description:
       "Agencia digital en El Salvador. Desarrollo web full-stack, diseño de productos y IA. 12+ proyectos entregados.",
-    images: ["/og.png"],
+    images: ["/OPimage.png"],
   },
   alternates: {
     canonical: SITE_URL,
   },
   category: "technology",
+  other: {
+    "geo.region": "SV",
+    "geo.placename": "El Salvador",
+    "geo.position": "13.6929;-89.2182",
+    ICBM: "13.6929, -89.2182",
+  },
 };
 
 export default function RootLayout({
