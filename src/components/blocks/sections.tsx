@@ -8,6 +8,7 @@ import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
 import { PhotoSpread } from '@/components/ui/gallery'
+import { GlobeReach } from '@/components/ui/cobe-globe-cdn'
 import Image from 'next/image'
 import { companyStats } from '@/lib/company-stats'
 import { useLang } from '@/lib/lang'
@@ -90,6 +91,15 @@ const liveProjectsMeta = [
 const teamMeta = [
   { initials: 'JM', name: 'Julian Mendez',  role: 'Software Engineer & Founder',     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
   { initials: 'IR', name: 'Igmer Rodriguez', role: 'Software Engineer & Co-founder', linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/' },
+]
+
+const reachMeta = [
+  { id: 'sv', isHQ: true  },
+  { id: 'gt', isHQ: false },
+  { id: 'mx', isHQ: false },
+  { id: 'ar', isHQ: false },
+  { id: 'gb', isHQ: false },
+  { id: 'de', isHQ: false },
 ]
 
 const stackCategories = [
@@ -526,6 +536,87 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
+// ─── Global Reach ────────────────────────────────────────────
+export function GlobalReachSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
+  const { t } = useLang()
+  const tr = t.reach
+
+  return (
+    <section ref={ref} id="reach" className="sticky top-0 z-[35] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tr.label}</span>
+          </div>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
+        </div>
+
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:grid-cols-2 lg:items-center lg:gap-10 lg:overflow-hidden lg:pb-0">
+          <motion.div {...fadeUp(0)}>
+            <h2 className="text-3xl font-semibold leading-snug tracking-tight text-foreground lg:text-4xl">
+              {tr.headline1}<br /><span className="text-foreground/25">{tr.headline2}</span>
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-foreground/40">{tr.subtext}</p>
+
+            {/* Mobile globe — above the legend, decorative only */}
+            <div className="my-6 flex justify-center lg:hidden" aria-hidden="true">
+              <div className="w-full max-w-[260px]">
+                <GlobeReach />
+              </div>
+            </div>
+
+            <motion.div
+              className="mt-6 flex flex-col gap-2 lg:mt-8"
+              variants={staggerContainer}
+              initial="hidden"
+              animate={isInView ? 'visible' : 'hidden'}
+            >
+              {reachMeta.map((c, i) => {
+                const text = tr.countries[i]
+                return (
+                  <motion.div
+                    key={c.id}
+                    variants={staggerItem}
+                    whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
+                    className="flex items-center gap-3 rounded-2xl border border-foreground/8 px-4 py-2.5"
+                  >
+                    {c.isHQ ? (
+                      <span className="relative flex h-1.5 w-1.5 shrink-0">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                      </span>
+                    ) : (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/20" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-semibold text-foreground">{text.name}</p>
+                        {c.isHQ && (
+                          <span className="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-1.5 py-0.5 text-[9px] font-medium text-emerald-400/90">{tr.hq}</span>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-foreground/40">{text.city}</p>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
+          </motion.div>
+
+          <motion.div {...fadeUp(0.1)} className="hidden items-center justify-center lg:flex" aria-hidden="true">
+            <div className="w-full max-w-[420px]">
+              <GlobeReach />
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
+    </section>
+  )
+}
+
 // ─── Tech Stack ──────────────────────────────────────────────
 export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
@@ -542,7 +633,7 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ts.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
         </div>
 
         <motion.h2 {...fadeUp(0.05)} className="mt-6 text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
@@ -605,7 +696,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tp.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </div>
 
         {/* Mobile: icon-led list */}
@@ -763,7 +854,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tf.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:gap-12 lg:overflow-hidden lg:pb-0 lg:mb-24 lg:grid-cols-2">
@@ -872,7 +963,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tc.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">
