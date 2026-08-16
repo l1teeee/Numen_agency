@@ -7,6 +7,7 @@ import {
   ProjectsSection,
   UseCasesSection,
   AboutSection,
+  GlobalReachSection,
   TechStackSection,
   ProcessSection,
   FAQSection,
@@ -27,7 +28,7 @@ function useBlurStyle(
   return { filter }
 }
 
-const TOTAL = 8
+const TOTAL = 9
 
 function r(k: number): [number, number] {
   const base = (k - 1) / TOTAL
@@ -61,10 +62,11 @@ export function StickyStack() {
   const b5 = useBlurStyle(scrollYProgress, ...r(5))
   const b6 = useBlurStyle(scrollYProgress, ...r(6))
   const b7 = useBlurStyle(scrollYProgress, ...r(7))
+  const b8 = useBlurStyle(scrollYProgress, ...r(8))
 
   const blur = isDesktop
-    ? { b1, b2, b3, b4, b5, b6, b7 }
-    : { b1: undefined, b2: undefined, b3: undefined, b4: undefined, b5: undefined, b6: undefined, b7: undefined }
+    ? { b1, b2, b3, b4, b5, b6, b7, b8 }
+    : { b1: undefined, b2: undefined, b3: undefined, b4: undefined, b5: undefined, b6: undefined, b7: undefined, b8: undefined }
 
   return (
     <div ref={containerRef} className="section-stack" style={{ height: `${TOTAL * 100}vh` }}>
@@ -72,9 +74,10 @@ export function StickyStack() {
       <ProjectsSection blurStyle={blur.b2} />
       <UseCasesSection blurStyle={blur.b3} />
       <AboutSection blurStyle={blur.b4} />
-      <TechStackSection blurStyle={blur.b5} />
-      <ProcessSection blurStyle={blur.b6} />
-      <FAQSection blurStyle={blur.b7} />
+      <GlobalReachSection blurStyle={blur.b5} />
+      <TechStackSection blurStyle={blur.b6} />
+      <ProcessSection blurStyle={blur.b7} />
+      <FAQSection blurStyle={blur.b8} />
       <ContactFormSection />
     </div>
   )

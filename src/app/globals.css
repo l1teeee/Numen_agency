@@ -121,12 +121,50 @@
   --grid-line: rgba(0, 0, 0, 0.45);
   --grid-fine: rgba(0, 0, 0, 0.25);
   --vignette: #ffffff;
+
+  /* ── Text legibility ramp ─────────────────────────────────────
+     Solid stand-ins for text-foreground/NN opacity utilities. Raw
+     opacity reads low-contrast on both bg extremes (worst on pure
+     black), so each step is pre-computed to keep the same visual
+     weight while clearing 4.5:1 AA (4.1:1 for the /15 decorative
+     floor). Consumed by the html.dark / html:not(.dark) override
+     rules below. --text-70/--text-80 exist only as hover/group-hover
+     targets (never a base class), brighter than /60 so a hover
+     reads as a lift. */
+  --text-80: #050505;
+  --text-70: #0a0a0a;
+  --text-60: #111111;
+  --text-55: #1a1a1a;
+  --text-50: #222222;
+  --text-45: #2a2a2a;
+  --text-40: #333333;
+  --text-35: #444444;
+  --text-30: #555555;
+  --text-25: #666666;
+  --text-20: #777777;
+  --text-15: #888888;
+  --text-placeholder: #aaaaaa;
 }
 
 .dark {
   --grid-line: rgba(255, 255, 255, 0.12);
   --grid-fine: rgba(255, 255, 255, 0.035);
   --vignette: #000000;
+
+  /* ── Text legibility ramp (dark) — see :root for context ────── */
+  --text-80: #f0f0f0;
+  --text-70: #e3e3e3;
+  --text-60: #d4d4d4;
+  --text-55: #c4c4c4;
+  --text-50: #b5b5b5;
+  --text-45: #a8a8a8;
+  --text-40: #9e9e9e;
+  --text-35: #949494;
+  --text-30: #8a8a8a;
+  --text-25: #808080;
+  --text-20: #767676;
+  --text-15: #6e6e6e;
+  --text-placeholder: #5f5f5f;
 }
 
 
@@ -163,32 +201,71 @@
   }
 }
 
-/* ── Light mode: solid grays (no opacity) ─────────────────────
-   Opacity fractions look washed-out on white bg.
-   We override each shade with a solid dark-gray equivalent. */
-html:not(.dark) .text-foreground\/60  { color: #111111; }
-html:not(.dark) .text-foreground\/50  { color: #222222; }
-html:not(.dark) .text-foreground\/40  { color: #333333; }
-html:not(.dark) .text-foreground\/35  { color: #444444; }
-html:not(.dark) .text-foreground\/30  { color: #555555; }
-html:not(.dark) .text-foreground\/25  { color: #666666; }
-html:not(.dark) .text-foreground\/20  { color: #777777; }
-html:not(.dark) .text-foreground\/15  { color: #888888; }
-html:not(.dark) .placeholder\:text-foreground\/20::placeholder { color: #aaaaaa; }
+/* ── Text ramp: opacity utilities → solid var(--text-NN) ───────
+   text-foreground/NN compiles to rgba() opacity, which reads as
+   low-contrast gray on white and (especially) on pure black. Every
+   fraction used in the app is remapped to the token ramp defined
+   in :root/.dark above — hierarchy (strong → body → meta → faint)
+   is preserved, but the faint end now clears WCAG AA in both
+   themes. Unlayered + prefixed so it wins over the compiled utility
+   without !important. */
+html:not(.dark) .text-foreground\/60 { color: var(--text-60); }
+html.dark       .text-foreground\/60 { color: var(--text-60); }
+html:not(.dark) .text-foreground\/55 { color: var(--text-55); }
+html.dark       .text-foreground\/55 { color: var(--text-55); }
+html:not(.dark) .text-foreground\/50 { color: var(--text-50); }
+html.dark       .text-foreground\/50 { color: var(--text-50); }
+html:not(.dark) .text-foreground\/45 { color: var(--text-45); }
+html.dark       .text-foreground\/45 { color: var(--text-45); }
+html:not(.dark) .text-foreground\/40 { color: var(--text-40); }
+html.dark       .text-foreground\/40 { color: var(--text-40); }
+html:not(.dark) .text-foreground\/35 { color: var(--text-35); }
+html.dark       .text-foreground\/35 { color: var(--text-35); }
+html:not(.dark) .text-foreground\/30 { color: var(--text-30); }
+html.dark       .text-foreground\/30 { color: var(--text-30); }
+html:not(.dark) .text-foreground\/25 { color: var(--text-25); }
+html.dark       .text-foreground\/25 { color: var(--text-25); }
+html:not(.dark) .text-foreground\/20 { color: var(--text-20); }
+html.dark       .text-foreground\/20 { color: var(--text-20); }
+html:not(.dark) .text-foreground\/15 { color: var(--text-15); }
+html.dark       .text-foreground\/15 { color: var(--text-15); }
+html:not(.dark) .placeholder\:text-foreground\/20::placeholder { color: var(--text-placeholder); }
+html.dark       .placeholder\:text-foreground\/20::placeholder { color: var(--text-placeholder); }
 
-/* Light mode borders — clearly visible */
-html:not(.dark) .border-foreground\/\[0\.08\]  { border-color: #b8b8b8; }
-html:not(.dark) .border-foreground\/\[0\.14\]  { border-color: #999999; }
-html:not(.dark) .border-foreground\/\[0\.16\]  { border-color: #888888; }
-html:not(.dark) .border-foreground\/\[0\.06\]  { border-color: #cccccc; }
+/* ── Borders: light mode — solid grays, bracket + bare forms ────
+   Codebase mixes border-foreground/[0.NN] and border-foreground/NN
+   for the same intended opacity; both forms map to one value. */
+html:not(.dark) .border-foreground\/\[0\.06\],
+html:not(.dark) .border-foreground\/6  { border-color: #cccccc; }
+html:not(.dark) .border-foreground\/\[0\.08\],
+html:not(.dark) .border-foreground\/8  { border-color: #b8b8b8; }
+html:not(.dark) .border-foreground\/10 { border-color: #adadad; }
+html:not(.dark) .border-foreground\/12 { border-color: #a3a3a3; }
+html:not(.dark) .border-foreground\/\[0\.14\],
+html:not(.dark) .border-foreground\/14 { border-color: #999999; }
+html:not(.dark) .border-foreground\/\[0\.16\],
+html:not(.dark) .border-foreground\/16 { border-color: #888888; }
+html:not(.dark) .border-foreground\/18 { border-color: #808080; }
+html:not(.dark) .border-foreground\/20 { border-color: #777777; }
+html:not(.dark) .border-foreground\/22 { border-color: #707070; }
 
 /* Light mode input / card backgrounds — white lifts above the page */
-html:not(.dark) .bg-foreground\/\[0\.03\]  { background-color: #ffffff; }
-html:not(.dark) .bg-foreground\/\[0\.05\]  { background-color: #f0f0f0; }
-html:not(.dark) .bg-foreground\/\[0\.06\]  { background-color: #e8e8e8; }
+html:not(.dark) .bg-foreground\/2 { background-color: #fafafa; }
+html:not(.dark) .bg-foreground\/\[0\.03\],
+html:not(.dark) .bg-foreground\/3 { background-color: #ffffff; }
+html:not(.dark) .bg-foreground\/4 { background-color: #f5f5f5; }
+html:not(.dark) .bg-foreground\/\[0\.05\],
+html:not(.dark) .bg-foreground\/5 { background-color: #f0f0f0; }
+html:not(.dark) .bg-foreground\/\[0\.06\],
+html:not(.dark) .bg-foreground\/6 { background-color: #e8e8e8; }
 
-/* Light mode inline bg elements (dividers, progress dots) */
-html:not(.dark) .bg-foreground\/\[0\.08\]  { background-color: #c8c8c8; }
+/* Light mode inline bg elements (dividers, progress dots).
+   bg-foreground/8 (bare) is only ever used as a hairline divider in
+   this codebase — blog grid-gap line, navbar rule — never as a card
+   fill, so it stays grouped with the /[0.08] divider value rather
+   than a lighter surface tint. */
+html:not(.dark) .bg-foreground\/\[0\.08\],
+html:not(.dark) .bg-foreground\/8  { background-color: #c8c8c8; }
 html:not(.dark) .bg-foreground\/\[0\.12\]  { background-color: #b8b8b8; }
 
 /* Light mode opacity-60 icons — boost visibility */
@@ -223,3 +300,77 @@ html:not(.dark) .opacity-60 { opacity: 0.8; }
     overflow: visible;
   }
 }
+
+/* ── Borders: dark mode — outlines are ~invisible on pure black ──
+   rgba (not solid hex) so the border still blends over whichever
+   card tint (bg-foreground/2…/8) sits underneath it. */
+html.dark .border-foreground\/\[0\.06\],
+html.dark .border-foreground\/6  { border-color: rgba(255, 255, 255, 0.10); }
+html.dark .border-foreground\/\[0\.08\],
+html.dark .border-foreground\/8  { border-color: rgba(255, 255, 255, 0.12); }
+html.dark .border-foreground\/10 { border-color: rgba(255, 255, 255, 0.14); }
+html.dark .border-foreground\/12 { border-color: rgba(255, 255, 255, 0.16); }
+html.dark .border-foreground\/\[0\.14\],
+html.dark .border-foreground\/14 { border-color: rgba(255, 255, 255, 0.18); }
+html.dark .border-foreground\/\[0\.16\],
+html.dark .border-foreground\/16 { border-color: rgba(255, 255, 255, 0.20); }
+html.dark .border-foreground\/18 { border-color: rgba(255, 255, 255, 0.22); }
+html.dark .border-foreground\/20 { border-color: rgba(255, 255, 255, 0.26); }
+html.dark .border-foreground\/22 { border-color: rgba(255, 255, 255, 0.28); }
+
+/* ── Hover / focus / group-hover variants ───────────────────────
+   Tailwind compiles a variant to a DIFFERENT class name inside
+   @layer utilities (e.g. .hover\:text-foreground\/70:hover). The
+   base overrides above are unlayered, so wherever an element's base
+   fraction is one we override, the base rule now beats the layered
+   variant rule regardless of :hover/:focus state — the affordance
+   goes dead. Re-declaring each live variant here, unlayered, adds
+   enough extra selector (the pseudo-class / group ancestor) to win
+   back over the base rule. Only variants whose base class actually
+   collides with a rule above are listed — see report for the ones
+   left to native cascade (no colliding base class exists). */
+
+/* Text: hover */
+html:not(.dark) .hover\:text-foreground\/80:hover { color: var(--text-80); }
+html.dark       .hover\:text-foreground\/80:hover { color: var(--text-80); }
+html:not(.dark) .hover\:text-foreground\/70:hover { color: var(--text-70); }
+html.dark       .hover\:text-foreground\/70:hover { color: var(--text-70); }
+html:not(.dark) .hover\:text-foreground\/60:hover { color: var(--text-60); }
+html.dark       .hover\:text-foreground\/60:hover { color: var(--text-60); }
+html:not(.dark) .hover\:text-foreground\/55:hover { color: var(--text-55); }
+html.dark       .hover\:text-foreground\/55:hover { color: var(--text-55); }
+html:not(.dark) .hover\:text-foreground\/50:hover { color: var(--text-50); }
+html.dark       .hover\:text-foreground\/50:hover { color: var(--text-50); }
+
+/* Text: group-hover (descendant of a hovered .group) */
+html:not(.dark) .group:hover .group-hover\:text-foreground\/80 { color: var(--text-80); }
+html.dark       .group:hover .group-hover\:text-foreground\/80 { color: var(--text-80); }
+html:not(.dark) .group:hover .group-hover\:text-foreground\/60 { color: var(--text-60); }
+html.dark       .group:hover .group-hover\:text-foreground\/60 { color: var(--text-60); }
+html:not(.dark) .group:hover .group-hover\:text-foreground\/40 { color: var(--text-40); }
+html.dark       .group:hover .group-hover\:text-foreground\/40 { color: var(--text-40); }
+html:not(.dark) .group:hover .group-hover\:text-foreground\/35 { color: var(--text-35); }
+html.dark       .group:hover .group-hover\:text-foreground\/35 { color: var(--text-35); }
+
+/* Borders: hover — same value as the matching base rule above */
+html:not(.dark) .hover\:border-foreground\/\[0\.16\]:hover,
+html:not(.dark) .hover\:border-foreground\/16:hover        { border-color: #888888; }
+html.dark       .hover\:border-foreground\/\[0\.16\]:hover,
+html.dark       .hover\:border-foreground\/16:hover        { border-color: rgba(255, 255, 255, 0.20); }
+html:not(.dark) .hover\:border-foreground\/\[0\.14\]:hover { border-color: #999999; }
+html.dark       .hover\:border-foreground\/\[0\.14\]:hover { border-color: rgba(255, 255, 255, 0.18); }
+html:not(.dark) .hover\:border-foreground\/18:hover        { border-color: #808080; }
+html.dark       .hover\:border-foreground\/18:hover        { border-color: rgba(255, 255, 255, 0.22); }
+html:not(.dark) .hover\:border-foreground\/20:hover        { border-color: #777777; }
+html.dark       .hover\:border-foreground\/20:hover        { border-color: rgba(255, 255, 255, 0.26); }
+html:not(.dark) .hover\:border-foreground\/22:hover        { border-color: #707070; }
+html.dark       .hover\:border-foreground\/22:hover        { border-color: rgba(255, 255, 255, 0.28); }
+
+/* Borders: focus — form input focus ring (accessibility-relevant) */
+html:not(.dark) .focus\:border-foreground\/20:focus { border-color: #777777; }
+html.dark       .focus\:border-foreground\/20:focus { border-color: rgba(255, 255, 255, 0.26); }
+
+/* Backgrounds: hover — light mode only. Dark never had a base
+   bg-foreground override (out of original ramp scope), so dark
+   hover:bg-foreground/* still cascades natively; no fix needed. */
+html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }

@@ -162,6 +162,39 @@
         }
       ]
     },
+    "reach": {
+      "label": "Global Reach",
+      "headline1": "Local team,",
+      "headline2": "worldwide clients.",
+      "subtext": "Headquartered in San Salvador. Active client relationships in Guatemala, Mexico, Argentina, the UK, and Germany: six countries, one team, fully remote.",
+      "hq": "HQ",
+      "countries": [
+        {
+          "name": "El Salvador",
+          "city": "San Salvador"
+        },
+        {
+          "name": "Guatemala",
+          "city": "Guatemala City"
+        },
+        {
+          "name": "Mexico",
+          "city": "Mexico City"
+        },
+        {
+          "name": "Argentina",
+          "city": "Buenos Aires"
+        },
+        {
+          "name": "United Kingdom",
+          "city": "London"
+        },
+        {
+          "name": "Germany",
+          "city": "Berlin"
+        }
+      ]
+    },
     "stack": {
       "label": "Our Stack",
       "headline1": "Tools we trust",
@@ -529,6 +562,39 @@
         {
           "title": "Sin dependencias",
           "desc": "Código limpio, documentación completa y entrega ordenada. Tú eres dueño de todo lo que construimos, siempre."
+        }
+      ]
+    },
+    "reach": {
+      "label": "Alcance Global",
+      "headline1": "Equipo local,",
+      "headline2": "clientes en el mundo.",
+      "subtext": "Con sede en San Salvador. Relaciones activas con clientes en Guatemala, México, Argentina, Reino Unido y Alemania: seis países, un mismo equipo, 100% remoto.",
+      "hq": "Sede",
+      "countries": [
+        {
+          "name": "El Salvador",
+          "city": "San Salvador"
+        },
+        {
+          "name": "Guatemala",
+          "city": "Ciudad de Guatemala"
+        },
+        {
+          "name": "México",
+          "city": "Ciudad de México"
+        },
+        {
+          "name": "Argentina",
+          "city": "Buenos Aires"
+        },
+        {
+          "name": "Reino Unido",
+          "city": "Londres"
+        },
+        {
+          "name": "Alemania",
+          "city": "Berlín"
         }
       ]
     },
