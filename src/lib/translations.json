@@ -168,6 +168,7 @@
       "headline2": "worldwide clients.",
       "subtext": "Headquartered in San Salvador. Active client relationships in Guatemala, Mexico, Argentina, the UK, and Germany: six countries, one team, fully remote.",
       "hq": "HQ",
+      "liveProject": "Live project",
       "countries": [
         {
           "name": "El Salvador",
@@ -571,6 +572,7 @@
       "headline2": "clientes en el mundo.",
       "subtext": "Con sede en San Salvador. Relaciones activas con clientes en Guatemala, México, Argentina, Reino Unido y Alemania: seis países, un mismo equipo, 100% remoto.",
       "hq": "Sede",
+      "liveProject": "Proyecto en vivo",
       "countries": [
         {
           "name": "El Salvador",

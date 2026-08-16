@@ -151,13 +151,13 @@ export function GlobeReach({
 
       globe = createGlobe(canvas, {
         ...palette,
-        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
         width,
         height: width,
         phi: phiRef.current,
         theta: THETA,
         diffuse: 1.5,
-        mapSamples: 16000,
+        mapSamples: 8000,
         markerElevation: 0.02,
         markers: markers.map((m) => ({ location: m.location, size: 0.012, id: m.id })),
         arcs,

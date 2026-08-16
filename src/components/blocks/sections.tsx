@@ -126,12 +126,12 @@ const teamMeta = [
 ]
 
 const reachMeta = [
-  { id: 'sv', isHQ: true  },
-  { id: 'gt', isHQ: false },
-  { id: 'mx', isHQ: false },
-  { id: 'ar', isHQ: false },
-  { id: 'gb', isHQ: false },
-  { id: 'de', isHQ: false },
+  { id: 'sv', isHQ: true,  isLive: false },
+  { id: 'gt', isHQ: false, isLive: true  },
+  { id: 'mx', isHQ: false, isLive: true  },
+  { id: 'ar', isHQ: false, isLive: true  },
+  { id: 'gb', isHQ: false, isLive: false },
+  { id: 'de', isHQ: false, isLive: false },
 ]
 
 const stackCategories = [
@@ -714,11 +714,8 @@ export function GlobalReachSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                     whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
                     className="flex items-center gap-3 rounded-2xl border border-foreground/8 px-4 py-2.5"
                   >
-                    {c.isHQ ? (
-                      <span className="relative flex h-1.5 w-1.5 shrink-0">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                      </span>
+                    {c.isHQ || c.isLive ? (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
                     ) : (
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/20" />
                     )}
@@ -727,6 +724,9 @@ export function GlobalReachSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                         <p className="text-xs font-semibold text-foreground">{text.name}</p>
                         {c.isHQ && (
                           <span className="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-1.5 py-0.5 text-[9px] font-medium text-emerald-400/90">{tr.hq}</span>
+                        )}
+                        {c.isLive && (
+                          <span className="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-1.5 py-0.5 text-[9px] font-medium text-emerald-400/90">{tr.liveProject}</span>
                         )}
                       </div>
                       <p className="text-[10px] text-foreground/40">{text.city}</p>
