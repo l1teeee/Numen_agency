@@ -294,7 +294,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           animate={isInView ? "visible" : "hidden"}
         >
           <motion.div variants={staggerItem} {...LIFT} className="flex flex-col flex-none lg:flex-3">
-            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:p-6">
+            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:p-6">
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{
@@ -306,6 +306,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   padding: '1px',
                 }}
               />
+              <span aria-hidden="true" className="pointer-events-none absolute bottom-3 right-4 select-none text-7xl font-bold leading-none text-foreground/[0.05] lg:bottom-4 lg:right-6 lg:text-9xl">01</span>
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-xs text-foreground/30">{featuredText.category}</span>
@@ -322,7 +323,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
               </div>
               <div className="mt-auto">
-                <p className="mb-2 line-clamp-2 text-[13px] leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{featuredText.desc}</p>
+                <p className="mb-2 line-clamp-4 text-[13px] leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{featuredText.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {featuredMeta.stack.map((t) => (
                     <span key={t} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-[11px] text-foreground/40 lg:px-3 lg:py-1 lg:text-xs">{t}</span>
@@ -337,7 +338,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               const pt = restText[i]
               return (
                 <motion.div key={pm.href} variants={staggerItem} {...LIFT} className="flex-1">
-                  <Link href={pm.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
+                  <Link href={pm.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
+                    <span aria-hidden="true" className="pointer-events-none absolute bottom-1 right-3 select-none text-5xl font-bold leading-none text-foreground/[0.05] lg:bottom-1 lg:right-4 lg:text-6xl">0{i + 2}</span>
                     <div className="flex items-start justify-between">
                       <div>
                         <span className="text-xs text-foreground/30">{pt.category}</span>
@@ -354,7 +356,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                       <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                     </div>
                     <div className="mt-auto">
-                      <p className="mb-2 line-clamp-2 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{pt.desc}</p>
+                      <p className="mb-2 line-clamp-4 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{pt.desc}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {pm.stack.map((s) => (
                           <span key={s} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-xs text-foreground/40">{s}</span>
