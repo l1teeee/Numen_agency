@@ -194,7 +194,7 @@ export function ChatBubble() {
                     )}
                     <div className={`flex flex-col max-w-52 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                       <div
-                        className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                        className={`break-words rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
                           msg.role === 'user'
                             ? 'rounded-tr-sm bg-foreground text-background'
                             : 'rounded-tl-sm bg-foreground/6 text-foreground/70'

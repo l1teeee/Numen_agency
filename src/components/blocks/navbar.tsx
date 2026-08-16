@@ -26,7 +26,7 @@ function LangToggle({ lang, setLang }: { lang: Lang; setLang: (lang: Lang) => vo
 }
 
 export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
-  const [visible, setVisible] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lenis = useLenis()
@@ -35,10 +35,11 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
   const isHome = pathname === '/'
 
   const contactHref = SECTION_HREFS.contact
+  const visible = alwaysVisible || scrolled
 
   useEffect(() => {
-    if (alwaysVisible) { setVisible(true); return }
-    const onScroll = () => setVisible(window.scrollY > 60)
+    if (alwaysVisible) return
+    const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [alwaysVisible])
@@ -71,7 +72,7 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
           transition={{ duration: 0.35, ease: EASE }}
-          className="fixed top-5 left-1/2 z-100 -translate-x-1/2"
+          className="fixed top-5 left-1/2 z-100 max-w-[calc(100vw-3rem)] -translate-x-1/2"
         >
           <div className="flex items-center rounded-full border border-foreground/8 bg-background/70 px-3 py-2 backdrop-blur-xl">
             <Link
@@ -86,7 +87,8 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
             <AnimatePresence>
               {menuOpen && (
                 <motion.div
-                  className="flex items-center gap-2 overflow-hidden whitespace-nowrap"
+                  className="flex items-center gap-2 overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:hidden"
+                  style={{ scrollbarWidth: 'none' }}
                   initial={{ opacity: 0, maxWidth: 0 }}
                   animate={{
                     opacity: 1,
