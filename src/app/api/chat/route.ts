@@ -225,11 +225,15 @@ function inMemoryRateLimited(ip: string): boolean {
 
 async function isRateLimited(ip: string): Promise<boolean> {
   if (minuteLimiter && dailyLimiter) {
-    const [min, day] = await Promise.all([
-      minuteLimiter.limit(ip),
-      dailyLimiter.limit(ip),
-    ])
-    return !min.success || !day.success
+    try {
+      const [min, day] = await Promise.all([
+        minuteLimiter.limit(ip),
+        dailyLimiter.limit(ip),
+      ])
+      return !min.success || !day.success
+    } catch {
+      return inMemoryRateLimited(ip)
+    }
   }
   return inMemoryRateLimited(ip)
 }
