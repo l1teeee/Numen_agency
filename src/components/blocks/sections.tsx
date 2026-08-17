@@ -3,15 +3,16 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, type LucideIcon } from 'lucide-react'
+import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, Building2, MapPin, Phone, Tags, UserPlus, type LucideIcon } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { SelectCustom } from '@/components/ui/select-custom'
-import { PhotoSpread } from '@/components/ui/gallery'
+import { GlobeReach } from '@/components/ui/cobe-globe-cdn'
 import Image from 'next/image'
 import { companyStats } from '@/lib/company-stats'
 import { useLang } from '@/lib/lang'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
+import { HoverPeek } from '@/components/ui/link-preview'
 
 interface BlurStyle { filter: MotionValue<string> }
 
@@ -68,6 +69,32 @@ function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
   return <span ref={ref}>{val}{suffix}</span>
 }
 
+// ─── Live status check ────────────────────────────────────────
+function useProjectStatus() {
+  const [status, setStatus] = useState<Record<string, boolean>>({})
+  useEffect(() => {
+    let active = true
+    fetch('/api/project-status')
+      .then((res) => (res.ok ? res.json() : {}))
+      .then((data) => { if (active) setStatus(data) })
+      .catch(() => {})
+    return () => { active = false }
+  }, [])
+  return status
+}
+
+function StatusDot({ online, size = 'h-1.5 w-1.5' }: { online?: boolean; size?: string }) {
+  if (online === false) {
+    return <span className={`inline-block rounded-full bg-red-400 ${size}`} />
+  }
+  return (
+    <span className={`relative flex shrink-0 ${size}`}>
+      {online && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />}
+      <span className={`relative inline-flex rounded-full ${size} ${online === undefined ? 'bg-foreground/20' : 'bg-emerald-400'}`} />
+    </span>
+  )
+}
+
 // ─── Static non-translatable data ────────────────────────────
 const servicesMeta = [
   { num: '01', tags: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Stripe'],          img: '/programming.png' },
@@ -78,8 +105,14 @@ const servicesMeta = [
 
 const projectsMeta = [
   { href: 'https://vielinks.com',          name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
-  { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'], img: '/scoutia/inicio.png' },
-  { href: 'https://inkytap.com',           name: 'InkyTap',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Supabase', 'PayPal', 'Framer Motion'] },
+  { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
+  { href: 'https://dashboard-bot-whatsapp.vercel.app', name: 'WhatsApp Ops', status: 'Live', dot: 'bg-emerald-400', stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'TanStack Query'] },
+  { href: 'https://servilocal-three.vercel.app', name: 'ServiLocal', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Tkiero'] },
+]
+
+const useCaseMeta = [
+  { href: 'https://aeri-self.vercel.app/' },
+  { href: 'https://savia-cafe-nu.vercel.app/' },
 ]
 
 const liveProjectsMeta = [
@@ -90,6 +123,15 @@ const liveProjectsMeta = [
 const teamMeta = [
   { initials: 'JM', name: 'Julian Mendez',  role: 'Software Engineer & Founder',     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
   { initials: 'IR', name: 'Igmer Rodriguez', role: 'Software Engineer & Co-founder', linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/' },
+]
+
+const reachMeta = [
+  { id: 'sv', isHQ: true,  isLive: false },
+  { id: 'gt', isHQ: false, isLive: true  },
+  { id: 'mx', isHQ: false, isLive: true  },
+  { id: 'ar', isHQ: false, isLive: true  },
+  { id: 'gb', isHQ: false, isLive: false },
+  { id: 'de', isHQ: false, isLive: false },
 ]
 
 const stackCategories = [
@@ -206,12 +248,12 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 />
                 <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/30 to-background/20 hidden sm:block" />
                 <div className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-background via-background/90 to-transparent hidden sm:block" />
-                <div className="relative z-10 flex h-full flex-col justify-between p-5">
+                <div className="relative z-10 flex h-full flex-col justify-end sm:justify-between p-5">
                   <span className="text-[10px] font-medium text-foreground/30">{s.num}</span>
                   <div>
                     <h3 className="mb-1.5 text-sm font-semibold text-foreground">{text.title}</h3>
-                    <p className="mb-3 text-xs leading-relaxed text-foreground/50">{text.desc}</p>
-                    <div className="flex flex-wrap gap-1.5">
+                    <p className="mb-0 lg:mb-3 text-xs leading-relaxed text-foreground/50">{text.desc}</p>
+                    <div className="service-tags flex flex-wrap gap-1.5">
                       {s.tags.map((tag) => (
                         <span key={tag} className="rounded-full border border-foreground/[0.14] bg-background/40 px-2.5 py-0.5 text-[10px] text-foreground/40 backdrop-blur-sm">{tag}</span>
                       ))}
@@ -233,6 +275,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const isInView = useInView(ref, { amount: 0.5, once: false })
   const { t } = useLang()
   const tp = t.projects
+  const status = useProjectStatus()
 
   const [featuredMeta, ...restMeta] = projectsMeta
   const [featuredText, ...restText] = tp.items
@@ -261,7 +304,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           animate={isInView ? "visible" : "hidden"}
         >
           <motion.div variants={staggerItem} {...LIFT} className="flex flex-col flex-none lg:flex-3">
-            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:justify-between lg:gap-0 lg:p-6">
+            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:p-6">
               <div
                 className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{
@@ -273,6 +316,7 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   padding: '1px',
                 }}
               />
+              <span aria-hidden="true" className="pointer-events-none absolute bottom-3 right-4 select-none text-7xl font-bold leading-none text-foreground/[0.05] lg:bottom-4 lg:right-6 lg:text-9xl">01</span>
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-xs text-foreground/30">{featuredText.category}</span>
@@ -280,24 +324,16 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                     <h3 className="text-base font-semibold text-foreground lg:text-xl">{featuredText.name}</h3>
                     {featuredMeta.status && (
                       <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
-                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${featuredMeta.dot}`} />
-                        {featuredMeta.status}
+                        <StatusDot online={status[featuredMeta.href]} />
+                        {status[featuredMeta.href] === false ? 'Offline' : featuredMeta.status}
                       </span>
                     )}
                   </div>
                 </div>
                 <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
               </div>
-              <div className="hidden lg:flex items-center justify-center">
-                <PhotoSpread
-                  images={['/vielink/vielink2.png', '/vielink/inici vie.png', '/vielink/vielink3.png']}
-                  width={170}
-                  height={280}
-                  centerWidth={260}
-                />
-              </div>
-              <div>
-                <p className="mb-2 line-clamp-2 text-[13px] leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{featuredText.desc}</p>
+              <div className="mt-auto">
+                <p className="mb-2 line-clamp-4 text-[13px] leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{featuredText.desc}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {featuredMeta.stack.map((t) => (
                     <span key={t} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-[11px] text-foreground/40 lg:px-3 lg:py-1 lg:text-xs">{t}</span>
@@ -312,7 +348,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               const pt = restText[i]
               return (
                 <motion.div key={pm.href} variants={staggerItem} {...LIFT} className="flex-1">
-                  <Link href={pm.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
+                  <Link href={pm.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
+                    <span aria-hidden="true" className="pointer-events-none absolute bottom-1 right-3 select-none text-5xl font-bold leading-none text-foreground/[0.05] lg:bottom-1 lg:right-4 lg:text-6xl">0{i + 2}</span>
                     <div className="flex items-start justify-between">
                       <div>
                         <span className="text-xs text-foreground/30">{pt.category}</span>
@@ -320,23 +357,16 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                           <h3 className="text-sm font-semibold text-foreground">{pt.name}</h3>
                           {pm.status && (
                             <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-1.5 py-0.5 text-[9px] text-foreground/30">
-                              <span className={`inline-block h-1 w-1 rounded-full ${pm.dot}`} />
-                              {pm.status}
+                              <StatusDot online={status[pm.href]} size="h-1 w-1" />
+                              {status[pm.href] === false ? 'Offline' : pm.status}
                             </span>
                           )}
                         </div>
                       </div>
                       <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                     </div>
-                    {'img' in pm && pm.img && (
-                      <div className="relative hidden my-4 overflow-hidden rounded-xl lg:block lg:flex-1">
-                        <Image fill src={pm.img as string} alt={pt.name}
-                          sizes="(max-width: 1024px) 0px, 33vw"
-                          className="object-cover invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.04]" />
-                      </div>
-                    )}
                     <div className="mt-auto">
-                      <p className="mb-2 line-clamp-2 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{pt.desc}</p>
+                      <p className="mb-2 line-clamp-4 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{pt.desc}</p>
                       <div className="flex flex-wrap gap-1.5">
                         {pm.stack.map((s) => (
                           <span key={s} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-xs text-foreground/40">{s}</span>
@@ -355,12 +385,126 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
+// --- Brand Concepts -------------------------------------------
+export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
+  const { t } = useLang()
+  const tu = t.useCases
+
+  // Bento placement (desktop only) — the two live concepts fill the top two
+  // rows, the coming-soon tiles split the bottom row, so the 3×3 grid reads as
+  // an ordered-but-varied square.
+  const liveSpans = [
+    'lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-3',  // big — 2×2 top-left
+    'lg:col-start-3 lg:row-start-1 lg:row-end-3',               // tall — full-height right column
+  ]
+  const conceptSpans = [
+    'lg:col-start-1 lg:row-start-3',                // small — bottom-left
+    'lg:col-start-2 lg:col-end-4 lg:row-start-3',   // wide — bottom-right
+  ]
+
+  return (
+    <section ref={ref} id="use-cases" className="sticky top-0 z-[25] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:px-8 lg:pt-24 lg:pb-10" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <h2 className={`text-[10px] font-normal uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tu.label}</h2>
+          </div>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+        </div>
+
+        <motion.div
+          className="mt-4 grid flex-1 grid-cols-1 gap-3 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mt-6 lg:mb-24 lg:grid-cols-3 lg:grid-rows-3 lg:overflow-visible lg:pb-0"
+          style={{ scrollbarWidth: 'none' }}
+          variants={staggerContainer}
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+        >
+          {/* Live concepts — bigger tiles, live preview on hover */}
+          {tu.concepts.map((concept, index) => (
+            <motion.div
+              key={concept.name}
+              variants={staggerItem}
+              {...LIFT}
+              className={`min-h-[20rem] lg:min-h-0 ${liveSpans[index] ?? ''}`}
+            >
+              <HoverPeek url={useCaseMeta[index].href} peekWidth={320} peekHeight={200}>
+                <Link
+                  href={useCaseMeta[index].href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-background p-5 ring-1 ring-foreground/8 lg:p-7"
+                >
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{
+                      background: 'linear-gradient(to right, #C8553A, #e8896e, #C8553A)',
+                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMaskComposite: 'xor',
+                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      maskComposite: 'exclude',
+                      padding: '1px',
+                    }}
+                  />
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <span className="text-xs text-foreground/30">{concept.category}</span>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <h3 className="text-xl font-semibold text-foreground lg:text-2xl">{concept.name}</h3>
+                        <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
+                          <StatusDot online />
+                          Live
+                        </span>
+                      </div>
+                    </div>
+                    <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
+                  </div>
+                  <div>
+                    <p className="mb-3 max-w-md text-[13px] leading-relaxed text-foreground/40 lg:text-sm">{concept.desc}</p>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/50 transition-colors duration-200 group-hover:text-[#C8553A] lg:text-xs">
+                      {concept.cta}
+                      <ArrowUpRight className="size-3" />
+                    </span>
+                  </div>
+                </Link>
+              </HoverPeek>
+            </motion.div>
+          ))}
+
+          {/* Coming-soon concepts — varied sizes fill the rest of the square */}
+          {tu.cards.map((card, index) => (
+            <motion.article
+              key={card.category}
+              variants={staggerItem}
+              {...LIFT}
+              aria-label={`${card.title}. ${tu.comingSoon}`}
+              className={`group relative flex min-h-40 flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-foreground/[0.14] bg-foreground/[0.02] p-5 transition-colors duration-300 hover:border-foreground/[0.24] lg:min-h-0 ${conceptSpans[index] ?? ''}`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-medium text-foreground/25">0{index + 3}</span>
+                <span className="rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] text-foreground/35">{tu.comingSoon}</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-[0.14em] text-foreground/25 lg:text-xs">{card.category}</span>
+                <h3 className="mt-1 max-w-[16rem] text-sm font-medium leading-snug text-foreground/55 lg:text-base">{card.title}</h3>
+              </div>
+            </motion.article>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  )
+}
+
 // ─── Live Projects ───────────────────────────────────────────
 export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.5, once: false })
   const { t } = useLang()
   const tl = t.liveProjects
+  const status = useProjectStatus()
 
   return (
     <section ref={ref} id="live-projects" className="sticky top-0 z-[25] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
@@ -401,11 +545,8 @@ export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <span className="relative flex h-1.5 w-1.5 shrink-0">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                      </span>
-                      <span className="text-[10px] text-foreground/30">{pm.status}</span>
+                      <StatusDot online={status[pm.href]} />
+                      <span className="text-[10px] text-foreground/30">{status[pm.href] === false ? 'Offline' : pm.status}</span>
                     </div>
                     <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
                   </div>
@@ -443,7 +584,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ta.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </div>
 
         <div className="mt-6 flex flex-1 flex-col gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0">
@@ -526,6 +667,87 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
+// ─── Global Reach ────────────────────────────────────────────
+export function GlobalReachSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+  const ref = useRef<HTMLElement>(null)
+  const isInView = useInView(ref, { amount: 0.5, once: false })
+  const { t } = useLang()
+  const tr = t.reach
+
+  return (
+    <section ref={ref} id="reach" className="sticky top-0 z-[35] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
+          <div className="flex items-center gap-2">
+            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tr.label}</span>
+          </div>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
+        </div>
+
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:grid-cols-2 lg:items-center lg:gap-10 lg:overflow-hidden lg:pb-0">
+          <motion.div {...fadeUp(0)}>
+            <h2 className="text-3xl font-semibold leading-snug tracking-tight text-foreground lg:text-4xl">
+              {tr.headline1}<br /><span className="text-foreground/25">{tr.headline2}</span>
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-foreground/40">{tr.subtext}</p>
+
+            {/* Mobile globe — above the legend, decorative only */}
+            <div className="my-6 flex justify-center lg:hidden" aria-hidden="true">
+              <div className="w-full max-w-[260px]">
+                <GlobeReach />
+              </div>
+            </div>
+
+            <motion.div
+              className="mt-6 flex flex-col gap-2 lg:mt-8"
+              variants={staggerContainer}
+              initial="hidden"
+              animate={isInView ? 'visible' : 'hidden'}
+            >
+              {reachMeta.map((c, i) => {
+                const text = tr.countries[i]
+                return (
+                  <motion.div
+                    key={c.id}
+                    variants={staggerItem}
+                    whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
+                    className="flex items-center gap-3 rounded-2xl border border-foreground/8 px-4 py-2.5"
+                  >
+                    {c.isHQ || c.isLive ? (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+                    ) : (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/20" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-semibold text-foreground">{text.name}</p>
+                        {c.isHQ && (
+                          <span className="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-1.5 py-0.5 text-[9px] font-medium text-emerald-400/90">{tr.hq}</span>
+                        )}
+                        {c.isLive && (
+                          <span className="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-1.5 py-0.5 text-[9px] font-medium text-emerald-400/90">{tr.liveProject}</span>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-foreground/40">{text.city}</p>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
+          </motion.div>
+
+          <motion.div {...fadeUp(0.1)} className="hidden items-center justify-center lg:flex" aria-hidden="true">
+            <div className="w-full max-w-[420px]">
+              <GlobeReach />
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
+    </section>
+  )
+}
+
 // ─── Tech Stack ──────────────────────────────────────────────
 export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
@@ -542,7 +764,7 @@ export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ts.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </div>
 
         <motion.h2 {...fadeUp(0.05)} className="mt-6 text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
@@ -605,7 +827,7 @@ export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tp.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
         </div>
 
         {/* Mobile: icon-led list */}
@@ -763,7 +985,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tf.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:gap-12 lg:overflow-hidden lg:pb-0 lg:mb-24 lg:grid-cols-2">
@@ -833,7 +1055,17 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.3, once: false })
-  const [form, setForm] = useState({ name: '', email: '', budget: '', message: '', website: '' })
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    company: '',
+    phone: '',
+    location: '',
+    category: '',
+    budget: '',
+    message: '',
+    website: '',
+  })
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
   const { t } = useLang()
   const tc = t.contact
@@ -872,7 +1104,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
             <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tc.label}</span>
           </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>10</span>
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">
@@ -915,7 +1147,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
             </motion.div>
           </div>
 
-          <motion.div {...fadeUp(0.05)} className="flex flex-col">
+          <motion.div {...fadeUp(0.05)} className="flex min-h-0 flex-col">
             <div className="mb-4 lg:hidden">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">
                 {tc.headline1}<br />
@@ -957,7 +1189,11 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 <p className="mt-2 text-sm text-foreground/40">{tc.successDesc}</p>
               </div>
             ) : (
-              <form onSubmit={submit} className="space-y-3">
+              <form
+                onSubmit={submit}
+                className="min-h-0 space-y-3 overflow-y-auto pb-4 pr-1 [&::-webkit-scrollbar]:hidden"
+                style={{ scrollbarWidth: 'none' }}
+              >
                 {/* Honeypot — invisible to users, bots fill it and get silently rejected */}
                 <input
                   type="text"
@@ -969,7 +1205,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   autoComplete="off"
                   style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, overflow: 'hidden', opacity: 0 }}
                 />
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="name" className="text-xs text-foreground/30">{tc.nameLabel}</label>
                     <div className="relative">
@@ -1003,11 +1239,77 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="company" className="text-xs text-foreground/30">{tc.companyLabel}</label>
+                    <div className="relative">
+                      <Building2 className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <input
+                        id="company"
+                        name="company"
+                        value={form.company}
+                        onChange={handle}
+                        placeholder={tc.companyPlaceholder}
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="phone" className="text-xs text-foreground/30">{tc.phoneLabel}</label>
+                    <div className="relative">
+                      <Phone className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={form.phone}
+                        onChange={handle}
+                        placeholder={tc.phonePlaceholder}
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="location" className="text-xs text-foreground/30">{tc.locationLabel}</label>
+                    <div className="relative">
+                      <MapPin className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <input
+                        id="location"
+                        name="location"
+                        required
+                        value={form.location}
+                        onChange={handle}
+                        placeholder={tc.locationPlaceholder}
+                        className={`${INPUT} pl-10`}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="category" className="text-xs text-foreground/30">{tc.categoryLabel}</label>
+                    <div className="relative">
+                      <Tags className="pointer-events-none absolute left-4 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <SelectCustom
+                        id="category"
+                        name="category"
+                        value={form.category}
+                        onChange={(v) => setForm((p) => ({ ...p, category: v }))}
+                        options={tc.categoryOptions}
+                        placeholder={tc.categoryPlaceholder}
+                        icon={Tags}
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="budget" className="text-xs text-foreground/30">{tc.budgetLabel}</label>
                   <div className="relative">
                     <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
                     <SelectCustom
+                      id="budget"
                       name="budget"
                       value={form.budget}
                       onChange={(v) => setForm((p) => ({ ...p, budget: v }))}
@@ -1044,6 +1346,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   disabled={status === 'loading'}
                   className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
                 >
+                  <UserPlus className="size-4" />
                   {status === 'loading' ? tc.sendingBtn : tc.sendBtn}
                 </Button>
                 <Link
@@ -1068,14 +1371,28 @@ export function SiteFooter() {
   const { t } = useLang()
   return (
     <footer className="border-t border-foreground/[0.08] bg-background">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6 lg:px-8">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-6 lg:px-8">
         <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen Agency. {t.contact.footer}</span>
-        <Link
-          href="/blog"
-          className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
-        >
-          Blog →
-        </Link>
+        <nav aria-label="Footer" className="flex items-center gap-5">
+          <Link
+            href="/"
+            className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
+          >
+            {t.nav.home}
+          </Link>
+          <Link
+            href="/projects"
+            className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
+          >
+            {t.nav.projectsLink}
+          </Link>
+          <Link
+            href="/blog"
+            className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
+          >
+            {t.blog.label}
+          </Link>
+        </nav>
       </div>
     </footer>
   )

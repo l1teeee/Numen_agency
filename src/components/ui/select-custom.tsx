@@ -13,6 +13,7 @@ interface Option {
 }
 
 interface SelectProps {
+  id?: string
   value: string
   onChange: (value: string) => void
   options: Option[]
@@ -21,14 +22,12 @@ interface SelectProps {
   icon?: LucideIcon
 }
 
-export function SelectCustom({ value, onChange, options, placeholder = 'Select...', name, icon: Icon }: SelectProps) {
+export function SelectCustom({ id, value, onChange, options, placeholder = 'Select...', name, icon: Icon }: SelectProps) {
   const [open, setOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const [rect, setRect] = useState<DOMRect | null>(null)
-
-  useEffect(() => { setMounted(true) }, [])
+  const canCreatePortal = typeof document !== 'undefined'
 
   const toggle = () => {
     if (!open && triggerRef.current) setRect(triggerRef.current.getBoundingClientRect())
@@ -54,7 +53,7 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
 
   const selected = options.find((o) => o.value === value)
 
-  const dropdown = rect && mounted ? (
+  const dropdown = rect && canCreatePortal ? (
     <div
       style={{
         position: 'fixed',
@@ -68,6 +67,7 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
         {open && (
           <motion.div
             ref={dropdownRef}
+            role="listbox"
             initial={{ opacity: 0, y: -6, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
@@ -80,6 +80,8 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
                 <button
                   key={opt.value}
                   type="button"
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => { onChange(opt.value); setOpen(false) }}
                   className="flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left text-sm transition-colors duration-100 hover:bg-foreground/[0.06]"
                 >
@@ -109,9 +111,12 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
     <>
       {name && <input type="hidden" name={name} value={value} />}
       <button
+        id={id}
         ref={triggerRef}
         type="button"
         onClick={toggle}
+        aria-expanded={open}
+        aria-haspopup="listbox"
         className={`flex w-full items-center justify-between rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] py-3 text-left text-sm transition-colors duration-200 hover:border-foreground/[0.16] focus:border-foreground/20 focus:outline-none ${Icon ? 'pl-10 pr-4' : 'px-4'}`}
       >
         <span className={selected ? 'text-foreground' : 'text-foreground/20'}>
@@ -125,7 +130,7 @@ export function SelectCustom({ value, onChange, options, placeholder = 'Select..
         </motion.span>
       </button>
 
-      {mounted && createPortal(dropdown, document.body)}
+      {canCreatePortal && createPortal(dropdown, document.body)}
     </>
   )
 }

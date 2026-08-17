@@ -14,6 +14,16 @@ const ALLOWED_ORIGINS = new Set([
 ])
 
 const VALID_BUDGETS = new Set(['under1k', '1-5k', '5-10k', '10k+'])
+const VALID_CATEGORIES = new Set([
+  'website',
+  'ecommerce',
+  'saas',
+  'ai',
+  'automation',
+  'devops',
+  'product-design',
+  'consulting',
+])
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
@@ -107,7 +117,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true })
   }
 
-  const { name, email, budget, message } = body
+  const { name, email, company, phone, location, category, budget, message } = body
 
   if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
     return NextResponse.json({ error: 'Invalid fields' }, { status: 400 })
@@ -116,6 +126,10 @@ export async function POST(req: NextRequest) {
   const cleanName    = sanitize(name)
   const cleanEmail   = sanitize(email).toLowerCase()
   const cleanMessage = sanitize(message)
+  const cleanCompany = typeof company === 'string' ? sanitize(company) : ''
+  const cleanPhone   = typeof phone === 'string' ? sanitize(phone) : ''
+  const cleanLocation = typeof location === 'string' ? sanitize(location) : ''
+  const cleanCategory = typeof category === 'string' ? sanitize(category) : ''
   const cleanBudget  = typeof budget === 'string' ? sanitize(budget) : ''
 
   if (!cleanName || cleanName.length > 100) {
@@ -127,6 +141,18 @@ export async function POST(req: NextRequest) {
   if (!cleanMessage || cleanMessage.length > 2000) {
     return NextResponse.json({ error: 'Invalid message' }, { status: 400 })
   }
+  if (cleanCompany.length > 120) {
+    return NextResponse.json({ error: 'Invalid company' }, { status: 400 })
+  }
+  if (cleanPhone.length > 40) {
+    return NextResponse.json({ error: 'Invalid phone' }, { status: 400 })
+  }
+  if (!cleanLocation || cleanLocation.length > 120) {
+    return NextResponse.json({ error: 'Invalid location' }, { status: 400 })
+  }
+  if (!cleanCategory || !VALID_CATEGORIES.has(cleanCategory)) {
+    return NextResponse.json({ error: 'Invalid category' }, { status: 400 })
+  }
   if (cleanBudget && !VALID_BUDGETS.has(cleanBudget)) {
     return NextResponse.json({ error: 'Invalid budget' }, { status: 400 })
   }
@@ -136,7 +162,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Email service not configured' }, { status: 500 })
   }
 
-  const emailData = { name: cleanName, email: cleanEmail, budget: cleanBudget, message: cleanMessage }
+  const emailData = {
+    name: cleanName,
+    email: cleanEmail,
+    company: cleanCompany,
+    phone: cleanPhone,
+    location: cleanLocation,
+    category: cleanCategory,
+    budget: cleanBudget,
+    message: cleanMessage,
+  }
   const inquiryTemplate      = createElement(ContactInquiryEmail, emailData)
   const confirmationTemplate = createElement(ContactConfirmationEmail, { name: cleanName })
 
@@ -154,7 +189,7 @@ export async function POST(req: NextRequest) {
       sender:  { name: 'Numen Website', email: CONTACT_EMAIL },
       to:      [{ email: CONTACT_EMAIL, name: 'Numen' }],
       replyTo: { email: cleanEmail, name: cleanName },
-      subject: `New inquiry from ${cleanName}`,
+      subject: `New lead from ${cleanName}`,
       htmlContent,
       textContent,
     }),

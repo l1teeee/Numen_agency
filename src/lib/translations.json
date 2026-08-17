@@ -27,7 +27,9 @@
           "href": "#faq"
         }
       ],
-      "contact": "Let's Talk"
+      "contact": "Let's Talk",
+      "projectsLink": "Live Projects",
+      "home": "Home"
     },
     "hero": {
       "headline": "Web Development Agency from El Salvador.",
@@ -72,9 +74,42 @@
           "desc": "Local business prospecting workspace — search by zone and category, review signals, save prospects, and organize follow-up from one place."
         },
         {
-          "name": "InkyTap",
-          "category": "Web App · 2026",
-          "desc": "\"Historias para descubrir.\" A curated story library for Spanish readers — browse 15+ genres from fiction to biography, filter by reading time, and find your next great read."
+          "name": "WhatsApp Ops",
+          "category": "Dashboard · 2026",
+          "desc": "Turns WhatsApp orders into a clear operation — a live order queue, status flow from pending to completed, menu management, searchable history, and analytics in a single panel with team roles."
+        },
+        {
+          "name": "ServiLocal",
+          "category": "Platform · 2026",
+          "desc": "A local services marketplace for El Salvador — post a request, compare proposals from verified professionals, and pay only when the job is done."
+        }
+      ]
+    },
+    "useCases": {
+      "label": "Brand Concepts",
+      "concepts": [
+        {
+          "name": "Aeriform",
+          "category": "Architecture / Web concept",
+          "desc": "An editorial web direction for a contemporary architecture studio, pairing centered typography, spatial rhythm, and a quiet, precise interface.",
+          "cta": "Explore live concept"
+        },
+        {
+          "name": "Savia Café",
+          "category": "Specialty coffee / Web concept",
+          "desc": "A warm, editorial direction for a specialty coffee roastery — origin storytelling, natural texture, and an unhurried browsing rhythm.",
+          "cta": "Explore live concept"
+        }
+      ],
+      "comingSoon": "Coming soon",
+      "cards": [
+        {
+          "category": "Technology & AI",
+          "title": "A new product story"
+        },
+        {
+          "category": "Fashion & retail",
+          "title": "A new visual identity"
         }
       ]
     },
@@ -124,6 +159,40 @@
         {
           "title": "Zero lock-in",
           "desc": "Clean code, full documentation, and a clean handoff. You own everything we build, always."
+        }
+      ]
+    },
+    "reach": {
+      "label": "Global Reach",
+      "headline1": "Local team,",
+      "headline2": "worldwide clients.",
+      "subtext": "Headquartered in San Salvador. Active client relationships in Guatemala, Mexico, Argentina, the UK, and Germany: six countries, one team, fully remote.",
+      "hq": "HQ",
+      "liveProject": "Live project",
+      "countries": [
+        {
+          "name": "El Salvador",
+          "city": "San Salvador"
+        },
+        {
+          "name": "Guatemala",
+          "city": "Guatemala City"
+        },
+        {
+          "name": "Mexico",
+          "city": "Mexico City"
+        },
+        {
+          "name": "Argentina",
+          "city": "Buenos Aires"
+        },
+        {
+          "name": "United Kingdom",
+          "city": "London"
+        },
+        {
+          "name": "Germany",
+          "city": "Berlin"
         }
       ]
     },
@@ -230,6 +299,48 @@
       },
       "nameLabel": "Name *",
       "emailLabel": "Email *",
+      "companyLabel": "Company",
+      "companyPlaceholder": "Company or brand",
+      "phoneLabel": "Phone / WhatsApp",
+      "phonePlaceholder": "+503 0000 0000",
+      "locationLabel": "Location *",
+      "locationPlaceholder": "San Salvador, El Salvador",
+      "categoryLabel": "Project category *",
+      "categoryPlaceholder": "Select a category",
+      "categoryOptions": [
+        {
+          "value": "website",
+          "label": "Website / landing page"
+        },
+        {
+          "value": "ecommerce",
+          "label": "E-commerce"
+        },
+        {
+          "value": "saas",
+          "label": "SaaS / platform"
+        },
+        {
+          "value": "ai",
+          "label": "AI integration"
+        },
+        {
+          "value": "automation",
+          "label": "Automation"
+        },
+        {
+          "value": "devops",
+          "label": "DevOps / infrastructure"
+        },
+        {
+          "value": "product-design",
+          "label": "Product design"
+        },
+        {
+          "value": "consulting",
+          "label": "Strategy / consulting"
+        }
+      ],
       "budgetLabel": "Budget range",
       "budgetPlaceholder": "Select a range",
       "budgetOptions": [
@@ -252,10 +363,10 @@
       ],
       "messageLabel": "Tell us about your project *",
       "messagePlaceholder": "We're looking to build...",
-      "sendBtn": "Send message",
-      "sendingBtn": "Sending...",
-      "successTitle": "Message sent!",
-      "successDesc": "We'll get back to you within 24 hours.",
+      "sendBtn": "Create lead",
+      "sendingBtn": "Creating lead...",
+      "successTitle": "Lead created!",
+      "successDesc": "We received the lead details and will get back to you within 24 hours.",
       "errorMsg": "Something went wrong. Please try again or email us at contact@delta-numen.com.",
       "blogCta": "Need to learn more first? We have a blog for you →",
       "footer": "All rights reserved."
@@ -320,7 +431,9 @@
           "href": "#faq"
         }
       ],
-      "contact": "Hablemos"
+      "contact": "Hablemos",
+      "projectsLink": "Proyectos en vivo",
+      "home": "Inicio"
     },
     "hero": {
       "headline": "Agencia Digital de Desarrollo Web en El Salvador.",
@@ -365,9 +478,42 @@
           "desc": "Workspace de prospección de negocios locales — busca por zona y categoría, revisa señales, guarda prospectos y organiza el seguimiento desde un solo lugar."
         },
         {
-          "name": "InkyTap",
-          "category": "App Web · 2026",
-          "desc": "\"Historias para descubrir.\" Una biblioteca curada para lectores hispanohablantes — explora más de 15 géneros, filtra por tiempo de lectura y encuentra tu próxima gran historia."
+          "name": "WhatsApp Ops",
+          "category": "Panel · 2026",
+          "desc": "Convierte los pedidos de WhatsApp en una operación clara — cola de pedidos en vivo, estados de pendiente a completado, gestión de menú, historial buscable y analíticas en un solo panel con roles de equipo."
+        },
+        {
+          "name": "ServiLocal",
+          "category": "Plataforma · 2026",
+          "desc": "Marketplace de servicios locales para El Salvador — publica una solicitud, compara propuestas de profesionales verificados y paga solo cuando el trabajo esté listo."
+        }
+      ]
+    },
+    "useCases": {
+      "label": "Conceptos de marca",
+      "concepts": [
+        {
+          "name": "Aeriform",
+          "category": "Arquitectura / Concepto web",
+          "desc": "Una dirección web editorial para un estudio de arquitectura contemporánea, combinando tipografía centrada, ritmo espacial y una interfaz serena y precisa.",
+          "cta": "Explorar concepto en vivo"
+        },
+        {
+          "name": "Savia Café",
+          "category": "Café de especialidad / Concepto web",
+          "desc": "Una dirección editorial y cálida para un tostador de café de especialidad — relato de origen, textura natural y un ritmo de navegación sin prisa.",
+          "cta": "Explorar concepto en vivo"
+        }
+      ],
+      "comingSoon": "Próximamente",
+      "cards": [
+        {
+          "category": "Tecnología & IA",
+          "title": "Una nueva historia de producto"
+        },
+        {
+          "category": "Moda & retail",
+          "title": "Una nueva identidad visual"
         }
       ]
     },
@@ -417,6 +563,40 @@
         {
           "title": "Sin dependencias",
           "desc": "Código limpio, documentación completa y entrega ordenada. Tú eres dueño de todo lo que construimos, siempre."
+        }
+      ]
+    },
+    "reach": {
+      "label": "Alcance Global",
+      "headline1": "Equipo local,",
+      "headline2": "clientes en el mundo.",
+      "subtext": "Con sede en San Salvador. Relaciones activas con clientes en Guatemala, México, Argentina, Reino Unido y Alemania: seis países, un mismo equipo, 100% remoto.",
+      "hq": "Sede",
+      "liveProject": "Proyecto en vivo",
+      "countries": [
+        {
+          "name": "El Salvador",
+          "city": "San Salvador"
+        },
+        {
+          "name": "Guatemala",
+          "city": "Ciudad de Guatemala"
+        },
+        {
+          "name": "México",
+          "city": "Ciudad de México"
+        },
+        {
+          "name": "Argentina",
+          "city": "Buenos Aires"
+        },
+        {
+          "name": "Reino Unido",
+          "city": "Londres"
+        },
+        {
+          "name": "Alemania",
+          "city": "Berlín"
         }
       ]
     },
@@ -523,6 +703,48 @@
       },
       "nameLabel": "Nombre *",
       "emailLabel": "Correo *",
+      "companyLabel": "Empresa",
+      "companyPlaceholder": "Empresa o marca",
+      "phoneLabel": "Teléfono / WhatsApp",
+      "phonePlaceholder": "+503 0000 0000",
+      "locationLabel": "Ubicación *",
+      "locationPlaceholder": "San Salvador, El Salvador",
+      "categoryLabel": "Categoría del proyecto *",
+      "categoryPlaceholder": "Selecciona una categoría",
+      "categoryOptions": [
+        {
+          "value": "website",
+          "label": "Sitio web / landing page"
+        },
+        {
+          "value": "ecommerce",
+          "label": "E-commerce"
+        },
+        {
+          "value": "saas",
+          "label": "SaaS / plataforma"
+        },
+        {
+          "value": "ai",
+          "label": "Integración de IA"
+        },
+        {
+          "value": "automation",
+          "label": "Automatización"
+        },
+        {
+          "value": "devops",
+          "label": "DevOps / infraestructura"
+        },
+        {
+          "value": "product-design",
+          "label": "Diseño de producto"
+        },
+        {
+          "value": "consulting",
+          "label": "Estrategia / consultoría"
+        }
+      ],
       "budgetLabel": "Presupuesto estimado",
       "budgetPlaceholder": "Selecciona un rango",
       "budgetOptions": [
@@ -545,10 +767,10 @@
       ],
       "messageLabel": "Cuéntanos sobre tu proyecto *",
       "messagePlaceholder": "Queremos construir...",
-      "sendBtn": "Enviar mensaje",
-      "sendingBtn": "Enviando...",
-      "successTitle": "¡Mensaje enviado!",
-      "successDesc": "Te responderemos en 24 horas.",
+      "sendBtn": "Crear lead",
+      "sendingBtn": "Creando lead...",
+      "successTitle": "Lead creado",
+      "successDesc": "Recibimos los datos del lead y te responderemos en 24 horas.",
       "errorMsg": "Algo salió mal. Intenta de nuevo o escríbenos a contact@delta-numen.com.",
       "blogCta": "¿Necesitas saber un poco más? Tenemos un blog para que no te pierdas →",
       "footer": "Todos los derechos reservados."

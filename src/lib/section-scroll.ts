@@ -10,6 +10,7 @@ export const SECTION_HREFS = {
   services: '#services',
   work: '#work',
   about: '#about',
+  reach: '#reach',
   stack: '#stack',
   process: '#process',
   faq: '#faq',
