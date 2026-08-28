@@ -130,8 +130,8 @@ const reachMeta = [
   { id: 'gt', isHQ: false, isLive: true  },
   { id: 'mx', isHQ: false, isLive: true  },
   { id: 'ar', isHQ: false, isLive: true  },
-  { id: 'gb', isHQ: false, isLive: false },
-  { id: 'de', isHQ: false, isLive: false },
+  { id: 'gb', isHQ: false, isLive: true },
+  { id: 'de', isHQ: false, isLive: true },
 ]
 
 const stackCategories = [
