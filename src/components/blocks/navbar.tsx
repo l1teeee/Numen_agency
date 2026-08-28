@@ -77,11 +77,16 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
           <div className="flex items-center rounded-full border border-foreground/8 bg-background/70 px-3 py-2 backdrop-blur-xl">
             <Link
               href="/"
-              className="shrink-0 whitespace-nowrap px-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/40 transition-colors duration-200 hover:text-foreground/70"
+              aria-label="Numen Agency — Home"
+              className="shrink-0 px-2 text-foreground/40 transition-colors duration-200 hover:text-foreground/70"
               onMouseEnter={openMenu}
               onClick={openMenu}
             >
-              Numen Agency
+              <svg viewBox="0 0 32 32" className="h-4 w-4 fill-current" aria-hidden="true">
+                <rect x="5.5" y="5.5" width="4" height="21" />
+                <polygon points="9.5,5.5 13.5,5.5 22.5,26.5 18.5,26.5" />
+                <rect x="22.5" y="5.5" width="4" height="21" />
+              </svg>
             </Link>
 
             <AnimatePresence>
@@ -89,15 +94,15 @@ export function Navbar({ alwaysVisible }: { alwaysVisible?: boolean } = {}) {
                 <motion.div
                   className="flex items-center gap-2 overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:hidden"
                   style={{ scrollbarWidth: 'none' }}
-                  initial={{ opacity: 0, maxWidth: 0 }}
+                  initial={{ opacity: 0, width: 0 }}
                   animate={{
                     opacity: 1,
-                    maxWidth: 320,
+                    width: 'auto',
                     transition: { duration: 0.4, ease: EASE },
                   }}
                   exit={{
                     opacity: 0,
-                    maxWidth: 0,
+                    width: 0,
                     transition: { duration: 0.3, ease: 'linear' },
                   }}
                   onMouseEnter={resetTimer}
