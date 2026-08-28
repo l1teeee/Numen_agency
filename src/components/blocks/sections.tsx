@@ -46,7 +46,7 @@ const LIFT = {
 }
 
 const INPUT =
-  'w-full rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] px-4 py-3 text-sm text-foreground placeholder:text-foreground/20 focus:border-foreground/20 focus:outline-none transition-colors duration-200'
+  'w-full rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] px-4 py-2.5 text-sm text-foreground placeholder:text-foreground/20 focus:border-foreground/20 focus:outline-none transition-colors duration-200'
 
 function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
@@ -1108,7 +1108,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
         </div>
 
         <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">
-          <div className="hidden flex-col justify-between gap-6 lg:flex">
+          <div className="hidden flex-col gap-8 lg:flex">
             <motion.div {...fadeUp(0.05)}>
               <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
                 {tc.headline1}<br />
@@ -1191,7 +1191,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
             ) : (
               <form
                 onSubmit={submit}
-                className="min-h-0 space-y-3 overflow-y-auto pb-4 pr-1 [&::-webkit-scrollbar]:hidden"
+                className="min-h-0 space-y-2.5 overflow-y-auto pb-4 pr-1 [&::-webkit-scrollbar]:hidden"
                 style={{ scrollbarWidth: 'none' }}
               >
                 {/* Honeypot — invisible to users, bots fill it and get silently rejected */}
@@ -1205,8 +1205,8 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   autoComplete="off"
                   style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, overflow: 'hidden', opacity: 0 }}
                 />
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="flex flex-col gap-1.5">
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1">
                     <label htmlFor="name" className="text-xs text-foreground/30">{tc.nameLabel}</label>
                     <div className="relative">
                       <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
@@ -1221,7 +1221,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     <label htmlFor="email" className="text-xs text-foreground/30">{tc.emailLabel}</label>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
@@ -1239,8 +1239,8 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="flex flex-col gap-1.5">
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1">
                     <label htmlFor="company" className="text-xs text-foreground/30">{tc.companyLabel}</label>
                     <div className="relative">
                       <Building2 className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
@@ -1254,7 +1254,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     <label htmlFor="phone" className="text-xs text-foreground/30">{tc.phoneLabel}</label>
                     <div className="relative">
                       <Phone className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
@@ -1271,8 +1271,8 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="flex flex-col gap-1.5">
+                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1">
                     <label htmlFor="location" className="text-xs text-foreground/30">{tc.locationLabel}</label>
                     <div className="relative">
                       <MapPin className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
@@ -1287,7 +1287,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                       />
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     <label htmlFor="category" className="text-xs text-foreground/30">{tc.categoryLabel}</label>
                     <div className="relative">
                       <Tags className="pointer-events-none absolute left-4 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
@@ -1304,7 +1304,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label htmlFor="budget" className="text-xs text-foreground/30">{tc.budgetLabel}</label>
                   <div className="relative">
                     <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
@@ -1320,7 +1320,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   <label htmlFor="message" className="text-xs text-foreground/30">{tc.messageLabel}</label>
                   <div className="relative">
                     <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
@@ -1328,7 +1328,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                       id="message"
                       name="message"
                       required
-                      rows={3}
+                      rows={2}
                       value={form.message}
                       onChange={handle}
                       placeholder={tc.messagePlaceholder}

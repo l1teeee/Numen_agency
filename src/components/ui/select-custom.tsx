@@ -117,7 +117,7 @@ export function SelectCustom({ id, value, onChange, options, placeholder = 'Sele
         onClick={toggle}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className={`flex w-full items-center justify-between rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] py-3 text-left text-sm transition-colors duration-200 hover:border-foreground/[0.16] focus:border-foreground/20 focus:outline-none ${Icon ? 'pl-10 pr-4' : 'px-4'}`}
+        className={`flex w-full items-center justify-between rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] py-2.5 text-left text-sm transition-colors duration-200 hover:border-foreground/[0.16] focus:border-foreground/20 focus:outline-none ${Icon ? 'pl-10 pr-4' : 'px-4'}`}
       >
         <span className={selected ? 'text-foreground' : 'text-foreground/20'}>
           {selected ? selected.label : placeholder}
