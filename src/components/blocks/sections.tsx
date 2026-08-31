@@ -113,6 +113,7 @@ const projectsMeta = [
 const useCaseMeta = [
   { href: 'https://aeri-self.vercel.app/' },
   { href: 'https://savia-cafe-nu.vercel.app/' },
+  { href: 'https://luvre-jewerly.vercel.app/' },
 ]
 
 const liveProjectsMeta = [
@@ -398,10 +399,10 @@ export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const liveSpans = [
     'lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-3',  // big — 2×2 top-left
     'lg:col-start-3 lg:row-start-1 lg:row-end-3',               // tall — full-height right column
+    'lg:col-start-1 lg:col-end-3 lg:row-start-3',               // wide — bottom-left
   ]
   const conceptSpans = [
-    'lg:col-start-1 lg:row-start-3',                // small — bottom-left
-    'lg:col-start-2 lg:col-end-4 lg:row-start-3',   // wide — bottom-right
+    'lg:col-start-3 lg:row-start-3',                // small — bottom-right
   ]
 
   return (
@@ -483,7 +484,7 @@ export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               className={`group relative flex min-h-40 flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-foreground/[0.14] bg-foreground/[0.02] p-5 transition-colors duration-300 hover:border-foreground/[0.24] lg:min-h-0 ${conceptSpans[index] ?? ''}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium text-foreground/25">0{index + 3}</span>
+                <span className="text-[10px] font-medium text-foreground/25">0{tu.concepts.length + index + 1}</span>
                 <span className="rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] text-foreground/35">{tu.comingSoon}</span>
               </div>
               <div>

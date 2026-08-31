@@ -99,6 +99,12 @@
           "category": "Specialty coffee / Web concept",
           "desc": "A warm, editorial direction for a specialty coffee roastery — origin storytelling, natural texture, and an unhurried browsing rhythm.",
           "cta": "Explore live concept"
+        },
+        {
+          "name": "Luvre",
+          "category": "Fine jewelry / Web concept",
+          "desc": "An editorial web direction for a fine jewelry atelier — warm neutral tones, macro product photography, and an unhurried, gallery-like browsing rhythm.",
+          "cta": "Explore live concept"
         }
       ],
       "comingSoon": "Coming soon",
@@ -106,10 +112,6 @@
         {
           "category": "Technology & AI",
           "title": "A new product story"
-        },
-        {
-          "category": "Fashion & retail",
-          "title": "A new visual identity"
         }
       ]
     },
@@ -503,6 +505,12 @@
           "category": "Café de especialidad / Concepto web",
           "desc": "Una dirección editorial y cálida para un tostador de café de especialidad — relato de origen, textura natural y un ritmo de navegación sin prisa.",
           "cta": "Explorar concepto en vivo"
+        },
+        {
+          "name": "Luvre",
+          "category": "Joyería fina / Concepto web",
+          "desc": "Una dirección web editorial para un atelier de joyería fina — tonos neutros cálidos, fotografía de producto en macro y un ritmo de navegación tipo galería, sin prisa.",
+          "cta": "Explorar concepto en vivo"
         }
       ],
       "comingSoon": "Próximamente",
@@ -510,10 +518,6 @@
         {
           "category": "Tecnología & IA",
           "title": "Una nueva historia de producto"
-        },
-        {
-          "category": "Moda & retail",
-          "title": "Una nueva identidad visual"
         }
       ]
     },
