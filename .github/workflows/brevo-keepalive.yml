@@ -1,0 +1,40 @@
+name: Brevo API Keepalive
+
+on:
+  schedule:
+    - cron: '0 6 1 * *' # 06:00 UTC on the 1st of every month
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Brevo /account
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "api-key: $BREVO_API_KEY" \
+            -H "Accept: application/json" \
+            https://api.brevo.com/v3/account)
+          echo "Brevo response status: $status"
+          if [ "$status" -ne 200 ]; then
+            echo "::error::Brevo keepalive ping failed with status $status"
+            exit 1
+          fi
+
+      - name: Send confirmation email via Brevo
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+        run: |
+          today=$(date -u +%Y-%m-%d)
+          curl -s -o /dev/null -w "Email send status: %{http_code}\n" \
+            -X POST https://api.brevo.com/v3/smtp/email \
+            -H "api-key: $BREVO_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"sender\": { \"name\": \"Numen Keepalive\", \"email\": \"contact@delta-numen.com\" },
+              \"to\": [{ \"email\": \"official.count.alejandro@gmail.com\", \"name\": \"Alejandro\" }],
+              \"subject\": \"Brevo keepalive OK - $today\",
+              \"htmlContent\": \"<p>Ping mensual a Brevo (GET /account) fue exitoso el $today. La API key sigue activa.</p>\"
+            }"
