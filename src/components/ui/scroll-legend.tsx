@@ -5,7 +5,7 @@ import { useLenis } from 'lenis/react'
 import { cn } from '@/lib/utils'
 import { useLang } from '@/lib/lang'
 
-const SECTION_IDS = ['services', 'work', 'about', 'stack', 'process', 'faq', 'contact'] as const
+const SECTION_IDS = ['services', 'work', 'about', 'process', 'faq', 'contact'] as const
 
 export function ScrollLegend({ className }: { className?: string }) {
   const [activeSection, setActiveSection] = useState<string>('')
@@ -18,9 +18,8 @@ export function ScrollLegend({ className }: { className?: string }) {
     { id: 'services', name: t.nav.links[0].label },
     { id: 'work',     name: t.nav.links[1].label },
     { id: 'about',    name: t.nav.links[2].label },
-    { id: 'stack',    name: t.nav.links[3].label },
-    { id: 'process',  name: t.nav.links[4].label },
-    { id: 'faq',      name: t.nav.links[5].label },
+    { id: 'process',  name: t.nav.links[3].label },
+    { id: 'faq',      name: t.nav.links[4].label },
     { id: 'contact',  name: t.contact.label },
   ]
 

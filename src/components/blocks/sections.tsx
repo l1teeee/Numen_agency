@@ -10,6 +10,7 @@ import { SelectCustom } from '@/components/ui/select-custom'
 import { GlobeReach } from '@/components/ui/cobe-globe-cdn'
 import Image from 'next/image'
 import { companyStats } from '@/lib/company-stats'
+import { blogPosts } from '@/lib/blog-posts'
 import { useLang } from '@/lib/lang'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 import { SOCIAL_LINKS } from '@/lib/site'
@@ -135,70 +136,6 @@ const reachMeta = [
   { id: 'ar', isHQ: false, isLive: true  },
   { id: 'gb', isHQ: false, isLive: true },
   { id: 'de', isHQ: false, isLive: true },
-]
-
-const stackCategories = [
-  {
-    key: 'UI Layer',
-    items: [
-      { name: 'Next.js',       icon: 'nextdotjs'   },
-      { name: 'React',         icon: 'react'        },
-      { name: 'TypeScript',    icon: 'typescript'   },
-      { name: 'Tailwind CSS',  icon: 'tailwindcss'  },
-      { name: 'Framer Motion', icon: 'framer'       },
-      { name: 'GSAP',          icon: 'greensock'    },
-      { name: 'Vite',          icon: 'vite'         },
-      { name: 'Radix UI',      icon: 'radixui'      },
-    ],
-  },
-  {
-    key: 'Data',
-    items: [
-      { name: 'Node.js',    icon: 'nodedotjs'  },
-      { name: 'Supabase',   icon: 'supabase'   },
-      { name: 'PostgreSQL', icon: 'postgresql' },
-      { name: 'Prisma',     icon: 'prisma'     },
-      { name: 'Redis',      icon: 'redis'      },
-    ],
-  },
-  {
-    key: 'Intelligence',
-    items: [
-      { name: 'OpenAI',    icon: 'openai'    },
-      { name: 'Anthropic', icon: 'anthropic' },
-    ],
-  },
-  {
-    key: 'Revenue',
-    items: [
-      { name: 'Stripe', icon: 'stripe' },
-      { name: 'PayPal', icon: 'paypal' },
-    ],
-  },
-  {
-    key: 'Workflow',
-    items: [
-      { name: 'Vercel', icon: 'vercel'  },
-      { name: 'GitHub', icon: 'github'  },
-      { name: 'Docker', icon: 'docker'  },
-      { name: 'Figma',  icon: 'figma'   },
-      { name: 'Notion', icon: 'notion'  },
-      { name: 'Linear', icon: 'linear'  },
-    ],
-  },
-  {
-    key: 'Infrastructure & DevOps',
-    items: [
-      { name: 'Kubernetes',     icon: 'kubernetes'    },
-      { name: 'AWS',            icon: 'amazonaws'     },
-      { name: 'Google Cloud',   icon: 'googlecloud'   },
-      { name: 'Terraform',      icon: 'terraform'     },
-      { name: 'Istio',          icon: 'istio'         },
-      { name: 'GitHub Actions', icon: 'githubactions' },
-      { name: 'Prometheus',     icon: 'prometheus'    },
-      { name: 'Grafana',        icon: 'grafana'       },
-    ],
-  },
 ]
 
 const stepIcons: Record<string, LucideIcon> = {
@@ -753,63 +690,73 @@ export function GlobalReachSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
-// ─── Tech Stack ──────────────────────────────────────────────
-export function TechStackSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+// ─── Insights ────────────────────────────────────────────────
+const recentPosts = [...blogPosts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
+
+export function InsightsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { amount: 0.4, once: false })
-  const { t } = useLang()
-  const ts = t.stack
+  const { lang, t } = useLang()
+  const tb = t.blog
+  const locale = lang === 'en' ? 'en-US' : 'es-SV'
 
   return (
-    <section ref={ref} id="stack" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+    <section ref={ref} id="blog" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
       <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
-
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
           <div className="flex items-center gap-2">
             <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ts.label}</span>
+            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tb.label}</span>
           </div>
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
         </div>
 
-        <motion.h2 {...fadeUp(0.05)} className="mt-6 text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-5xl">
-          {ts.headline1}<br />
-          <span className="text-foreground/25">{ts.headline2}</span>
+        <motion.h2 {...fadeUp(0.05)} className="mt-6 max-w-2xl text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-4xl">
+          {tb.headline}
         </motion.h2>
+        <motion.p {...fadeUp(0.1)} className="mt-3 max-w-xl text-sm leading-relaxed text-foreground/40">
+          {tb.subtext}
+        </motion.p>
 
-        <motion.div
-          className="mt-6 grid grid-cols-1 gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mb-20 lg:mt-10 lg:grid-cols-2 lg:gap-8 lg:overflow-auto lg:pb-0"
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-        >
-          {stackCategories.map((cat) => (
-            <motion.div key={cat.key} variants={staggerItem} className="flex flex-col">
-              <span className="mb-3 text-[9px] font-medium uppercase tracking-widest text-foreground/30">
-                {ts.capabilities[cat.key as keyof typeof ts.capabilities]}
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {cat.items.map((item) => (
-                  <motion.span
-                    key={item.name}
-                    whileHover={{ scale: 1.07, y: -2, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
-                    whileTap={{ scale: 0.96 }}
-                    className="flex items-center gap-2 rounded-xl border border-foreground/8 bg-foreground/2 px-3 py-2.5 text-xs text-foreground/50 transition-all duration-200 hover:border-foreground/18 hover:bg-foreground/4 hover:text-foreground/80"
-                  >
-                    <img
-                      src={`/icons/${item.icon}.svg`}
-                      alt=""
-                      loading="lazy"
-                      className="h-3.5 w-3.5 opacity-60 dark:invert"
-                    />
-                    {item.name}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+        <div className="mt-6 grid grid-cols-1 gap-3 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mt-10 lg:grid-cols-3 lg:gap-4 lg:overflow-hidden lg:pb-0">
+          {recentPosts.map((post, i) => {
+            const title = lang === 'en' && post.en ? post.en.title : post.title
+            const description = lang === 'en' && post.en ? post.en.description : post.description
+            const category = lang === 'en' && post.en ? post.en.category : post.category
+
+            return (
+              <motion.div key={post.slug} {...fadeUp(0.15 + i * 0.07)} {...LIFT}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group flex h-full flex-col rounded-2xl border border-foreground/8 p-5 transition-colors duration-200 hover:border-foreground/16"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full border border-foreground/10 px-2.5 py-0.5 text-[10px] text-foreground/40">{category}</span>
+                    <span className="text-[10px] text-foreground/25">{post.readTime} {tb.readTime}</span>
+                  </div>
+                  <h3 className="mt-3 text-sm font-semibold leading-snug tracking-tight text-foreground">{title}</h3>
+                  <p className="mt-2 flex-1 text-[11px] leading-relaxed text-foreground/40">{description}</p>
+                  <div className="mt-4 flex items-center justify-between border-t border-foreground/[0.08] pt-3">
+                    <span className="text-[10px] text-foreground/25">
+                      {new Date(post.date + 'T00:00:00').toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </span>
+                    <span className="text-[10px] text-foreground/40 transition-colors duration-150 group-hover:text-foreground">{tb.readArticle}</span>
+                  </div>
+                </Link>
+              </motion.div>
+            )
+          })}
+        </div>
+
+        <motion.div {...fadeUp(0.36)} className="mt-5 lg:mb-16">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-1.5 text-xs text-foreground/40 transition-colors duration-150 hover:text-foreground"
+          >
+            {tb.moreArticles}
+            <ArrowUpRight className="h-3 w-3" />
+          </Link>
         </motion.div>
-
       </motion.div>
     </section>
   )

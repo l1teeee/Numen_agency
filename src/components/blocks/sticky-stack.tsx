@@ -8,7 +8,7 @@ import {
   UseCasesSection,
   AboutSection,
   GlobalReachSection,
-  TechStackSection,
+  InsightsSection,
   ProcessSection,
   FAQSection,
   ContactFormSection,
@@ -75,7 +75,7 @@ export function StickyStack() {
       <UseCasesSection blurStyle={blur.b3} />
       <AboutSection blurStyle={blur.b4} />
       <GlobalReachSection blurStyle={blur.b5} />
-      <TechStackSection blurStyle={blur.b6} />
+      <InsightsSection blurStyle={blur.b6} />
       <ProcessSection blurStyle={blur.b7} />
       <FAQSection blurStyle={blur.b8} />
       <ContactFormSection />

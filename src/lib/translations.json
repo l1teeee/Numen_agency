@@ -15,10 +15,6 @@
           "href": "#about"
         },
         {
-          "label": "Stack",
-          "href": "#stack"
-        },
-        {
           "label": "Process",
           "href": "#process"
         },
@@ -197,19 +193,6 @@
           "city": "Berlin"
         }
       ]
-    },
-    "stack": {
-      "label": "Our Stack",
-      "headline1": "Tools we trust",
-      "headline2": "to build with.",
-      "capabilities": {
-        "UI Layer": "UI Layer",
-        "Data": "Data",
-        "Intelligence": "Intelligence",
-        "Revenue": "Revenue",
-        "Workflow": "Workflow",
-        "Infrastructure & DevOps": "Infrastructure & DevOps"
-      }
     },
     "process": {
       "label": "How We Work",
@@ -421,10 +404,6 @@
           "href": "#about"
         },
         {
-          "label": "Stack",
-          "href": "#stack"
-        },
-        {
           "label": "Proceso",
           "href": "#process"
         },
@@ -603,19 +582,6 @@
           "city": "Berlín"
         }
       ]
-    },
-    "stack": {
-      "label": "Nuestro Stack",
-      "headline1": "Herramientas en las que",
-      "headline2": "confiamos para construir.",
-      "capabilities": {
-        "UI Layer": "Capa UI",
-        "Data": "Datos",
-        "Intelligence": "Inteligencia",
-        "Revenue": "Facturación",
-        "Workflow": "Flujo de trabajo",
-        "Infrastructure & DevOps": "Infraestructura y DevOps"
-      }
     },
     "process": {
       "label": "Cómo Trabajamos",

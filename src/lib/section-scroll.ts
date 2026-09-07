@@ -11,7 +11,7 @@ export const SECTION_HREFS = {
   work: '#work',
   about: '#about',
   reach: '#reach',
-  stack: '#stack',
+  blog: '#blog',
   process: '#process',
   faq: '#faq',
   contact: '#contact',
