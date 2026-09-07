@@ -14,6 +14,7 @@ import { useLang } from '@/lib/lang'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 import { SOCIAL_LINKS } from '@/lib/site'
 import { HoverPeek } from '@/components/ui/link-preview'
+import { FounderAvatar } from '@/components/ui/founder-avatar'
 
 interface BlurStyle { filter: MotionValue<string> }
 
@@ -123,9 +124,9 @@ const liveProjectsMeta = [
 ]
 
 const teamMeta = [
-  { initials: 'JM', name: 'Julian Mendez',  role: 'Software Engineer & Founder',     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
-  { initials: 'IR', name: 'Igmer Rodriguez', role: 'Software Engineer & Co-founder', linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/' },
-]
+  { figure: 'julian', name: 'Julian Mendez',  role: 'Software Engineer & Founder',     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
+  { figure: 'igmer',  name: 'Igmer Rodriguez', role: 'Software Engineer & Co-founder', linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/' },
+] as const
 
 const reachMeta = [
   { id: 'sv', isHQ: true,  isLive: false },
@@ -589,8 +590,8 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
         </div>
 
-        <div className="mt-6 flex flex-1 flex-col gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0">
-          {/* Top row: headline + stats */}
+        <div className="mt-6 flex flex-1 flex-col gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0">
+          {/* Headline + stats */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
             <motion.div {...fadeUp(0)}>
               <h2 className="text-3xl font-semibold leading-snug tracking-tight text-foreground lg:text-4xl">
@@ -601,68 +602,70 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <p className="mt-3 text-sm leading-relaxed text-foreground/30">{ta.p2}</p>
             </motion.div>
 
-            <dl className="grid h-full grid-cols-2 grid-rows-2 gap-3">
+            <dl className="grid grid-cols-2 self-center">
               {companyStats.map((s, i) => (
                 <motion.div
                   key={s.key}
                   {...fadeUp(0.1 + i * 0.07)}
-                  {...LIFT}
-                  className="flex flex-col items-center justify-center rounded-2xl border border-foreground/8 p-3 text-center transition-colors duration-200 hover:border-foreground/18 hover:bg-foreground/2 lg:p-6"
+                  className={`px-5 py-4 lg:py-5 ${i % 2 === 0 ? 'border-r border-foreground/[0.08]' : ''} ${i < 2 ? 'border-b border-foreground/[0.08]' : ''}`}
                   data-stat-name={s.schemaName}
                   data-stat-value={s.display}
                 >
-                  <dt className="order-2 mt-1 text-xs text-foreground/40">{ta.stats[i].label}</dt>
-                  <dd className="order-1 text-3xl font-bold text-foreground" aria-label={`${s.display} ${ta.stats[i].label}`}>
+                  <dd className="text-3xl font-bold text-foreground" aria-label={`${s.display} ${ta.stats[i].label}`}>
                     <CountUp to={s.value} suffix={s.suffix} />
                   </dd>
+                  <dt className="mt-1 text-xs text-foreground/40">{ta.stats[i].label}</dt>
                 </motion.div>
               ))}
             </dl>
           </div>
 
-          {/* Bottom row: team cards + principles */}
-          <div className="grid grid-cols-1 gap-6 lg:mb-24 lg:grid-cols-2 lg:gap-10">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {teamMeta.map((member, i) => (
-                <motion.div
-                  key={member.name}
-                  {...fadeUp(0.12 + i * 0.08)}
-                  {...LIFT}
-                  className="flex flex-col rounded-2xl border border-foreground/8 p-4 transition-colors duration-200 hover:border-foreground/16"
-                >
-                  <div className="mb-3 flex h-20 w-full items-center justify-center rounded-xl bg-linear-to-br from-foreground/8 to-foreground/4">
-                    <span className="select-none text-2xl font-bold text-foreground/20">{member.initials}</span>
-                  </div>
-                  <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                  <p className="mt-0.5 text-[10px] text-foreground/30">{member.role}</p>
-                  <p className="mt-2 text-[11px] leading-relaxed text-foreground/40">{ta.team[i].desc}</p>
+          {/* Founders */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            {teamMeta.map((member, i) => (
+              <motion.div
+                key={member.name}
+                {...fadeUp(0.12 + i * 0.08)}
+                {...LIFT}
+                className="flex items-center gap-4 rounded-2xl border border-black/[0.08] bg-white p-4 transition-colors duration-200 hover:border-black/20 lg:gap-5"
+              >
+                <div className="shrink-0 overflow-hidden rounded-xl border border-black/10">
+                  <FounderAvatar figure={member.figure} active={isInView} className="w-24 lg:w-28" />
+                </div>
+                {/* The card is pinned white in both themes to keep the portrait
+                    on its own paper, so its type is pinned to dark neutrals too. */}
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-neutral-900">{member.name}</p>
+                  <p className="mt-0.5 text-[10px] text-neutral-500">{member.role}</p>
+                  <p className="mt-2 text-[11px] leading-relaxed text-neutral-500">{ta.team[i].desc}</p>
                   <a
                     href={member.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 flex items-center gap-1.5 text-[10px] text-foreground/25 transition-colors duration-150 hover:text-foreground/55"
+                    className="mt-3 inline-flex items-center gap-1.5 text-[10px] text-neutral-400 transition-colors duration-150 hover:text-neutral-700"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                     </svg>
                     LinkedIn
                   </a>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div {...fadeUp(0.32)} className="flex flex-col gap-2">
-              {ta.principles.map((v) => (
-                <motion.div key={v.title} whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }} className="flex items-start gap-3 rounded-2xl border border-foreground/8 px-4 py-3">
-                  <div className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/20" />
-                  <div>
-                    <p className="text-xs font-semibold text-foreground">{v.title}</p>
-                    <p className="mt-0.5 text-[10px] leading-relaxed text-foreground/40">{v.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+                </div>
+              </motion.div>
+            ))}
           </div>
+
+          {/* Principles */}
+          <motion.div
+            {...fadeUp(0.32)}
+            className="grid grid-cols-1 gap-4 border-t border-foreground/[0.08] pt-5 sm:grid-cols-3 sm:gap-0"
+          >
+            {ta.principles.map((v) => (
+              <div key={v.title} className="sm:border-l sm:border-foreground/[0.08] sm:px-5 sm:first:border-l-0 sm:first:pl-0">
+                <p className="text-xs font-semibold text-foreground">{v.title}</p>
+                <p className="mt-1 text-[10px] leading-relaxed text-foreground/40">{v.desc}</p>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </motion.div>
     </section>
