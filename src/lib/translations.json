@@ -51,7 +51,7 @@
         },
         {
           "title": "DevOps & Infrastructure",
-          "desc": "Production-ready deployments across AWS, GCP, and Kubernetes. Multi-cloud SRE setups, CI/CD automation, service mesh configuration, and secure infrastructure-as-code with Terraform. Zero-downtime deployments, monitoring, and incident response."
+          "desc": "Production-ready deployments across AWS, GCP, and Kubernetes. Multi-cloud SRE, CI/CD automation, and infrastructure-as-code with Terraform. Monitored, with zero downtime."
         }
       ]
     },
@@ -386,6 +386,25 @@
       "sendLabel": "Send",
       "fallbackReply": "Something went wrong. Please try again.",
       "errorReply": "Something went wrong. Email us at contact@delta-numen.com."
+    },
+    "doodles": {
+      "heroBubble": "Hi, we're Numen.",
+      "heroBubbleAlt": "We build, you ship.",
+      "aboutBubbles": [
+        "Design, product, launch.",
+        "Infra that stays up."
+      ],
+      "faqBubble": "Got questions? Ask me.",
+      "contactSuccessBubble": "Thanks! Talk soon.",
+      "footerBubble": "See you soon.",
+      "blogBubble": "Notes from the build.",
+      "blogPostBubble": "Want to build this? Let's talk.",
+      "notFound": {
+        "title": "This page wandered off.",
+        "desc": "The link may be broken or the page may have moved. Let's get you back home.",
+        "bubble": "Hmm, not here.",
+        "cta": "Back to home"
+      }
     }
   },
   "es": {
@@ -440,7 +459,7 @@
         },
         {
           "title": "DevOps e Infraestructura",
-          "desc": "Despliegues en producción en AWS, GCP y Kubernetes. Configuraciones SRE multi-cloud, automatización CI/CD, service mesh y infraestructura como código con Terraform. Zero-downtime, monitoreo y respuesta a incidentes."
+          "desc": "Despliegues en producción en AWS, GCP y Kubernetes. SRE multi-cloud, automatización CI/CD e infraestructura como código con Terraform. Monitoreo continuo y cero downtime."
         }
       ]
     },
@@ -775,6 +794,25 @@
       "sendLabel": "Enviar",
       "fallbackReply": "Algo salió mal. Intenta de nuevo.",
       "errorReply": "Algo salió mal. Escríbenos a contact@delta-numen.com."
+    },
+    "doodles": {
+      "heroBubble": "Hola, somos Numen.",
+      "heroBubbleAlt": "Nosotros construimos, tú lanzas.",
+      "aboutBubbles": [
+        "Diseño, producto, lanzamiento.",
+        "Infra que no se cae."
+      ],
+      "faqBubble": "¿Tienes preguntas? Hazmelas a mí.",
+      "contactSuccessBubble": "¡Gracias! Hablamos pronto.",
+      "footerBubble": "Hasta pronto.",
+      "blogBubble": "Apuntes de lo que construimos.",
+      "blogPostBubble": "¿Quieres construir algo así? Hablemos.",
+      "notFound": {
+        "title": "Esta página se perdió.",
+        "desc": "El enlace puede estar roto o la página se movió. Volvamos al inicio.",
+        "bubble": "Mmm, por aquí no es.",
+        "cta": "Volver al inicio"
+      }
     }
   }
 }

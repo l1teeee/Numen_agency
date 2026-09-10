@@ -6,11 +6,6 @@ import { motion } from 'framer-motion'
 
 type Direction = 'left' | 'right'
 
-function getRandomRotation(min: number, max: number, direction: Direction) {
-  const val = Math.random() * (max - min) + min
-  return direction === 'left' ? -val : val
-}
-
 const BASE_3 = [
   { xRatio: -0.30, y: 20,  zIndex: 30, direction: 'left' as Direction },
   { xRatio:  0,    y: -10, zIndex: 50, direction: 'right' as Direction },
@@ -38,11 +33,7 @@ function Photo({
   height?: number
   dimmed?: boolean
 }) {
-  const [rotation, setRotation] = useState(0)
-
-  useEffect(() => {
-    setRotation(getRandomRotation(1, 4, direction))
-  }, [direction])
+  const rotation = direction === 'left' ? -2.5 : 2.5
 
   return (
     <motion.div

@@ -3,6 +3,9 @@ import ReactLenis, { useLenis } from 'lenis/react'
 import { ThemeProvider } from 'next-themes'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
+import { MotionConfig } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
+import { scrollToSection } from '@/lib/section-scroll'
 import { ScrollProgress } from '@/components/ui/scroll-progress'
 import { LangProvider } from '@/lib/lang'
 
@@ -14,10 +17,7 @@ function LenisScrollReset() {
     const hash = window.location.hash
     if (hash && hash.length > 1) {
       const timer = setTimeout(() => {
-        const target = document.querySelector(hash) as HTMLElement | null
-        if (target && lenis) {
-          lenis.scrollTo(target, { duration: 1.2 })
-        } else {
+        if (!scrollToSection(hash, lenis)) {
           lenis?.scrollTo(0, { immediate: true })
         }
       }, 80)
@@ -30,15 +30,18 @@ function LenisScrollReset() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const reducedMotion = useReducedMotion()
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-      <LangProvider>
-        <ReactLenis root>
-          <LenisScrollReset />
-          <ScrollProgress />
-          {children}
-        </ReactLenis>
-      </LangProvider>
+      <MotionConfig reducedMotion="user">
+        <LangProvider>
+          <ReactLenis root options={{ smoothWheel: !reducedMotion }}>
+            <LenisScrollReset />
+            <ScrollProgress />
+            {children}
+          </ReactLenis>
+        </LangProvider>
+      </MotionConfig>
     </ThemeProvider>
   )
 }

@@ -141,9 +141,9 @@
   --text-35: #444444;
   --text-30: #555555;
   --text-25: #666666;
-  --text-20: #777777;
-  --text-15: #888888;
-  --text-placeholder: #aaaaaa;
+  --text-20: #737373;
+  --text-15: #737373;
+  --text-placeholder: #737373;
 }
 
 .dark {
@@ -163,8 +163,8 @@
   --text-30: #8a8a8a;
   --text-25: #808080;
   --text-20: #767676;
-  --text-15: #6e6e6e;
-  --text-placeholder: #5f5f5f;
+  --text-15: #858585;
+  --text-placeholder: #949494;
 }
 
 
@@ -271,8 +271,7 @@ html:not(.dark) .bg-foreground\/\[0\.12\]  { background-color: #b8b8b8; }
 /* Light mode opacity-60 icons — boost visibility */
 html:not(.dark) .opacity-60 { opacity: 0.8; }
 
-@media (max-width: 1023px) {
-  .service-tags { display: none !important; }
+@media (max-width: 1023px), (max-height: 740px), (prefers-reduced-motion: reduce) {
 
   /* Mobile: unpin the sticky-stack.
      On desktop each section is position:sticky inside a 700vh container, so
@@ -286,8 +285,7 @@ html:not(.dark) .opacity-60 { opacity: 0.8; }
   .section-stack > section {
     position: relative;
     height: auto;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 0;
   }
   .section-stack > section > * {
     height: auto;
@@ -374,3 +372,91 @@ html.dark       .focus\:border-foreground\/20:focus { border-color: rgba(255, 25
    bg-foreground override (out of original ramp scope), so dark
    hover:bg-foreground/* still cascades natively; no fix needed. */
 html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
+
+/* -- Doodle ink system ---------------------------------------------
+   Hand-drawn SVGs (src/components/ui/doodles) keep one pen weight no
+   matter how large they render: vector-effect pins the stroke to CSS
+   pixels, so a 32px floater and a 320px scene read as the same ink.
+   Applied through the .doodle-ink root class set by DoodleSvg. */
+.doodle-ink :is(path, circle, ellipse, line, polyline, polygon, rect) {
+  vector-effect: non-scaling-stroke;
+}
+
+.editorial-note {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  letter-spacing: -0.025em;
+}
+
+.hero-grid {
+  background-image: linear-gradient(to right, var(--grid-fine) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-fine) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to right, transparent 20%, #000);
+  opacity: 0.5;
+}
+
+.hero-sketch {
+  --background: #fff;
+  --foreground: #000;
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10000;
+  transform: translateY(-200%);
+  border: 2px solid var(--foreground);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 4px;
+}
+
+:where(button, a, input, textarea, select) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 1024px) and (min-height: 741px) {
+  .hero-editorial { min-height: 100svh; }
+}
+
+@media (max-width: 639px) {
+  .hero-editorial { padding-top: 7rem; }
+  .hero-editorial > :last-child { align-items: flex-start; }
+  .hero-editorial > :last-child > :first-child { max-width: 44%; line-height: 1.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Horizontal rails that carry their own arrow buttons hide the native bar.
+   scrollbar-width covers Firefox; the pseudo-element covers WebKit. */
+.rail-scroll {
+  scrollbar-width: none;
+}
+.rail-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* The global focus ring above is unlayered, so a Tailwind focus-visible utility
+   cannot override it. The chat composer field has no border of its own, so that
+   ring floated as a loose rectangle over the panel; the row shows focus instead. */
+.chat-composer input:focus-visible {
+  outline: none;
+}

@@ -7,6 +7,12 @@ import { Redis } from '@upstash/redis'
 
 const BREVO_API    = 'https://api.brevo.com/v3/smtp/email'
 const CONTACT_EMAIL = 'contact@delta-numen.com'
+// Everyone who should see a new lead. The sender's confirmation still goes
+// only to the sender, so nobody here is exposed to them.
+const LEAD_RECIPIENTS = [
+  { email: CONTACT_EMAIL, name: 'Numen' },
+  { email: 'alejandro23.am29@gmail.com', name: 'Alejandro' },
+]
 
 const ALLOWED_ORIGINS = new Set([
   'https://delta-numen.com',
@@ -187,7 +193,7 @@ export async function POST(req: NextRequest) {
     headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       sender:  { name: 'Numen Website', email: CONTACT_EMAIL },
-      to:      [{ email: CONTACT_EMAIL, name: 'Numen' }],
+      to:      LEAD_RECIPIENTS,
       replyTo: { email: cleanEmail, name: cleanName },
       subject: `New lead from ${cleanName}`,
       htmlContent,

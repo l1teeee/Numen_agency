@@ -1,0 +1,17 @@
+'use client'
+
+import { HeroIconFrame, type HeroIconProps, type HeroIconStroke } from './icon-frame'
+
+const STROKES: HeroIconStroke[] = [
+  { d: 'M 17.5 33.3 C 13 30.4 10.1 25.4 10.5 20 C 10.9 12.8 17 7.3 24.3 7.6 C 31.5 7.9 37 14.1 36.6 21.3 C 36.4 26.1 33.6 30.3 29.5 33' },
+  { d: 'M 17.7 33.5 C 18.1 36.9 18.5 40.4 19.1 43.7 C 21.1 46.5 26.7 46.6 28.8 43.9 C 29.2 40.5 29.5 37 29.6 33.6' },
+  { d: 'M 18.1 38.5 C 21.9 39.6 25.9 39.5 29.2 38.4' },
+  { d: 'M 24.3 6.4 C 24.2 4.8 24.1 3.6 23.9 2.2' },
+  { d: 'M 11 11.3 C 8.2 9.6 5.5 8 2.7 6.5' },
+  { d: 'M 36.9 11.1 C 39.7 9.4 42.4 7.8 45.4 6.3' },
+]
+
+/** A lightbulb with three rays. The idea in the hero field. */
+export function IdeaIcon(props: HeroIconProps) {
+  return <HeroIconFrame strokes={STROKES} {...props} />
+}

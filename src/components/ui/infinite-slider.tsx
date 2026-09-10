@@ -1,6 +1,7 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { useMotionValue, animate, motion } from 'framer-motion'
+import { useMotionValue, animate, motion, type AnimationPlaybackControls } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
 import { useState, useEffect } from 'react'
 import useMeasure from 'react-use-measure'
 
@@ -28,9 +29,14 @@ export function InfiniteSlider({
   const translation = useMotionValue(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [key, setKey] = useState(0)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
-    let controls: any
+    if (reducedMotion) {
+      translation.set(0)
+      return
+    }
+    let controls: AnimationPlaybackControls
     const size = direction === 'horizontal' ? width : height
     const contentSize = size + gap
     const from = reverse ? -contentSize / 2 : 0
@@ -56,8 +62,8 @@ export function InfiniteSlider({
       })
     }
 
-    return controls?.stop
-  }, [key, translation, currentDuration, width, height, gap, isTransitioning, direction, reverse])
+    return () => controls.stop()
+  }, [key, translation, currentDuration, width, height, gap, isTransitioning, direction, reverse, reducedMotion])
 
   const hoverProps = durationOnHover
     ? {

@@ -2,13 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Search, PenTool, Code2, Rocket, TrendingUp, Building2, MapPin, Phone, Tags, UserPlus, type LucideIcon } from 'lucide-react'
+import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Building2, MapPin, Phone, Tags, UserPlus } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
-import { SelectCustom } from '@/components/ui/select-custom'
 import { GlobeReach } from '@/components/ui/cobe-globe-cdn'
-import Image from 'next/image'
 import { companyStats } from '@/lib/company-stats'
 import { blogPosts } from '@/lib/blog-posts'
 import { useLang } from '@/lib/lang'
@@ -16,16 +15,30 @@ import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 import { SOCIAL_LINKS } from '@/lib/site'
 import { HoverPeek } from '@/components/ui/link-preview'
 import { FounderAvatar } from '@/components/ui/founder-avatar'
+import { ScribbleUnderline } from '@/components/ui/doodles/scribbles'
+import { SERVICE_DOODLES } from '@/components/ui/doodles/services'
+import { PROCESS_DOODLES } from '@/components/ui/doodles/process'
+import { INSIGHT_DOODLES } from '@/components/ui/doodles/insights'
+import { COUNTRY_DOODLES, PaperTileFrame } from '@/components/ui/doodles/reach'
+import { CheckScribble, PaperPlaneDoodle, QuestionMarkDoodle, SketchPencilDoodle, SparkleDoodle } from '@/components/ui/doodles/misc'
+import { FounderSticker } from '@/components/ui/doodles/founder-sticker'
+import { SpeechBubble } from '@/components/ui/doodles/speech-bubble'
+import { NumenBot } from '@/components/ui/doodles/numen-bot'
+import { NumenMark } from '@/components/ui/doodles/numen-mark'
+import { EditorialConceptArt } from './editorial-concept-art'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
 
 interface BlurStyle { filter: MotionValue<string> }
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 20, scale: 0.97 },
+const fadeUp = (delay = 0, reducedMotion = false) => ({
+  initial: reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 },
   whileInView: { opacity: 1, y: 0, scale: 1 },
   viewport: { once: true, amount: 0.08 },
-  transition: { type: 'spring' as const, stiffness: 150, damping: 22, delay },
+  transition: reducedMotion
+    ? { duration: 0 }
+    : { type: 'spring' as const, stiffness: 150, damping: 22, delay },
 })
 
 const staggerContainer = {
@@ -43,20 +56,43 @@ const staggerItem = {
   },
 }
 
+const immediateContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0, delayChildren: 0 } },
+}
+
+const immediateItem = {
+  hidden: { opacity: 1, y: 0, scale: 1 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0 } },
+}
+
 const LIFT = {
   whileHover: { y: -4, transition: { type: 'spring' as const, stiffness: 400, damping: 25 } },
   whileTap: { scale: 0.98, transition: { duration: 0.1 } },
 }
 
 const INPUT =
-  'w-full rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] px-4 py-2.5 text-sm text-foreground placeholder:text-foreground/20 focus:border-foreground/20 focus:outline-none transition-colors duration-200'
+  'w-full min-h-11 rounded-xl border border-foreground/20 bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-foreground/65 focus:border-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/25 transition-colors duration-200'
+
+function useSectionReveal(ref: React.RefObject<HTMLElement | null>) {
+  const isInView = useInView(ref, { amount: 0.12, once: true })
+  const reducedMotion = useReducedMotion()
+  return {
+    isInView,
+    isActive: isInView || reducedMotion,
+    reducedMotion,
+    containerVariants: reducedMotion ? immediateContainer : staggerContainer,
+    itemVariants: reducedMotion ? immediateItem : staggerItem,
+  }
+}
 
 function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.5 })
   const [val, setVal] = useState(to)
+  const reduceMotion = useReducedMotion()
   useEffect(() => {
-    if (!inView) return
+    if (!inView || reduceMotion) return
     const dur = 1400
     let frame = requestAnimationFrame((start) => {
       setVal(0)
@@ -68,8 +104,8 @@ function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
       frame = requestAnimationFrame(tick)
     })
     return () => cancelAnimationFrame(frame)
-  }, [inView, to])
-  return <span ref={ref}>{val}{suffix}</span>
+  }, [inView, to, reduceMotion])
+  return <span ref={ref}>{reduceMotion ? to : val}{suffix}</span>
 }
 
 // ─── Live status check ────────────────────────────────────────
@@ -86,25 +122,31 @@ function useProjectStatus() {
   return status
 }
 
+/** Section label, underlined by hand the way the hero headline is. */
+function SectionEyebrow({ label, active }: { label: string; active: boolean }) {
+  return (
+    <span className="relative inline-block text-[10px] uppercase tracking-[0.16em] text-foreground/65 lg:text-xs lg:tracking-widest">
+      {label}
+      <ScribbleUnderline active={active} strokeWidth={1.5} className="absolute -bottom-1.5 left-0 h-2 w-full" />
+    </span>
+  )
+}
+
 function StatusDot({ online, size = 'h-1.5 w-1.5' }: { online?: boolean; size?: string }) {
   if (online === false) {
     return <span className={`inline-block rounded-full bg-red-400 ${size}`} />
   }
   return (
     <span className={`relative flex shrink-0 ${size}`}>
-      {online && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />}
+      {online && <span className="absolute inline-flex h-full w-full motion-safe:animate-ping rounded-full bg-emerald-400 opacity-75" />}
       <span className={`relative inline-flex rounded-full ${size} ${online === undefined ? 'bg-foreground/20' : 'bg-emerald-400'}`} />
     </span>
   )
 }
 
 // ─── Static non-translatable data ────────────────────────────
-const servicesMeta = [
-  { num: '01', tags: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Stripe'],          img: '/programming.png' },
-  { num: '02', tags: ['Figma', 'Design Systems', 'UX Research', 'Prototyping'],               img: '/design.png' },
-  { num: '03', tags: ['OpenAI', 'Anthropic', 'RAG', 'Embeddings', 'Automation'],             img: '/ia.png' },
-  { num: '04', tags: ['Kubernetes', 'AWS EKS', 'Google GKE', 'Istio', 'Terraform', 'Docker', 'GitHub Actions'], img: '/launch.png' },
-]
+// `as const` keeps `num` a literal so it can key SERVICE_DOODLES.
+const serviceNums = ['01', '02', '03', '04'] as const
 
 const projectsMeta = [
   { href: 'https://vielinks.com',          name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
@@ -129,78 +171,48 @@ const teamMeta = [
   { figure: 'igmer',  name: 'Igmer Rodriguez', role: 'Software Engineer & Co-founder', linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/' },
 ] as const
 
+// Every country that is not the HQ is a live client relationship.
 const reachMeta = [
-  { id: 'sv', isHQ: true,  isLive: false },
-  { id: 'gt', isHQ: false, isLive: true  },
-  { id: 'mx', isHQ: false, isLive: true  },
-  { id: 'ar', isHQ: false, isLive: true  },
-  { id: 'gb', isHQ: false, isLive: true },
-  { id: 'de', isHQ: false, isLive: true },
-]
-
-const stepIcons: Record<string, LucideIcon> = {
-  '01': Search,
-  '02': PenTool,
-  '03': Code2,
-  '04': Rocket,
-  '05': TrendingUp,
-}
+  { id: 'sv', isHQ: true },
+  { id: 'gt', isHQ: false },
+  { id: 'mx', isHQ: false },
+  { id: 'ar', isHQ: false },
+  { id: 'gb', isHQ: false },
+  { id: 'de', isHQ: false },
+] as const
 
 // ─── Services ────────────────────────────────────────────────
 export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.5, once: false })
-  const { t } = useLang()
+  const { isActive, reducedMotion, containerVariants, itemVariants } = useSectionReveal(ref)
+  const { t, lang } = useLang()
   const ts = t.services
+  const deliverables = lang === 'es'
+    ? ['MVPs, plataformas SaaS y aplicaciones web', 'Flujos, prototipos y sistemas de diseño', 'Asistentes, búsqueda y automatización', 'Despliegues, monitoreo e infraestructura']
+    : ['MVPs, SaaS platforms and web applications', 'User flows, prototypes and design systems', 'Assistants, search and automation', 'Deployments, monitoring and infrastructure']
 
   return (
-    <section ref={ref} id="services" className="sticky top-0 z-10 flex h-screen flex-col bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ts.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>02</span>
+    <section ref={ref} id="services" className="relative z-10 flex flex-col border-t border-foreground/15 bg-background lg:sticky lg:top-0 lg:h-screen">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-8 lg:pt-24" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/15 pb-4">
+          <SectionEyebrow label={ts.label} active={isActive} />
+          <span className="font-mono text-xs text-foreground/65">02</span>
         </div>
-        <motion.div
-          className="mt-6 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0"
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          {servicesMeta.map((s, i) => {
-            const text = ts.items[i]
+        <div className="my-4 flex items-end justify-between gap-6">
+          <h2 className="max-w-xl text-3xl font-semibold leading-tight tracking-tight lg:text-4xl">{lang === 'es' ? 'De una buena idea a algo real.' : 'From a good idea to the real thing.'}</h2>
+          <span className="hidden shrink-0 text-right text-xs leading-relaxed text-foreground/65 sm:block">{lang === 'es' ? 'Diseño + ingeniería.' : 'Design + engineering.'}<br />{lang === 'es' ? 'Un mismo equipo.' : 'One team.'}</span>
+        </div>
+        <motion.div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-rows-2" variants={containerVariants} initial={reducedMotion ? false : 'hidden'} animate={isActive ? 'visible' : 'hidden'}>
+          {serviceNums.map((num, i) => {
+            const item = ts.items[i]
+            const Doodle = SERVICE_DOODLES[num]
             return (
-              <motion.div
-                key={s.num}
-                variants={staggerItem}
-                {...LIFT}
-                className={`group relative overflow-hidden rounded-2xl border border-foreground/8 transition-colors duration-300 hover:border-foreground/[0.14]${i >= 2 ? ' lg:mb-14' : ''}`}
-              >
-                <Image
-                  fill
-                  src={s.img}
-                  alt={text.title}
-                  sizes="(max-width: 640px) 0px, (max-width: 1024px) 50vw, 25vw"
-                  style={{ objectPosition: 'center 18%' }}
-                  className="object-contain scale-[0.82] origin-top transition-transform duration-700 group-hover:scale-[0.87] invert brightness-[0.88] dark:invert-0 dark:brightness-100 hidden sm:block"
-                />
-                <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/30 to-background/20 hidden sm:block" />
-                <div className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-background via-background/90 to-transparent hidden sm:block" />
-                <div className="relative z-10 flex h-full flex-col justify-end sm:justify-between p-5">
-                  <span className="text-[10px] font-medium text-foreground/30">{s.num}</span>
-                  <div>
-                    <h3 className="mb-1.5 text-sm font-semibold text-foreground">{text.title}</h3>
-                    <p className="mb-0 lg:mb-3 text-xs leading-relaxed text-foreground/50">{text.desc}</p>
-                    <div className="service-tags flex flex-wrap gap-1.5">
-                      {s.tags.map((tag) => (
-                        <span key={tag} className="rounded-full border border-foreground/[0.14] bg-background/40 px-2.5 py-0.5 text-[10px] text-foreground/40 backdrop-blur-sm">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              <motion.article key={num} variants={itemVariants} className="group flex min-h-0 flex-col rounded-2xl border border-foreground/15 bg-foreground/[0.02] p-5 transition-colors hover:border-foreground/40">
+                <div><span className="font-mono text-[11px] text-foreground/65">/{num}</span><h3 className="mt-1 text-lg font-semibold leading-tight tracking-tight">{item.title}</h3></div>
+                <Doodle active={isActive} className="mx-auto my-3 min-h-24 w-[86%] max-h-28 flex-1 text-foreground motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:-rotate-2" />
+                <p className="text-xs leading-relaxed text-foreground/75">{item.desc}</p>
+                <p className="flex items-start gap-2 pt-3 text-[11px] font-medium"><CheckScribble active={isActive} className="mt-0.5 h-3 w-3 shrink-0" />{deliverables[i]}</p>
+              </motion.article>
             )
           })}
         </motion.div>
@@ -209,227 +221,95 @@ export function ServicesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
-// ─── Projects ────────────────────────────────────────────────
 export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.5, once: false })
-  const { t } = useLang()
-  const tp = t.projects
+  const { isActive, reducedMotion, containerVariants, itemVariants } = useSectionReveal(ref)
+  const { t, lang } = useLang()
   const status = useProjectStatus()
-
   const [featuredMeta, ...restMeta] = projectsMeta
-  const [featuredText, ...restText] = tp.items
+  const [featuredText, ...restText] = t.projects.items
 
   return (
-    <section ref={ref} id="work" className="sticky top-0 z-20 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-              <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tp.label}</span>
-            </div>
-            <Link href="/projects" className={`flex items-center gap-1 text-[10px] transition-colors duration-200 hover:text-foreground/70 lg:text-xs ${isInView ? 'text-foreground/30' : 'text-foreground/15'}`}>
-              <span>{tp.seeAll}</span>
-              <ArrowUpRight className="size-3" />
-            </Link>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>03</span>
+    <section ref={ref} id="work" className="relative z-20 flex flex-col rounded-t-[2rem] border-t border-foreground/15 bg-background lg:sticky lg:top-0 lg:h-screen">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-24 lg:pt-24" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/15 pb-4">
+          <SectionEyebrow label={t.projects.label} active={isActive} />
+          <span className="font-mono text-xs text-foreground/65">03</span>
         </div>
-        <motion.div
-          className="mt-4 flex flex-1 flex-col gap-2 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mt-6 lg:mb-24 lg:gap-3 lg:overflow-visible lg:pb-0 lg:flex-row"
-          style={{ scrollbarWidth: 'none' }}
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          <motion.div variants={staggerItem} {...LIFT} className="flex flex-col flex-none lg:flex-3">
-            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-2xl bg-background p-4 ring-1 ring-foreground/8 lg:p-6">
-              <div
-                className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                style={{
-                  background: 'linear-gradient(to right, #C8553A, #e8896e, #C8553A)',
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  maskComposite: 'exclude',
-                  padding: '1px',
-                }}
-              />
-              <span aria-hidden="true" className="pointer-events-none absolute bottom-3 right-4 select-none text-7xl font-bold leading-none text-foreground/[0.05] lg:bottom-4 lg:right-6 lg:text-9xl">01</span>
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-xs text-foreground/30">{featuredText.category}</span>
-                  <div className="mt-1 flex items-center gap-2">
-                    <h3 className="text-base font-semibold text-foreground lg:text-xl">{featuredText.name}</h3>
-                    {featuredMeta.status && (
-                      <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
-                        <StatusDot online={status[featuredMeta.href]} />
-                        {status[featuredMeta.href] === false ? 'Offline' : featuredMeta.status}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
+        <div className="my-5 flex flex-wrap items-end justify-between gap-3">
+          <h2 className="text-3xl font-semibold tracking-tight lg:text-4xl">{lang === 'es' ? 'Ideas que ya están ahí afuera.' : 'Ideas out in the real world.'}</h2>
+          <Link href="/projects" className="inline-flex min-h-11 items-center gap-2 text-xs font-medium">{t.projects.seeAll}<ArrowUpRight className="size-4" /></Link>
+        </div>
+        <motion.div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-5" variants={containerVariants} initial={reducedMotion ? false : 'hidden'} animate={isActive ? 'visible' : 'hidden'}>
+          <motion.div variants={itemVariants} className="min-h-0 lg:col-span-3">
+            <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-foreground/15 transition-colors hover:border-foreground/50">
+              <div className="relative min-h-48 flex-1 overflow-hidden bg-[#100f0b] lg:min-h-0">
+                <Image src="/vielink/live-home.png" alt={lang === 'es' ? 'Página de VieLinks para campañas de correo y redes sociales' : 'VieLinks website for email campaigns and social media'} fill sizes="(min-width: 1024px) 570px, 90vw" className="object-cover object-top motion-safe:transition-transform motion-safe:duration-700 motion-safe:group-hover:scale-[1.03]" />
+                <span className="absolute left-4 top-4 rounded-full border border-white/25 bg-black px-3 py-1 text-[10px] text-white">{lang === 'es' ? 'Proyecto destacado' : 'Selected project'}</span>
               </div>
-              <div className="mt-auto">
-                <p className="mb-2 line-clamp-4 text-[13px] leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{featuredText.desc}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {featuredMeta.stack.map((t) => (
-                    <span key={t} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-[11px] text-foreground/40 lg:px-3 lg:py-1 lg:text-xs">{t}</span>
-                  ))}
+              <div className="relative p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div><p className="text-[11px] text-foreground/65">{featuredText.category}</p><h3 className="mt-1 text-2xl font-semibold tracking-tight">{featuredText.name}</h3></div>
+                  <ArrowUpRight className="size-5" />
                 </div>
-                <p className="mt-3 hidden text-[11px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/40 lg:block">{featuredMeta.href.replace('https://', '')}</p>
+                <p className="mt-3 text-xs leading-relaxed text-foreground/75">{featuredText.desc}</p>
+                <div className="mt-4 flex flex-wrap gap-1.5">{featuredMeta.stack.map((tag) => <span key={tag} className="rounded-full border border-foreground/15 px-2 py-0.5 text-[10px] text-foreground/65">{tag}</span>)}</div>
               </div>
             </Link>
           </motion.div>
-          <motion.div variants={staggerContainer} className="flex flex-col gap-2 lg:flex-[2]">
-            {restMeta.map((pm, i) => {
-              const pt = restText[i]
-              return (
-                <motion.div key={pm.href} variants={staggerItem} {...LIFT} className="flex-1">
-                  <Link href={pm.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16] lg:p-5">
-                    <span aria-hidden="true" className="pointer-events-none absolute bottom-1 right-3 select-none text-5xl font-bold leading-none text-foreground/[0.05] lg:bottom-1 lg:right-4 lg:text-6xl">0{i + 2}</span>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <span className="text-xs text-foreground/30">{pt.category}</span>
-                        <div className="mt-1 flex items-center gap-1.5">
-                          <h3 className="text-sm font-semibold text-foreground">{pt.name}</h3>
-                          {pm.status && (
-                            <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-1.5 py-0.5 text-[9px] text-foreground/30">
-                              <StatusDot online={status[pm.href]} size="h-1 w-1" />
-                              {status[pm.href] === false ? 'Offline' : pm.status}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
-                    </div>
-                    <div className="mt-auto">
-                      <p className="mb-2 line-clamp-4 text-xs leading-relaxed text-foreground/40 lg:mb-3 lg:line-clamp-none">{pt.desc}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {pm.stack.map((s) => (
-                          <span key={s} className="rounded-full border border-foreground/[0.08] px-2.5 py-0.5 text-xs text-foreground/40">{s}</span>
-                        ))}
-                      </div>
-                      <p className="mt-2 hidden text-[10px] text-foreground/20 transition-colors duration-200 group-hover:text-foreground/35 lg:block">{pm.href.replace('https://', '')}</p>
-                    </div>
-                  </Link>
-                </motion.div>
-              )
-            })}
-          </motion.div>
+          <div className="grid min-h-0 gap-3 lg:col-span-2 lg:grid-rows-3">
+            {restMeta.map((project, i) => (
+              <motion.div key={project.href} variants={itemVariants} className="min-h-0">
+                <Link href={project.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col rounded-2xl border border-foreground/15 p-4 transition-colors hover:border-foreground/50 hover:bg-foreground/[0.02]">
+                  <div className="flex items-start justify-between gap-3"><div><p className="text-[10px] text-foreground/65">{restText[i].category}</p><h3 className="mt-1 text-lg font-semibold">{restText[i].name}</h3></div><span className="font-mono text-[11px] text-foreground/65">0{i + 2}</span></div>
+                  <p className="mt-2 text-xs leading-relaxed text-foreground/75">{restText[i].desc}</p>
+                  <div className="mt-auto flex items-center justify-between gap-2 pt-3"><span className="flex items-center gap-2 text-[10px] text-foreground/65"><StatusDot online={status[project.href]} />{status[project.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}</span><ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5" /></div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </motion.div>
     </section>
   )
 }
 
-// --- Brand Concepts -------------------------------------------
 export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.5, once: false })
-  const { t } = useLang()
+  const { isActive, reducedMotion, containerVariants, itemVariants } = useSectionReveal(ref)
+  const { t, lang } = useLang()
   const tu = t.useCases
-
-  // Bento placement (desktop only) — the two live concepts fill the top two
-  // rows, the coming-soon tiles split the bottom row, so the 3×3 grid reads as
-  // an ordered-but-varied square.
-  const liveSpans = [
-    'lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-3',  // big — 2×2 top-left
-    'lg:col-start-3 lg:row-start-1 lg:row-end-3',               // tall — full-height right column
-    'lg:col-start-1 lg:col-end-3 lg:row-start-3',               // wide — bottom-left
-  ]
-  const conceptSpans = [
-    'lg:col-start-3 lg:row-start-3',                // small — bottom-right
-  ]
+  const placement = ['lg:col-span-2 lg:row-span-2', 'lg:row-span-2', 'lg:col-span-2']
 
   return (
-    <section ref={ref} id="use-cases" className="sticky top-0 z-[25] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:px-8 lg:pt-24 lg:pb-10" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <h2 className={`text-[10px] font-normal uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tu.label}</h2>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+    <section ref={ref} id="use-cases" className="relative z-[25] flex flex-col rounded-t-[2rem] border-t border-foreground/15 bg-background lg:sticky lg:top-0 lg:h-screen">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-24 lg:pt-24" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/15 pb-4">
+          <SectionEyebrow label={tu.label} active={isActive} />
+          <span className="font-mono text-xs text-foreground/65">04</span>
         </div>
-
-        <motion.div
-          className="mt-4 grid flex-1 grid-cols-1 gap-3 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mt-6 lg:mb-24 lg:grid-cols-3 lg:grid-rows-3 lg:overflow-visible lg:pb-0"
-          style={{ scrollbarWidth: 'none' }}
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-        >
-          {/* Live concepts — bigger tiles, live preview on hover */}
-          {tu.concepts.map((concept, index) => (
-            <motion.div
-              key={concept.name}
-              variants={staggerItem}
-              {...LIFT}
-              className={`min-h-[20rem] lg:min-h-0 ${liveSpans[index] ?? ''}`}
-            >
-              <HoverPeek url={useCaseMeta[index].href} peekWidth={320} peekHeight={200}>
-                <Link
-                  href={useCaseMeta[index].href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-background p-5 ring-1 ring-foreground/8 lg:p-7"
-                >
-                  <div
-                    className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                    style={{
-                      background: 'linear-gradient(to right, #C8553A, #e8896e, #C8553A)',
-                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      WebkitMaskComposite: 'xor',
-                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      maskComposite: 'exclude',
-                      padding: '1px',
-                    }}
-                  />
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <span className="text-xs text-foreground/30">{concept.category}</span>
-                      <div className="mt-1 flex flex-wrap items-center gap-2">
-                        <h3 className="text-xl font-semibold text-foreground lg:text-2xl">{concept.name}</h3>
-                        <span className="flex items-center gap-1 rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">
-                          <StatusDot online />
-                          Live
-                        </span>
-                      </div>
-                    </div>
-                    <ArrowUpRight className="size-4 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-[#C8553A]" />
-                  </div>
-                  <div>
-                    <p className="mb-3 max-w-md text-[13px] leading-relaxed text-foreground/40 lg:text-sm">{concept.desc}</p>
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/50 transition-colors duration-200 group-hover:text-[#C8553A] lg:text-xs">
-                      {concept.cta}
-                      <ArrowUpRight className="size-3" />
-                    </span>
-                  </div>
+        <div className="my-5 flex items-end justify-between gap-4">
+          <h2 className="text-3xl font-semibold tracking-tight lg:text-4xl">{lang === 'es' ? 'Espacio para explorar.' : 'Room to explore.'}</h2>
+          <span className="hidden max-w-48 text-right text-xs leading-relaxed text-foreground/65 sm:block">{lang === 'es' ? 'Experimentos de marca, diseño y nuevas posibilidades.' : 'Experiments in brand, design and new possibilities.'}</span>
+        </div>
+        <motion.div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-3" variants={containerVariants} initial={reducedMotion ? false : 'hidden'} animate={isActive ? 'visible' : 'hidden'}>
+          {tu.concepts.map((concept, i) => (
+            <motion.div key={concept.name} variants={itemVariants} className={`min-h-0 ${placement[i]}`}>
+              <HoverPeek url={useCaseMeta[i].href} peekWidth={320} peekHeight={200}>
+                <Link href={useCaseMeta[i].href} target="_blank" rel="noopener noreferrer" className={`group relative flex h-full min-h-72 flex-col overflow-hidden rounded-2xl border border-foreground/15 p-5 transition-colors hover:border-foreground/50 lg:min-h-0 ${i === 0 ? 'bg-foreground/[0.03] lg:p-6' : 'bg-background'}`}>
+                  <div className="flex items-start justify-between gap-2"><div><p className="text-[10px] text-foreground/65">{concept.category}</p><h3 className={`mt-1 font-semibold tracking-tight ${i === 0 ? 'text-3xl lg:text-4xl' : 'text-2xl'}`}>{concept.name}</h3></div><ArrowUpRight className="size-4 shrink-0" /></div>
+                  {/* The third tile is one grid row tall and two wide, so its art sits beside the copy instead of above it. */}
+                  <EditorialConceptArt kind={i} active={isActive} className={`my-3 w-full text-foreground motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:-rotate-2 ${i === 2 ? 'h-32 lg:absolute lg:inset-y-5 lg:right-5 lg:my-0 lg:h-auto lg:w-64' : 'h-40 min-h-0 flex-1'}`} />
+                  <div className={i === 2 ? 'lg:pr-72' : ''}><p className="text-xs leading-relaxed text-foreground/75">{concept.desc}</p><span className="mt-3 inline-flex items-center gap-2 text-[11px] font-medium">{concept.cta}<ArrowUpRight className="size-3" /></span></div>
                 </Link>
               </HoverPeek>
             </motion.div>
           ))}
-
-          {/* Coming-soon concepts — varied sizes fill the rest of the square */}
-          {tu.cards.map((card, index) => (
-            <motion.article
-              key={card.category}
-              variants={staggerItem}
-              {...LIFT}
-              aria-label={`${card.title}. ${tu.comingSoon}`}
-              className={`group relative flex min-h-40 flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-foreground/[0.14] bg-foreground/[0.02] p-5 transition-colors duration-300 hover:border-foreground/[0.24] lg:min-h-0 ${conceptSpans[index] ?? ''}`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium text-foreground/25">0{tu.concepts.length + index + 1}</span>
-                <span className="rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[9px] uppercase tracking-[0.12em] text-foreground/35">{tu.comingSoon}</span>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase tracking-[0.14em] text-foreground/25 lg:text-xs">{card.category}</span>
-                <h3 className="mt-1 max-w-[16rem] text-sm font-medium leading-snug text-foreground/55 lg:text-base">{card.title}</h3>
-              </div>
+          {tu.cards.map((card) => (
+            <motion.article key={card.category} variants={itemVariants} className="relative flex min-h-48 flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-foreground/25 p-5 lg:min-h-0">
+              <div className="flex items-center justify-between"><span className="font-mono text-[10px] text-foreground/65">/04</span><span className="text-[10px] uppercase tracking-wider text-foreground/65">{tu.comingSoon}</span></div>
+              <SketchPencilDoodle active={isActive} className="absolute right-3 top-9 w-20 text-foreground/65" />
+              <div className="relative mt-12 max-w-44"><p className="text-[10px] text-foreground/65">{card.category}</p><h3 className="mt-1 text-sm font-medium">{card.title}</h3></div>
             </motion.article>
           ))}
         </motion.div>
@@ -438,70 +318,35 @@ export function UseCasesSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
-// ─── Live Projects ───────────────────────────────────────────
-export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
+export function LiveProjectsSection({ blurStyle, standalone = false }: { blurStyle?: BlurStyle; standalone?: boolean }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.5, once: false })
-  const { t } = useLang()
+  const { isActive, reducedMotion, containerVariants, itemVariants } = useSectionReveal(ref)
+  const { t, lang } = useLang()
   const tl = t.liveProjects
   const status = useProjectStatus()
 
   return (
-    <section ref={ref} id="live-projects" className="sticky top-0 z-[25] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tl.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>04</span>
+    <section ref={ref} id="live-projects" className={`relative z-[25] flex flex-col border-t border-foreground/15 bg-background ${standalone ? '' : 'rounded-t-[2rem] lg:sticky lg:top-0 lg:h-screen'}`}>
+      <motion.div className={`mx-auto flex min-h-0 w-full max-w-5xl flex-col px-6 py-16 lg:px-8 lg:py-24 ${standalone ? '' : 'h-full'}`} style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/15 pb-4"><SectionEyebrow label={tl.label} active={isActive} /><span className="font-mono text-xs text-foreground/65">{String(liveProjectsMeta.length).padStart(2, '0')}</span></div>
+        <div className="my-8 flex items-center justify-between gap-6">
+          <motion.div {...fadeUp(0, reducedMotion)}><h2 className="text-3xl font-semibold tracking-tight lg:text-5xl">{tl.headline1}<br /><span className="text-foreground/65">{tl.headline2}</span></h2><p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/75">{tl.subtext}</p></motion.div>
+          <PaperPlaneDoodle active={isActive} className="hidden w-40 shrink-0 text-foreground sm:block" />
         </div>
-
-        <motion.div
-          className="mt-6 flex flex-1 flex-col gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-visible lg:pb-0 lg:mt-8"
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-        >
-          <motion.div variants={staggerItem}>
-            <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-5xl">
-              {tl.headline1}<br />
-              <span className="text-foreground/25">{tl.headline2}</span>
-            </h2>
-            <p className="mt-3 max-w-lg text-sm leading-relaxed text-foreground/40">{tl.subtext}</p>
-          </motion.div>
-
-          <motion.div
-            className="grid grid-cols-2 gap-3 lg:grid-cols-4"
-            variants={staggerContainer}
-          >
-            {liveProjectsMeta.map((pm) => (
-              <motion.div key={pm.href} variants={staggerItem} {...LIFT}>
-                <Link
-                  href={pm.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex h-full flex-col gap-3 rounded-2xl border border-foreground/[0.08] p-4 transition-colors duration-300 hover:border-foreground/[0.16]"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <StatusDot online={status[pm.href]} />
-                      <span className="text-[10px] text-foreground/30">{status[pm.href] === false ? 'Offline' : pm.status}</span>
-                    </div>
-                    <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{pm.name}</p>
-                    <p className="mt-0.5 text-[11px] text-foreground/30">{pm.href.replace('https://', '')}</p>
-                  </div>
-                  <div className="mt-auto flex flex-wrap gap-1">
-                    {pm.stack.slice(0, 2).map((s) => (
-                      <span key={s} className="rounded-full border border-foreground/[0.08] px-2 py-0.5 text-[10px] text-foreground/35">{s}</span>
-                    ))}
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+        <motion.div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" variants={containerVariants} initial={reducedMotion ? false : 'hidden'} animate={isActive ? 'visible' : 'hidden'}>
+          {liveProjectsMeta.map((project, i) => (
+            <motion.div key={project.href} variants={itemVariants}>
+              <Link href={project.href} target="_blank" rel="noopener noreferrer" className="group flex h-full min-h-48 flex-col rounded-2xl border border-foreground/15 p-5 transition-colors hover:border-foreground/50 hover:bg-foreground/[0.02]">
+                <div className="flex items-center justify-between"><span className="font-mono text-xs text-foreground/65">/{String(i + 1).padStart(2, '0')}</span><ArrowUpRight className="size-4" /></div>
+                <h3 className="mt-5 text-xl font-semibold tracking-tight">{project.name}</h3>
+                <p className="mt-1 break-all text-[11px] text-foreground/65">{new URL(project.href).hostname}</p>
+                <div className="mt-4 flex flex-wrap gap-1.5">{project.stack.slice(0, 3).map((tag) => <span key={tag} className="rounded-full border border-foreground/15 px-2 py-0.5 text-[10px] text-foreground/65">{tag}</span>)}</div>
+                <div className="mt-auto flex items-center gap-2 pt-4 text-[10px] text-foreground/65"><StatusDot online={status[project.href]} />{status[project.href] === true ? (lang === 'es' ? 'En línea' : 'Online') : status[project.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Visitar proyecto' : 'Visit project')}</div>
+              </Link>
+            </motion.div>
+          ))}
+          <motion.div variants={itemVariants} className="flex min-h-48 flex-col items-start justify-between rounded-2xl border border-dashed border-foreground/25 p-5">
+            <SparkleDoodle active={isActive} className="size-10" /><p className="mt-3 text-xl font-medium tracking-tight">{lang === 'es' ? 'El siguiente puede ser el tuyo.' : 'Yours could be next.'}</p><Link href={SECTION_HREFS.contact} className="mt-4 inline-flex min-h-11 items-center gap-2 text-xs font-medium">{lang === 'es' ? 'Cuéntanos tu idea' : 'Tell us your idea'}<ArrowUpRight className="size-4" /></Link>
           </motion.div>
         </motion.div>
       </motion.div>
@@ -509,41 +354,38 @@ export function LiveProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   )
 }
 
-// ─── About ───────────────────────────────────────────────────
 export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.5, once: false })
+  const { isActive, reducedMotion } = useSectionReveal(ref)
+  const [hoveredFounder, setHoveredFounder] = useState<number | null>(null)
   const { t } = useLang()
   const ta = t.about
 
   return (
-    <section ref={ref} id="about" className="sticky top-0 z-30 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
+    <section ref={ref} id="about" className="relative lg:sticky lg:top-0 z-30 flex flex-col lg:h-screen rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-24 lg:pt-24" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{ta.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>05</span>
+          <SectionEyebrow label={ta.label} active={isActive} />
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isActive ? 'text-foreground/65' : 'text-foreground/65'}`}>05</span>
         </div>
 
-        <div className="mt-6 flex flex-1 flex-col gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:overflow-hidden lg:pb-0">
+        <div className="mt-6 flex min-h-0 flex-1 flex-col gap-5">
           {/* Headline + stats */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
-            <motion.div {...fadeUp(0)}>
+            <motion.div {...fadeUp(0, reducedMotion)}>
               <h2 className="text-3xl font-semibold leading-snug tracking-tight text-foreground lg:text-4xl">
                 {ta.headline1}<br />
-                <span className="text-foreground/25">{ta.headline2}</span>
+                <span className="text-foreground/65">{ta.headline2}</span>
               </h2>
-              <p className="mt-4 text-sm leading-relaxed text-foreground/40">{ta.p1}</p>
-              <p className="mt-3 text-sm leading-relaxed text-foreground/30">{ta.p2}</p>
+              <p className="mt-4 text-sm leading-relaxed text-foreground/65">{ta.p1}</p>
+              <p className="mt-3 text-sm leading-relaxed text-foreground/65">{ta.p2}</p>
             </motion.div>
 
             <dl className="grid grid-cols-2 self-center">
               {companyStats.map((s, i) => (
                 <motion.div
                   key={s.key}
-                  {...fadeUp(0.1 + i * 0.07)}
+                  {...fadeUp(0.1 + i * 0.07, reducedMotion)}
                   className={`px-5 py-4 lg:py-5 ${i % 2 === 0 ? 'border-r border-foreground/[0.08]' : ''} ${i < 2 ? 'border-b border-foreground/[0.08]' : ''}`}
                   data-stat-name={s.schemaName}
                   data-stat-value={s.display}
@@ -551,7 +393,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   <dd className="text-3xl font-bold text-foreground" aria-label={`${s.display} ${ta.stats[i].label}`}>
                     <CountUp to={s.value} suffix={s.suffix} />
                   </dd>
-                  <dt className="mt-1 text-xs text-foreground/40">{ta.stats[i].label}</dt>
+                  <dt className="mt-1 text-xs text-foreground/65">{ta.stats[i].label}</dt>
                 </motion.div>
               ))}
             </dl>
@@ -562,24 +404,36 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
             {teamMeta.map((member, i) => (
               <motion.div
                 key={member.name}
-                {...fadeUp(0.12 + i * 0.08)}
+                {...fadeUp(0.12 + i * 0.08, reducedMotion)}
                 {...LIFT}
-                className="flex items-center gap-4 rounded-2xl border border-black/[0.08] bg-white p-4 transition-colors duration-200 hover:border-black/20 lg:gap-5"
+                onMouseEnter={() => setHoveredFounder(i)}
+                onMouseLeave={() => setHoveredFounder(null)}
+                onFocus={() => setHoveredFounder(i)}
+                onBlur={() => setHoveredFounder(null)}
+                className="relative flex items-center gap-4 rounded-2xl border border-black/[0.08] bg-white p-4 transition-colors duration-200 hover:border-black/20 lg:gap-5"
               >
-                <div className="shrink-0 overflow-hidden rounded-xl border border-black/10">
-                  <FounderAvatar figure={member.figure} active={isInView} className="w-24 lg:w-28" />
+                {/* The card is white in both themes, so the bubble gets its own
+                    paper and ink tokens instead of the theme's. display:contents
+                    keeps the wrapper out of the card's flex row and its gap. */}
+                <div className="contents [--background:#ffffff] [--foreground:#171717]">
+                  <SpeechBubble side="right" active={hoveredFounder === i} delay={0} className="-top-4 left-20 lg:left-24">
+                    {t.doodles.aboutBubbles[i]}
+                  </SpeechBubble>
+                </div>
+                <div className="shrink-0">
+                  <FounderAvatar figure={member.figure} active={isActive} className="w-24 lg:w-32" />
                 </div>
                 {/* The card is pinned white in both themes to keep the portrait
                     on its own paper, so its type is pinned to dark neutrals too. */}
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-neutral-900">{member.name}</p>
-                  <p className="mt-0.5 text-[10px] text-neutral-500">{member.role}</p>
-                  <p className="mt-2 text-[11px] leading-relaxed text-neutral-500">{ta.team[i].desc}</p>
+                  <p className="mt-0.5 text-[10px] text-neutral-600">{member.role}</p>
+                  <p className="mt-2 text-[11px] leading-relaxed text-neutral-600">{ta.team[i].desc}</p>
                   <a
                     href={member.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center gap-1.5 text-[10px] text-neutral-400 transition-colors duration-150 hover:text-neutral-700"
+                    className="mt-2 inline-flex min-h-11 items-center gap-1.5 text-xs text-neutral-600 transition-colors duration-150 hover:text-neutral-700"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -593,13 +447,13 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 
           {/* Principles */}
           <motion.div
-            {...fadeUp(0.32)}
+            {...fadeUp(0.32, reducedMotion)}
             className="grid grid-cols-1 gap-4 border-t border-foreground/[0.08] pt-5 sm:grid-cols-3 sm:gap-0"
           >
             {ta.principles.map((v) => (
               <div key={v.title} className="sm:border-l sm:border-foreground/[0.08] sm:px-5 sm:first:border-l-0 sm:first:pl-0">
                 <p className="text-xs font-semibold text-foreground">{v.title}</p>
-                <p className="mt-1 text-[10px] leading-relaxed text-foreground/40">{v.desc}</p>
+                <p className="mt-1 text-[10px] leading-relaxed text-foreground/65">{v.desc}</p>
               </div>
             ))}
           </motion.div>
@@ -612,76 +466,74 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 // ─── Global Reach ────────────────────────────────────────────
 export function GlobalReachSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.5, once: false })
+  const { isActive, reducedMotion, containerVariants, itemVariants } = useSectionReveal(ref)
   const { t } = useLang()
   const tr = t.reach
+  const [focused, setFocused] = useState<string | null>(null)
 
   return (
-    <section ref={ref} id="reach" className="sticky top-0 z-[35] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
+    <section ref={ref} id="reach" className="relative lg:sticky lg:top-0 z-[35] flex flex-col lg:h-screen rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-24 lg:pt-24" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tr.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>06</span>
+          <SectionEyebrow label={tr.label} active={isActive} />
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isActive ? 'text-foreground/65' : 'text-foreground/65'}`}>06</span>
         </div>
 
-        <div className="mt-6 grid flex-1 grid-cols-1 gap-6 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:grid-cols-2 lg:items-center lg:gap-10 lg:overflow-hidden lg:pb-0">
-          <motion.div {...fadeUp(0)}>
+        <div className="mt-6 grid flex-1 grid-cols-1 gap-6 overflow-visible lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-10 lg:overflow-visible">
+          <motion.div {...fadeUp(0, reducedMotion)} className="relative">
             <h2 className="text-3xl font-semibold leading-snug tracking-tight text-foreground lg:text-4xl">
-              {tr.headline1}<br /><span className="text-foreground/25">{tr.headline2}</span>
+              {tr.headline1}<br /><span className="text-foreground/65">{tr.headline2}</span>
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-foreground/40">{tr.subtext}</p>
+            <p className="mt-4 text-sm leading-relaxed text-foreground/65">{tr.subtext}</p>
 
             {/* Mobile globe — above the legend, decorative only */}
             <div className="my-6 flex justify-center lg:hidden" aria-hidden="true">
-              <div className="w-full max-w-[260px]">
-                <GlobeReach />
+              <div className="relative w-full max-w-[260px]">
+                <GlobeReach focus={focused} />
               </div>
             </div>
 
             <motion.div
-              className="mt-6 flex flex-col gap-2 lg:mt-8"
-              variants={staggerContainer}
-              initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
+              className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-8"
+              variants={containerVariants}
+              initial={reducedMotion ? false : 'hidden'}
+              animate={isActive ? 'visible' : 'hidden'}
             >
               {reachMeta.map((c, i) => {
                 const text = tr.countries[i]
+                const CountryMark = COUNTRY_DOODLES[c.id]
                 return (
-                  <motion.div
+                  <motion.button
                     key={c.id}
-                    variants={staggerItem}
-                    whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
-                    className="flex items-center gap-3 rounded-2xl border border-foreground/8 px-4 py-2.5"
+                    type="button"
+                    variants={itemVariants}
+                    aria-pressed={focused === c.id}
+                    onClick={() => setFocused(focused === c.id ? null : c.id)}
+                    // Alternating tilt so six sheets of paper do not read as a table.
+                    whileHover={reducedMotion ? undefined : { y: -3, rotate: i % 2 === 0 ? -1.2 : 1.2, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
+                    className="relative isolate flex items-center gap-3.5 px-4 py-3.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
                   >
-                    {c.isHQ || c.isLive ? (
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
-                    ) : (
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/20" />
-                    )}
+                    <PaperTileFrame active={isActive} className={`absolute inset-0 -z-10 h-full w-full transition-colors duration-300 ${focused === c.id ? 'text-foreground/60' : 'text-foreground/30'}`} />
+                    <CountryMark active={isActive} className="size-[72px] shrink-0 text-foreground" />
+                    {/* Status sits above the name: the sheet's folded corner eats the
+                        bottom right of every tile, and the Spanish label runs into it. */}
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-xs font-semibold text-foreground">{text.name}</p>
-                        {c.isHQ && (
-                          <span className="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-1.5 py-0.5 text-[9px] font-medium text-emerald-400/90">{tr.hq}</span>
-                        )}
-                        {c.isLive && (
-                          <span className="rounded-full border border-emerald-400/20 bg-emerald-400/5 px-1.5 py-0.5 text-[9px] font-medium text-emerald-400/90">{tr.liveProject}</span>
-                        )}
-                      </div>
-                      <p className="text-[10px] text-foreground/40">{text.city}</p>
+                      <span className={`flex items-center gap-1.5 text-[9px] uppercase tracking-[0.12em] transition-colors duration-300 ${focused === c.id ? 'text-foreground' : 'text-foreground/50'}`}>
+                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+                        {c.isHQ ? tr.hq : tr.liveProject}
+                      </span>
+                      <p className="mt-1 text-xs font-semibold leading-tight text-foreground">{text.name}</p>
+                      <p className="mt-0.5 text-[10px] text-foreground/65">{text.city}</p>
                     </div>
-                  </motion.div>
+                  </motion.button>
                 )
               })}
             </motion.div>
           </motion.div>
 
-          <motion.div {...fadeUp(0.1)} className="hidden items-center justify-center lg:flex" aria-hidden="true">
-            <div className="w-full max-w-[420px]">
-              <GlobeReach />
+          <motion.div {...fadeUp(0.1, reducedMotion)} className="relative hidden flex-col items-center justify-center lg:flex" aria-hidden="true">
+            <div className="relative w-full max-w-[420px]">
+              <GlobeReach focus={focused} />
             </div>
           </motion.div>
         </div>
@@ -695,52 +547,57 @@ const recentPosts = [...blogPosts].sort((a, b) => b.date.localeCompare(a.date)).
 
 export function InsightsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.4, once: false })
+  const { isActive, reducedMotion } = useSectionReveal(ref)
   const { lang, t } = useLang()
   const tb = t.blog
   const locale = lang === 'en' ? 'en-US' : 'es-SV'
 
   return (
-    <section ref={ref} id="blog" className="sticky top-0 z-40 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
+    <section ref={ref} id="blog" className="relative lg:sticky lg:top-0 z-40 flex flex-col lg:h-screen rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-24 lg:pt-24" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tb.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>07</span>
+          <SectionEyebrow label={tb.label} active={isActive} />
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isActive ? 'text-foreground/65' : 'text-foreground/65'}`}>07</span>
         </div>
 
-        <motion.h2 {...fadeUp(0.05)} className="mt-6 max-w-2xl text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-4xl">
+        <motion.h2 {...fadeUp(0.05, reducedMotion)} className="mt-6 max-w-2xl text-2xl font-semibold tracking-tight text-foreground lg:mt-10 lg:text-4xl">
           {tb.headline}
         </motion.h2>
-        <motion.p {...fadeUp(0.1)} className="mt-3 max-w-xl text-sm leading-relaxed text-foreground/40">
+        <motion.p {...fadeUp(0.1, reducedMotion)} className="mt-3 max-w-xl text-sm leading-relaxed text-foreground/65">
           {tb.subtext}
         </motion.p>
 
-        <div className="mt-6 grid grid-cols-1 gap-3 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:mt-10 lg:grid-cols-3 lg:gap-4 lg:overflow-hidden lg:pb-0">
+        <div className="mt-6 grid grid-cols-1 gap-3 overflow-visible lg:mt-10 lg:grid-cols-3 lg:gap-4 lg:overflow-visible">
           {recentPosts.map((post, i) => {
             const title = lang === 'en' && post.en ? post.en.title : post.title
             const description = lang === 'en' && post.en ? post.en.description : post.description
+            const ArticleDoodle = INSIGHT_DOODLES[i]
             const category = lang === 'en' && post.en ? post.en.category : post.category
 
             return (
-              <motion.div key={post.slug} {...fadeUp(0.15 + i * 0.07)} {...LIFT}>
+              <motion.div key={post.slug} {...fadeUp(0.15 + i * 0.07, reducedMotion)} {...LIFT}>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="group flex h-full flex-col rounded-2xl border border-foreground/8 p-5 transition-colors duration-200 hover:border-foreground/16"
+                  className="group flex h-full flex-col rounded-2xl border border-foreground/15 p-5 transition-colors duration-200 hover:border-foreground/40"
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full border border-foreground/10 px-2.5 py-0.5 text-[10px] text-foreground/40">{category}</span>
-                    <span className="text-[10px] text-foreground/25">{post.readTime} {tb.readTime}</span>
+                  <div className="relative mb-4 flex h-40 items-center justify-center border-b border-foreground/10 pb-4">
+                    <ArticleDoodle active={isActive} className="h-full w-full text-foreground motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:-rotate-2" />
+                    <span className="absolute right-0 top-0 font-mono text-xs text-foreground/65">0{i + 1}</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full border border-foreground/10 px-2.5 py-0.5 text-[10px] text-foreground/65">{category}</span>
+                    <span className="text-[10px] text-foreground/65">{post.readTime} {tb.readTime}</span>
                   </div>
                   <h3 className="mt-3 text-sm font-semibold leading-snug tracking-tight text-foreground">{title}</h3>
-                  <p className="mt-2 flex-1 text-[11px] leading-relaxed text-foreground/40">{description}</p>
+                  <p className="mt-2 flex-1 text-[11px] leading-relaxed text-foreground/65">{description}</p>
                   <div className="mt-4 flex items-center justify-between border-t border-foreground/[0.08] pt-3">
-                    <span className="text-[10px] text-foreground/25">
+                    <span className="text-[10px] text-foreground/65">
                       {new Date(post.date + 'T00:00:00').toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
-                    <span className="text-[10px] text-foreground/40 transition-colors duration-150 group-hover:text-foreground">{tb.readArticle}</span>
+                    <span className="flex items-center gap-1 text-[10px] text-foreground/65 transition-colors duration-150 group-hover:text-foreground">
+                      <SparkleDoodle className="h-3 w-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                      {tb.readArticle}
+                    </span>
                   </div>
                 </Link>
               </motion.div>
@@ -748,10 +605,10 @@ export function InsightsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           })}
         </div>
 
-        <motion.div {...fadeUp(0.36)} className="mt-5 lg:mb-16">
+        <motion.div {...fadeUp(0.36, reducedMotion)} className="mt-5">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 text-xs text-foreground/40 transition-colors duration-150 hover:text-foreground"
+            className="inline-flex items-center gap-1.5 text-xs text-foreground/65 transition-colors duration-150 hover:text-foreground"
           >
             {tb.moreArticles}
             <ArrowUpRight className="h-3 w-3" />
@@ -763,193 +620,77 @@ export function InsightsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 }
 
 // ─── Process ─────────────────────────────────────────────────
-const stepNums = ['01', '02', '03', '04', '05']
+const stepNums = ['01', '02', '03', '04', '05'] as const
 
 export function ProcessSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.4, once: false })
-  const { t } = useLang()
+  const { isActive, reducedMotion, containerVariants, itemVariants } = useSectionReveal(ref)
+  const { t, lang } = useLang()
   const tp = t.process
+  const outputs = lang === 'es'
+    ? ['Objetivos y alcance definidos', 'Prototipo y sistema visual', 'Producto funcional e integraciones', 'Producto publicado y monitoreado', 'Iteraciones y nuevas funcionalidades']
+    : ['Clear goals and project scope', 'Prototype and visual system', 'Working product and integrations', 'Live product and monitoring', 'Iterations and new features']
 
   return (
-    <section ref={ref} id="process" className="sticky top-0 z-50 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-24 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
-        <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tp.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>08</span>
-        </div>
-
-        {/* Mobile: icon-led list */}
-        <motion.div
-          className="mt-5 flex flex-col gap-2.5 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:hidden"
-          style={{ scrollbarWidth: 'none' }}
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          {tp.steps.map((s, i) => {
-            const num = stepNums[i]
-            const Icon = stepIcons[num]
+    <section ref={ref} id="process" className="relative z-50 flex flex-col rounded-t-[2rem] border-t border-foreground/15 bg-background lg:sticky lg:top-0 lg:h-screen">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-8 lg:pt-24" style={blurStyle}>
+        <div className="flex items-center justify-between border-b border-foreground/15 pb-4"><SectionEyebrow label={tp.label} active={isActive} /><span className="font-mono text-xs text-foreground/65">08</span></div>
+        <div className="my-4 flex items-end justify-between gap-5"><h2 className="text-3xl font-semibold tracking-tight lg:text-4xl">{lang === 'es' ? 'Una idea. Cinco pasos claros.' : 'One idea. Five clear steps.'}</h2><p className="hidden max-w-44 text-right text-xs leading-relaxed text-foreground/65 sm:block">{lang === 'es' ? 'Sabes qué sigue, desde el primer día.' : 'Know what comes next, from day one.'}</p></div>
+        <motion.div className="grid min-h-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6 lg:grid-rows-2" variants={containerVariants} initial={reducedMotion ? false : 'hidden'} animate={isActive ? 'visible' : 'hidden'}>
+          {tp.steps.map((step, i) => {
+            const Doodle = PROCESS_DOODLES[stepNums[i]]
             return (
-              <motion.div
-                key={num}
-                variants={staggerItem}
-                whileHover={{ x: 4, transition: { type: 'spring', stiffness: 300, damping: 25 } }}
-                className="flex gap-3 rounded-2xl border border-foreground/8 bg-foreground/4 p-4"
-              >
-                <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-foreground/8 bg-foreground/4">
-                  <Icon className="size-4 text-foreground/55" />
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-baseline gap-2">
-                    <h3 className="text-sm font-semibold text-foreground">{s.title}</h3>
-                    <span className="text-[10px] text-foreground/25">{num}</span>
-                  </div>
-                  <p className="mt-1 text-[12px] leading-relaxed text-foreground/50">{tp.stepsListDesc[i]}</p>
-                </div>
-              </motion.div>
+              <motion.article key={step.title} variants={itemVariants} className={`group flex min-h-0 flex-col rounded-2xl border border-foreground/15 p-5 transition-colors hover:border-foreground/40 ${i < 3 ? 'lg:col-span-2' : 'lg:col-span-3'} ${i === 4 ? 'bg-foreground/[0.03]' : ''}`}>
+                <div><span className="font-mono text-[11px] text-foreground/65">/{stepNums[i]}</span><h3 className="mt-1 text-xl font-semibold tracking-tight">{step.title}</h3></div>
+                <Doodle active={isActive} className="my-3 min-h-20 w-full flex-1 text-foreground motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:-rotate-2" />
+                <p className="text-xs leading-relaxed text-foreground/75">{tp.stepsListDesc[i]}</p>
+                <div className="mt-3 flex items-center gap-2 border-t border-foreground/10 pt-3 text-[11px] font-medium"><CheckScribble active={isActive} className="h-3 w-3 shrink-0" />{outputs[i]}</div>
+              </motion.article>
             )
           })}
-        </motion.div>
-
-        {/* Desktop: bento grid */}
-        <motion.div
-          className="mt-6 hidden flex-1 grid-cols-2 gap-2 overflow-hidden lg:grid lg:grid-cols-3 lg:grid-rows-3"
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          {/* 01 Discovery — cols 1-2 row 1 */}
-          <motion.div
-            variants={staggerItem}
-            className="col-span-2 group flex min-h-[6rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:flex-row lg:min-h-0 lg:col-start-1 lg:col-end-3 lg:row-start-1"
-          >
-            <div className="flex flex-1 flex-col justify-between p-4 lg:p-5 lg:w-1/2 lg:flex-none">
-              <span className="text-[10px] font-medium text-foreground/30">01</span>
-              <div>
-                <h3 className="mb-1 text-sm font-semibold text-foreground">{tp.steps[0].title}</h3>
-                <p className="text-xs leading-relaxed text-foreground/50">{tp.steps[0].desc}</p>
-                {tp.steps[0].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[0].extra}</p>}
-              </div>
-            </div>
-            <div className="relative h-24 overflow-hidden lg:h-auto lg:w-1/2">
-              <Image fill src="/discovery.png" alt="Discovery"
-                sizes="(max-width: 1024px) 100vw, 66vw"
-                className="object-contain p-4 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
-            </div>
-          </motion.div>
-
-          {/* 02 Design — col 3 rows 1-2 */}
-          <motion.div
-            variants={staggerItem}
-            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:min-h-0 lg:col-start-3 lg:row-start-1 lg:row-end-3"
-          >
-            <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[4]">
-              <Image fill src="/ux.png" alt="Design"
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
-            </div>
-            <div className="flex flex-col justify-end p-4 lg:flex-[2]">
-              <span className="text-[10px] font-medium text-foreground/30">02</span>
-              <h3 className="mt-1 text-sm font-semibold text-foreground">{tp.steps[1].title}</h3>
-              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">{tp.steps[1].desc}</p>
-              {tp.steps[1].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[1].extra}</p>}
-            </div>
-          </motion.div>
-
-          {/* 03 Build — col 2 row 2 */}
-          <motion.div
-            variants={staggerItem}
-            className="group flex min-h-[10rem] flex-col overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:min-h-0 lg:col-start-2 lg:row-start-2"
-          >
-            <div className="relative h-28 overflow-hidden lg:h-auto lg:min-h-0 lg:flex-[3]">
-              <Image fill src="/build.png" alt="Build"
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="object-contain p-2 invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.05]" />
-            </div>
-            <div className="flex flex-col justify-end p-4">
-              <span className="text-[10px] font-medium text-foreground/30">03</span>
-              <h3 className="mt-1 text-sm font-semibold text-foreground">{tp.steps[2].title}</h3>
-              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">{tp.steps[2].desc}</p>
-            </div>
-          </motion.div>
-
-          {/* 04 Launch — col 1 rows 2-3 */}
-          <motion.div
-            variants={staggerItem}
-            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:mb-14 lg:min-h-0 lg:flex-col lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-4"
-          >
-            <div className="relative w-2/5 overflow-hidden lg:w-auto lg:min-h-0 lg:flex-[4]">
-              <Image fill src="/launch.png" alt="Launch"
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="object-contain p-2 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
-            </div>
-            <div className="flex flex-1 flex-col justify-center p-4 lg:flex-[2] lg:justify-end">
-              <span className="text-[10px] font-medium text-foreground/30">04</span>
-              <h3 className="mt-1 text-sm font-semibold text-foreground">{tp.steps[3].title}</h3>
-              <p className="mt-0.5 text-xs leading-relaxed text-foreground/50">{tp.steps[3].desc}</p>
-              {tp.steps[3].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[3].extra}</p>}
-            </div>
-          </motion.div>
-
-          {/* 05 Scale — cols 2-3 row 3 */}
-          <motion.div
-            variants={staggerItem}
-            className="col-span-2 group flex min-h-[6rem] flex-row overflow-hidden rounded-2xl border border-foreground/8 dark:bg-black transition-colors duration-300 hover:border-foreground/16 lg:mb-14 lg:min-h-0 lg:col-start-2 lg:col-end-4 lg:row-start-3"
-          >
-            <div className="relative w-2/5 overflow-hidden lg:h-auto lg:w-2/5">
-              <Image fill src="/scale.png" alt="Scale"
-                sizes="(max-width: 1024px) 100vw, 66vw"
-                className="object-contain p-0 scale-[1.2] translate-y-[8%] invert dark:invert-0 transition-transform duration-700 group-hover:scale-[1.25] group-hover:translate-y-[8%]" />
-            </div>
-            <div className="flex flex-1 flex-col justify-center p-4 lg:justify-between lg:w-3/5">
-              <span className="text-[10px] font-medium text-foreground/30">05</span>
-              <div>
-                <h3 className="mb-1 text-sm font-semibold text-foreground">{tp.steps[4].title}</h3>
-                <p className="text-xs leading-relaxed text-foreground/50">{tp.steps[4].desc}</p>
-                {tp.steps[4].extra && <p className="mt-2 hidden line-clamp-2 text-xs leading-relaxed text-foreground/35 lg:block">{tp.steps[4].extra}</p>}
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
       </motion.div>
     </section>
   )
 }
 
-// ─── FAQ ─────────────────────────────────────────────────────
 export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.4, once: false })
-  const [open, setOpen] = useState<number | null>(null)
+  const isInView = useInView(ref, { amount: 0.12, once: true })
+  const [open, setOpen] = useState<number | null>(0)
   const { t } = useLang()
   const lenis = useLenis()
   const tf = t.faq
 
   return (
-    <section ref={ref} id="faq" className="sticky top-0 z-60 flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-10 lg:pb-10 lg:pt-24 lg:px-8" style={blurStyle}>
+    <section ref={ref} id="faq" className="relative lg:sticky lg:top-0 z-60 flex flex-col lg:h-screen rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-24 lg:pt-24" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tf.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>09</span>
+          <SectionEyebrow label={tf.label} active={isInView} />
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/65' : 'text-foreground/65'}`}>09</span>
         </div>
 
-        <div className="mt-6 grid flex-1 grid-cols-1 gap-4 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden lg:gap-12 lg:overflow-hidden lg:pb-0 lg:mb-24 lg:grid-cols-2">
+        <div className="mt-6 grid min-h-0 flex-1 grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div {...fadeUp(0)} className="flex flex-col justify-between">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-foreground lg:text-6xl">
                 {tf.headline1}<br />{tf.headline2}<br />
-                <span className="text-foreground/25">{tf.headline3}</span>
+                <span className="text-foreground/65">{tf.headline3}</span>
               </h2>
-              <p className="mt-3 max-w-xs text-sm leading-relaxed text-foreground/40 lg:mt-5">
+              <p className="mt-3 max-w-xs text-sm leading-relaxed text-foreground/65 lg:mt-5">
                 {tf.subtext}
               </p>
+              {/* The assistant alone: the founder portraits are ink on white and go
+                  invisible on this page's black ground. */}
+              <div className="mt-10 flex items-end gap-5">
+                <div className="relative">
+                  <NumenBot active={isInView} className="w-28 text-foreground" />
+                  <SpeechBubble side="right" active={isInView} delay={0.5} className="-top-3 left-[80%]">
+                    {t.doodles.faqBubble}
+                  </SpeechBubble>
+                </div>
+                <QuestionMarkDoodle active={isInView} className="mb-4 w-10 text-foreground/65" />
+              </div>
             </div>
             <Link
               href={SECTION_HREFS.contact}
@@ -962,7 +703,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           </motion.div>
 
           <motion.div
-            className="overflow-y-auto [&::-webkit-scrollbar]:hidden"
+            className="min-h-0 lg:overflow-y-auto"
             style={{ scrollbarWidth: 'none' }}
             variants={staggerContainer}
             initial="hidden"
@@ -972,25 +713,31 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               <motion.div key={i} variants={staggerItem} className="border-b border-foreground/[0.06]">
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between py-3.5 text-left"
+                  id={`faq-trigger-${i}`}
+                  aria-expanded={open === i}
+                  aria-controls={`faq-panel-${i}`}
+                  className="flex min-h-14 w-full items-center justify-between gap-3 py-4 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
                   onClick={() => setOpen(open === i ? null : i)}
                 >
                   <span className="pr-4 text-sm font-medium text-foreground">{faq.q}</span>
                   <Plus
                     size={14}
-                    className={`shrink-0 text-foreground/30 transition-transform duration-300 ${open === i ? 'rotate-45' : ''}`}
+                    className={`shrink-0 text-foreground/65 transition-transform duration-300 ${open === i ? 'rotate-45' : ''}`}
                   />
                 </button>
                 <AnimatePresence initial={false}>
                   {open === i && (
                     <motion.div
+                      id={`faq-panel-${i}`}
+                      role="region"
+                      aria-labelledby={`faq-trigger-${i}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.25, ease: EASE }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-4 text-xs leading-relaxed text-foreground/45">{faq.a}</p>
+                      <p className="pb-4 text-xs leading-relaxed text-foreground/65">{faq.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -1006,7 +753,7 @@ export function FAQSection({ blurStyle }: { blurStyle?: BlurStyle }) {
 // ─── Contact Form + Footer ───────────────────────────────────
 export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}) {
   const ref = useRef<HTMLElement>(null)
-  const isInView = useInView(ref, { amount: 0.3, once: false })
+  const isInView = useInView(ref, { amount: 0.12, once: true })
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -1029,11 +776,12 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
     { label: tc.infoLabels.availability, value: tc.infoValues.availability },
   ]
 
-  const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }))
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (status === 'loading') return
     setStatus('loading')
     try {
       const res = await fetch('/api/contact', {
@@ -1049,24 +797,21 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
   }
 
   return (
-    <section ref={ref} id="contact" className="sticky top-0 z-[70] flex h-screen flex-col rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
-      <motion.div className="mx-auto flex h-full w-full max-w-5xl flex-col px-6 pt-20 pb-0 lg:pt-24 lg:px-8" style={blurStyle}>
+    <section ref={ref} id="contact" className="relative lg:sticky lg:top-0 z-[70] flex flex-col lg:h-screen rounded-t-[2rem] border-t border-foreground/[0.08] bg-background">
+      <motion.div className="mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 pb-16 pt-16 lg:px-8 lg:pb-24 lg:pt-24" style={blurStyle}>
         <div className="flex items-center justify-between border-b border-foreground/[0.08] pb-4 lg:pb-6">
-          <div className="flex items-center gap-2">
-            <motion.div animate={{ scaleX: isInView ? 1 : 0 }} transition={{ duration: 0.45, ease: EASE }} style={{ originX: 0 }} className="h-px w-4 bg-foreground/40" />
-            <span className={`text-[10px] uppercase tracking-[0.16em] transition-colors duration-500 lg:text-xs lg:tracking-widest ${isInView ? 'text-foreground/60' : 'text-foreground/30'}`}>{tc.label}</span>
-          </div>
-          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/40' : 'text-foreground/20'}`}>10</span>
+          <SectionEyebrow label={tc.label} active={isInView} />
+          <span className={`text-[10px] transition-colors duration-500 lg:text-xs ${isInView ? 'text-foreground/65' : 'text-foreground/65'}`}>10</span>
         </div>
 
-        <div className="mt-6 grid flex-1 grid-cols-1 gap-8 overflow-hidden lg:grid-cols-2">
-          <div className="hidden flex-col gap-8 lg:flex">
+        <div className="mt-6 grid min-h-0 flex-1 grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="hidden min-h-0 flex-col gap-5 lg:flex">
             <motion.div {...fadeUp(0.05)}>
               <h2 className="text-3xl font-semibold tracking-tight text-foreground lg:text-4xl">
                 {tc.headline1}<br />
-                <span className="text-foreground/25">{tc.headline2}</span>
+                <span className="text-foreground/65">{tc.headline2}</span>
               </h2>
-              <p className="mt-4 text-sm leading-relaxed text-foreground/40">{tc.subtext}</p>
+              <p className="mt-4 text-sm leading-relaxed text-foreground/65">{tc.subtext}</p>
             </motion.div>
 
             <motion.div
@@ -1082,28 +827,32 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-4 rounded-2xl border border-foreground/8 px-5 py-4 transition-colors duration-200 hover:border-foreground/20"
+                      className="group flex items-center gap-3 rounded-2xl border border-foreground/15 px-4 py-3 transition-colors duration-200 hover:border-foreground/20"
                     >
-                      <span className="w-24 shrink-0 text-xs text-foreground/30">{item.label}</span>
+                      <span className="w-24 shrink-0 text-xs text-foreground/65">{item.label}</span>
                       <span className="flex-1 text-sm text-foreground/60 transition-colors duration-200 group-hover:text-foreground/80">{item.value}</span>
-                      <ArrowUpRight className="size-3.5 shrink-0 text-foreground/20 transition-colors duration-200 group-hover:text-foreground/60" />
+                      <ArrowUpRight className="size-3.5 shrink-0 text-foreground/65 transition-colors duration-200 group-hover:text-foreground/60" />
                     </a>
                   ) : (
-                    <div className="flex items-center gap-4 rounded-2xl border border-foreground/8 px-5 py-4">
-                      <span className="w-24 shrink-0 text-xs text-foreground/30">{item.label}</span>
+                    <div className="flex items-center gap-3 rounded-2xl border border-foreground/15 px-4 py-3">
+                      <span className="w-24 shrink-0 text-xs text-foreground/65">{item.label}</span>
                       <span className="text-sm text-foreground/60">{item.value}</span>
                     </div>
                   )}
                 </motion.div>
               ))}
             </motion.div>
+            {/* Julian sends the message off toward the form on the right. */}
+            <div className="mt-auto flex min-h-0 items-end gap-4 pt-2">
+              <PaperPlaneDoodle active={isInView} className="mb-6 w-40 scale-x-[-1] text-foreground" />
+            </div>
           </div>
 
           <motion.div {...fadeUp(0.05)} className="flex min-h-0 flex-col">
             <div className="mb-4 lg:hidden">
               <h2 className="text-2xl font-semibold tracking-tight text-foreground">
                 {tc.headline1}<br />
-                <span className="text-foreground/25">{tc.headline2}</span>
+                <span className="text-foreground/65">{tc.headline2}</span>
               </h2>
               <div className="mt-3 flex flex-wrap gap-2">
                 {infoItems.map((item) =>
@@ -1113,7 +862,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 rounded-full border border-foreground/10 px-3 py-1.5 text-[11px] text-foreground/50 transition-colors hover:border-foreground/20 hover:text-foreground/70"
+                      className="flex items-center gap-1.5 rounded-full border border-foreground/10 px-3 py-1.5 text-[11px] text-foreground/65 transition-colors hover:border-foreground/20 hover:text-foreground/70"
                     >
                       {item.label === 'Email'
                         ? <Mail className="h-3 w-3 shrink-0" />
@@ -1123,9 +872,9 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                   ) : (
                     <div
                       key={item.label}
-                      className="flex items-center gap-1.5 rounded-full border border-foreground/10 px-3 py-1.5 text-[11px] text-foreground/50"
+                      className="flex items-center gap-1.5 rounded-full border border-foreground/10 px-3 py-1.5 text-[11px] text-foreground/65"
                     >
-                      <span className="text-foreground/30">{item.label}:</span>
+                      <span className="text-foreground/65">{item.label}:</span>
                       <span>{item.value}</span>
                     </div>
                   )
@@ -1133,18 +882,26 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
               </div>
             </div>
             {status === 'sent' ? (
-              <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-8 text-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground">
-                  ✓
-                </div>
+              <div role="status" aria-live="polite" className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-foreground/[0.08] p-8 text-center">
+                <CheckScribble active className="h-16 w-16 text-foreground" />
                 <h3 className="mt-4 text-lg font-semibold text-foreground">{tc.successTitle}</h3>
-                <p className="mt-2 text-sm text-foreground/40">{tc.successDesc}</p>
+                <p className="mt-2 text-sm text-foreground/65">{tc.successDesc}</p>
+                {/* Ink on white, so it needs its paper to survive the dark panel. */}
+                <div className="mt-6 w-24 rounded-[1.25rem_0.5rem_1.25rem_0.5rem] border border-black/10 bg-white px-2 pt-2">
+                  <FounderSticker
+                    figure="julian"
+                    active
+                    bubble={t.doodles.contactSuccessBubble}
+                    bubbleSide="left"
+                    size="w-full"
+                  />
+                </div>
               </div>
             ) : (
               <form
                 onSubmit={submit}
-                className="min-h-0 space-y-2.5 overflow-y-auto pb-4 pr-1 [&::-webkit-scrollbar]:hidden"
-                style={{ scrollbarWidth: 'none' }}
+                aria-busy={status === 'loading'}
+                className="min-h-0 space-y-3 lg:overflow-y-auto lg:pr-2"
               >
                 {/* Honeypot — invisible to users, bots fill it and get silently rejected */}
                 <input
@@ -1159,11 +916,13 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 />
                 <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="name" className="text-xs text-foreground/30">{tc.nameLabel}</label>
+                    <label htmlFor="name" className="text-xs text-foreground/65">{tc.nameLabel}</label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/65 pointer-events-none" />
                       <input
                         id="name"
+                        autoComplete="name"
+                        maxLength={100}
                         name="name"
                         required
                         value={form.name}
@@ -1174,11 +933,13 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="email" className="text-xs text-foreground/30">{tc.emailLabel}</label>
+                    <label htmlFor="email" className="text-xs text-foreground/65">{tc.emailLabel}</label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/65 pointer-events-none" />
                       <input
                         id="email"
+                        autoComplete="email"
+                        maxLength={254}
                         name="email"
                         type="email"
                         required
@@ -1193,11 +954,13 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
 
                 <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="company" className="text-xs text-foreground/30">{tc.companyLabel}</label>
+                    <label htmlFor="company" className="text-xs text-foreground/65">{tc.companyLabel}</label>
                     <div className="relative">
-                      <Building2 className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <Building2 className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/65" />
                       <input
                         id="company"
+                        autoComplete="organization"
+                        maxLength={120}
                         name="company"
                         value={form.company}
                         onChange={handle}
@@ -1207,11 +970,13 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="phone" className="text-xs text-foreground/30">{tc.phoneLabel}</label>
+                    <label htmlFor="phone" className="text-xs text-foreground/65">{tc.phoneLabel}</label>
                     <div className="relative">
-                      <Phone className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <Phone className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/65" />
                       <input
                         id="phone"
+                        autoComplete="tel"
+                        maxLength={40}
                         name="phone"
                         type="tel"
                         value={form.phone}
@@ -1225,11 +990,13 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
 
                 <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="location" className="text-xs text-foreground/30">{tc.locationLabel}</label>
+                    <label htmlFor="location" className="text-xs text-foreground/65">{tc.locationLabel}</label>
                     <div className="relative">
-                      <MapPin className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
+                      <MapPin className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/65" />
                       <input
                         id="location"
+                        autoComplete="country-name"
+                        maxLength={120}
                         name="location"
                         required
                         value={form.location}
@@ -1240,57 +1007,48 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="category" className="text-xs text-foreground/30">{tc.categoryLabel}</label>
+                    <label htmlFor="category" className="text-xs text-foreground/65">{tc.categoryLabel}</label>
                     <div className="relative">
-                      <Tags className="pointer-events-none absolute left-4 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-foreground/20" />
-                      <SelectCustom
-                        id="category"
-                        name="category"
-                        value={form.category}
-                        onChange={(v) => setForm((p) => ({ ...p, category: v }))}
-                        options={tc.categoryOptions}
-                        placeholder={tc.categoryPlaceholder}
-                        icon={Tags}
-                      />
+                      <Tags className="pointer-events-none absolute left-4 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-foreground/65" />
+                      <select id="category" name="category" required value={form.category} onChange={handle} className={`${INPUT} pl-10 pr-8`}>
+                        <option value="" disabled>{tc.categoryPlaceholder}</option>
+                        {tc.categoryOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                      </select>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label htmlFor="budget" className="text-xs text-foreground/30">{tc.budgetLabel}</label>
+                  <label htmlFor="budget" className="text-xs text-foreground/65">{tc.budgetLabel}</label>
                   <div className="relative">
-                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/20 pointer-events-none z-10" />
-                    <SelectCustom
-                      id="budget"
-                      name="budget"
-                      value={form.budget}
-                      onChange={(v) => setForm((p) => ({ ...p, budget: v }))}
-                      options={tc.budgetOptions}
-                      placeholder={tc.budgetPlaceholder}
-                      icon={DollarSign}
-                    />
+                    <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-foreground/65 pointer-events-none z-10" />
+                    <select id="budget" name="budget" value={form.budget} onChange={handle} className={`${INPUT} pl-10 pr-8`}>
+                      <option value="">{tc.budgetPlaceholder}</option>
+                      {tc.budgetOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    </select>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label htmlFor="message" className="text-xs text-foreground/30">{tc.messageLabel}</label>
+                  <label htmlFor="message" className="text-xs text-foreground/65">{tc.messageLabel}</label>
                   <div className="relative">
-                    <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-foreground/20 pointer-events-none" />
+                    <MessageSquare className="absolute left-4 top-3.5 h-3.5 w-3.5 text-foreground/65 pointer-events-none" />
                     <textarea
                       id="message"
                       name="message"
                       required
-                      rows={2}
+                      rows={3}
+                      maxLength={2000}
                       value={form.message}
                       onChange={handle}
                       placeholder={tc.messagePlaceholder}
-                      className={`${INPUT} resize-none pl-10`}
+                      className={`${INPUT} resize-y pl-10`}
                     />
                   </div>
                 </div>
 
                 {status === 'error' && (
-                  <p className="text-center text-xs text-red-400/70">{tc.errorMsg}</p>
+                  <p role="alert" className="rounded-lg border border-red-500/30 p-3 text-center text-xs text-red-600 dark:text-red-300">{tc.errorMsg}</p>
                 )}
                 <Button
                   type="submit"
@@ -1303,7 +1061,7 @@ export function ContactFormSection({ blurStyle }: { blurStyle?: BlurStyle } = {}
                 </Button>
                 <Link
                   href="/blog"
-                  className="block text-center text-xs text-foreground/25 transition-colors hover:text-foreground/50"
+                  className="block text-center text-xs text-foreground/65 transition-colors hover:text-foreground/65"
                 >
                   {tc.blogCta}
                 </Link>
@@ -1321,14 +1079,17 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-foreground/[0.08] bg-background">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-6 lg:px-8">
-        <span className="text-xs text-foreground/20">© {new Date().getFullYear()} Numen Agency. {t.contact.footer}</span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-foreground/65">© {new Date().getFullYear()} Numen Agency. {t.contact.footer}</span>
+        </div>
         <nav aria-label="Footer" className="flex items-center gap-5">
+          <NumenMark className="hidden h-6 w-6 text-foreground/65 transition-colors hover:text-foreground md:inline-block" />
           <a
             href={SOCIAL_LINKS.instagram}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className="text-foreground/30 transition-colors hover:text-foreground/70"
+            className="text-foreground/65 transition-colors hover:text-foreground/70"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="size-4">
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
@@ -1339,7 +1100,7 @@ export function SiteFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
-            className="text-foreground/30 transition-colors hover:text-foreground/70"
+            className="text-foreground/65 transition-colors hover:text-foreground/70"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="size-4">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -1347,19 +1108,19 @@ export function SiteFooter() {
           </a>
           <Link
             href="/"
-            className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
+            className="text-xs text-foreground/65 transition-colors hover:text-foreground/70"
           >
             {t.nav.home}
           </Link>
           <Link
             href="/projects"
-            className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
+            className="text-xs text-foreground/65 transition-colors hover:text-foreground/70"
           >
             {t.nav.projectsLink}
           </Link>
           <Link
             href="/blog"
-            className="text-xs text-foreground/30 transition-colors hover:text-foreground/70"
+            className="text-xs text-foreground/65 transition-colors hover:text-foreground/70"
           >
             {t.blog.label}
           </Link>

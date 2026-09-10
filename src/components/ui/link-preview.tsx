@@ -3,7 +3,7 @@
 // Bringing in the essentials: Radix for the hover card, qss for URL params, React, Framer Motion for animations, and our utility function.
 import { HoverCard as RdxHoverCard } from "radix-ui";
 import { encode } from "qss";
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
     AnimatePresence,
     motion,
@@ -18,7 +18,6 @@ function usePreviewSource(
     url: string,
     width: number,
     height: number,
-    quality: number, // Microlink might ignore this for screenshots, but it's here if needed.
     isStatic: boolean,
     staticImageSrc?: string
 ) {
@@ -39,7 +38,7 @@ function usePreviewSource(
             "viewport.height": height * 2.5,
         });
         return `https://api.microlink.io/?${params}`;
-    }, [isStatic, staticImageSrc, url, width, height, quality]); // Recalculate only if these change.
+    }, [isStatic, staticImageSrc, url, width, height]);
 }
 
 // This hook handles the hover card's open state and the subtle mouse-following effect for the card itself.
@@ -100,7 +99,6 @@ export const HoverPeek = ({
     className,
     peekWidth = 200,
     peekHeight = 125,
-    imageQuality = 50,
     isStatic = false,
     imageSrc = "",
     enableMouseFollow = true,
@@ -110,11 +108,12 @@ export const HoverPeek = ({
 }: HoverPeekProps) => {
 
     // State to track if the preview image failed to load.
-    const [imageLoadFailed, setImageLoadFailed] = useState(false);
+    const [failedImageSrc, setFailedImageSrc] = useState<string | null>(null);
     // Get the actual image URL using our custom hook.
     const finalImageSrc = usePreviewSource(
-        url, peekWidth, peekHeight, imageQuality, isStatic, imageSrc
+        url, peekWidth, peekHeight, isStatic, imageSrc
     );
+    const imageLoadFailed = failedImageSrc === finalImageSrc;
     // Get card visibility state and mouse follow handlers from our other hook.
     const { isPeeking, handleOpenChange, handlePointerMove, followX } = useHoverState(enableMouseFollow);
 
@@ -122,16 +121,13 @@ export const HoverPeek = ({
     const [isHoveringLens, setIsHoveringLens] = useState(false); // Is the mouse currently over the preview image area?
     const [lensMousePosition, setLensMousePosition] = useState({ x: 0, y: 0 }); // Mouse coords relative to the image.
 
-    // Little cleanup effects: Reset error if source changes, and reset everything if card closes.
-    useEffect(() => {
-        setImageLoadFailed(false);
-    }, [finalImageSrc]);
-    useEffect(() => {
-        if (!isPeeking) {
-            setImageLoadFailed(false);
-            setIsHoveringLens(false); // Important to reset lens state when card hides.
+    const onOpenChange = (open: boolean) => {
+        handleOpenChange(open);
+        if (!open) {
+            setFailedImageSrc(null);
+            setIsHoveringLens(false);
         }
-    }, [isPeeking]);
+    };
 
     // Handlers for mouse events *within* the preview image area to control the lens.
     const handleLensMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -168,10 +164,13 @@ export const HoverPeek = ({
 
     // Prepare the trigger element. We use React.cloneElement to pass down props (like className and mouse handlers)
     // correctly, especially when the child might already have its own className.
-    const triggerChild = React.isValidElement(children)
-        ? React.cloneElement(children as React.ReactElement<any>, {
-            className: cn((children.props as any).className, className), // Merge classes nicely.
-            onPointerMove: handlePointerMove, // Attach the card's follow handler.
+    const triggerChild = React.isValidElement<React.HTMLAttributes<HTMLElement>>(children)
+        ? React.cloneElement(children, {
+            className: cn(children.props.className, className),
+            onPointerMove: (event: React.PointerEvent<HTMLElement>) => {
+                children.props.onPointerMove?.(event);
+                handlePointerMove(event);
+            },
         })
         : <span className={className} onPointerMove={handlePointerMove}>{children}</span>; // Fallback if children isn't a valid element.
 
@@ -181,7 +180,7 @@ export const HoverPeek = ({
         <RdxHoverCard.Root
             openDelay={75} // How long to wait before showing the card.
             closeDelay={150} // How long to wait before hiding after mouse leaves.
-            onOpenChange={handleOpenChange} // Connects Radix state to our hook.
+            onOpenChange={onOpenChange}
         >
             {/* The element the user actually hovers over. 'asChild' merges props onto our prepared triggerChild. */}
             <RdxHoverCard.Trigger asChild>
@@ -193,7 +192,7 @@ export const HoverPeek = ({
                 {/* The content container for the card. */}
                 <RdxHoverCard.Content
                     // We need perspective for the 3D rotation effect to look right. Origin set to center for the flip.
-                    className="[perspective:800px] [--radix-hover-card-content-transform-origin:center_center] z-50"
+                    className="[perspective:800px] [--radix-hover-card-content-transform-origin:center_center] z-[110]"
                     side="top" // Position card above the trigger.
                     align="center" // Align center horizontally.
                     sideOffset={12} // A little gap between trigger and card.
@@ -250,7 +249,7 @@ export const HoverPeek = ({
                                             // align-top helps prevent tiny gaps sometimes seen below images. pointer-events-none ensures clicks go to the link.
                                             className="block rounded-[5px] pointer-events-none bg-neutral-50 dark:bg-neutral-800 align-top"
                                             alt={`Link preview for ${url}`}
-                                            onError={() => setImageLoadFailed(true)} // Uh oh, image didn't load.
+                                            onError={() => setFailedImageSrc(finalImageSrc)}
                                             loading="lazy" // Let the browser optimize loading.
                                         />
                                     )}

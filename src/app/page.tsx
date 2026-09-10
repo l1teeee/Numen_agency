@@ -158,8 +158,10 @@ export default function Home() {
       />
       <div className="bg-background">
         <Navbar />
-        <HeroSection />
-        <StickyStack />
+        <main id="main-content" tabIndex={-1}>
+          <HeroSection />
+          <StickyStack />
+        </main>
         <SiteFooter />
         <ChatBubble />
       </div>

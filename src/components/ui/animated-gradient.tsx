@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useMemo, useState, CSSProperties } from "react";
+import { useRef, useEffect, useMemo, CSSProperties } from "react";
 
 type PatternShape = "Checks" | "Stripes" | "Edge";
 
@@ -111,12 +111,6 @@ export default function AnimatedGradient({
   const containerRef = useRef<HTMLDivElement>(null);
   const frameIdRef = useRef<number | undefined>(undefined);
   const startTimeRef = useRef<number>(0);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
 
   const params = useMemo((): PresetParams => {
     if (config.preset === "custom") {
@@ -136,7 +130,7 @@ export default function AnimatedGradient({
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
-    if (!canvas || !container || !isMounted) return;
+    if (!canvas || !container) return;
 
     const gl = canvas.getContext("webgl2", { premultipliedAlpha: true, alpha: true, antialias: true });
     if (!gl) return;
@@ -232,7 +226,7 @@ export default function AnimatedGradient({
       gl.deleteShader(fragmentShader);
       gl.deleteBuffer(positionBuffer);
     };
-  }, [isMounted, params]);
+  }, [params]);
 
   return (
     <div

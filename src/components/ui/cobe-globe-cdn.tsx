@@ -13,7 +13,8 @@ export interface GlobeMarker {
 export interface GlobeReachProps {
   markers?: GlobeMarker[]
   className?: string
-  speed?: number
+  /** Marker id to turn toward the viewer; null rests at the default view. */
+  focus?: string | null
 }
 
 /* Marker whose id anchors the arcs — every arc radiates from here. */
@@ -27,6 +28,27 @@ const VIEW_LNG_OFFSET = 45
 /* Fixed tilt. The markers span Buenos Aires (-34.6) to Berlin (+52.5), so a
    slight northward lean keeps both extremes on the visible cap. */
 const THETA = 0.3
+
+/* The globe sways instead of spinning. A full rotation spends half its cycle
+   showing the Pacific, where this studio has no clients and the map reads as
+   an empty ball. These bounds keep the Americas and Europe on the near face. */
+const SWAY_RADIANS = 0.32
+const SWAY_PERIOD_MS = 26000
+
+/* Turning toward a clicked country. The globe eases in rather than snapping,
+   and it holds still there instead of swaying off the country again. */
+const FOCUS_EASING = 0.075
+const MAX_FOCUS_TILT = 0.75
+
+/* Shortest way round the sphere, so a click never spins the long way. */
+function wrapDelta(delta: number) {
+  const turn = Math.PI * 2
+  return (((delta % turn) + turn * 1.5) % turn) - Math.PI
+}
+
+/* The HQ pin is drawn larger than the client pins. */
+const HQ_MARKER_SIZE = 0.05
+const CLIENT_MARKER_SIZE = 0.032
 
 const DEFAULT_MARKERS: GlobeMarker[] = [
   { id: 'sv', location: [13.69, -89.22], label: 'SV' },
@@ -49,25 +71,23 @@ type GlobePalette = Pick<
 const PALETTE: Record<'dark' | 'light', GlobePalette> = {
   dark: {
     dark: 1,
-    baseColor: [0.28, 0.28, 0.28],
+    baseColor: [0.42, 0.42, 0.42],
     markerColor: [1, 1, 1],
-    glowColor: [0.08, 0.08, 0.08],
-    mapBrightness: 6,
+    glowColor: [0.2, 0.2, 0.2],
+    mapBrightness: 11,
   },
   light: {
     dark: 0,
     baseColor: [1, 1, 1],
     markerColor: [0, 0, 0],
-    glowColor: [0.88, 0.88, 0.88],
-    mapBrightness: 10,
+    // Light mode paints the land dots by darkening the base, so brightness
+    // works the opposite way here: a high value washes them out to white.
+    glowColor: [0.72, 0.72, 0.72],
+    mapBrightness: 1.15,
   },
 }
 
-export function GlobeReach({
-  markers = DEFAULT_MARKERS,
-  className = '',
-  speed = 0.003,
-}: GlobeReachProps) {
+export function GlobeReach({ markers = DEFAULT_MARKERS, className = '', focus = null }: GlobeReachProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { resolvedTheme } = useTheme()
 
@@ -81,6 +101,7 @@ export function GlobeReach({
   const dragOffset = useRef({ phi: 0, theta: 0 })
   const onScreen = useRef(true)
   const reducedMotion = useRef(false)
+  const focusTarget = useRef<{ phi: number; theta: number } | null>(null)
 
   const arcs = useMemo(() => {
     if (!origin) return []
@@ -88,6 +109,19 @@ export function GlobeReach({
       .filter((m) => m.id !== origin.id)
       .map((m) => ({ from: origin.location, to: m.location, id: `${origin.id}-${m.id}` }))
   }, [markers, origin])
+
+  useEffect(() => {
+    const marker = focus ? markers.find((m) => m.id === focus) : null
+    if (!marker) {
+      focusTarget.current = null
+      return
+    }
+    const [lat, lng] = marker.location
+    focusTarget.current = {
+      phi: lngToPhi(lng),
+      theta: Math.max(-MAX_FOCUS_TILT, Math.min(MAX_FOCUS_TILT, (lat * Math.PI) / 180)),
+    }
+  }, [focus, markers])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -158,23 +192,37 @@ export function GlobeReach({
         theta: THETA,
         diffuse: 1.5,
         mapSamples: 8000,
-        markerElevation: 0.02,
-        markers: markers.map((m) => ({ location: m.location, size: 0.012, id: m.id })),
+        markerElevation: 0.035,
+        markers: markers.map((m) => ({
+          location: m.location,
+          size: m.id === HQ_ID ? HQ_MARKER_SIZE : CLIENT_MARKER_SIZE,
+          id: m.id,
+        })),
         arcs,
         arcColor: palette.markerColor,
-        arcWidth: 0.5,
-        arcHeight: 0.25,
-        opacity: 0.75,
+        arcWidth: 0.9,
+        arcHeight: 0.32,
+        opacity: 1,
       })
+
+      const startedAt = performance.now()
 
       const animate = () => {
         frame = requestAnimationFrame(animate)
         /* Scrolled away: keep the loop alive but skip the WebGL draw. This
            section sits mid-page, so it would otherwise render forever. */
         if (!onScreen.current) return
-        if (!dragStart.current && !reducedMotion.current) phiRef.current += speed
+        const target = focusTarget.current
+        if (target && !dragStart.current) {
+          phiRef.current += wrapDelta(target.phi - phiRef.current) * FOCUS_EASING
+          thetaOffset.current += (target.theta - THETA - thetaOffset.current) * FOCUS_EASING
+        }
+        const sway =
+          target || dragStart.current || reducedMotion.current
+            ? 0
+            : Math.sin(((performance.now() - startedAt) / SWAY_PERIOD_MS) * Math.PI * 2) * SWAY_RADIANS
         globe?.update({
-          phi: phiRef.current + dragOffset.current.phi,
+          phi: phiRef.current + sway + dragOffset.current.phi,
           theta: THETA + thetaOffset.current + dragOffset.current.theta,
         })
         if (!painted) {
@@ -212,7 +260,7 @@ export function GlobeReach({
       intersectionObserver.disconnect()
       globe?.destroy()
     }
-  }, [markers, arcs, speed, resolvedTheme])
+  }, [markers, arcs, resolvedTheme])
 
   return (
     <div className={`relative aspect-square select-none ${className}`}>

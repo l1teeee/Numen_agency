@@ -1,7 +1,9 @@
 "use client"
 
 import { MeshGradient } from "@paper-design/shaders-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useSyncExternalStore } from "react"
+
+const subscribe = () => () => {}
 
 interface HeroSectionProps {
   title?: string
@@ -41,10 +43,9 @@ export function HeroSection({
   veilOpacity = "bg-black/50",
 }: HeroSectionProps) {
   const [dimensions, setDimensions] = useState({ width: 1920, height: 1080 })
-  const [mounted, setMounted] = useState(false)
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false)
 
   useEffect(() => {
-    setMounted(true)
     const update = () =>
       setDimensions({ width: window.innerWidth, height: window.innerHeight })
     update()

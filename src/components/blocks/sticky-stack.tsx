@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { useScroll, useTransform, MotionValue } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
 import {
   ServicesSection,
   ProjectsSection,
@@ -38,7 +39,7 @@ function r(k: number): [number, number] {
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(false)
   useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 1024)
+    const check = () => setIsDesktop(window.innerWidth >= 1024 && window.innerHeight > 740)
     check()
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
@@ -49,6 +50,7 @@ function useIsDesktop() {
 export function StickyStack() {
   const containerRef = useRef<HTMLDivElement>(null)
   const isDesktop = useIsDesktop()
+  const reducedMotion = useReducedMotion()
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -64,7 +66,7 @@ export function StickyStack() {
   const b7 = useBlurStyle(scrollYProgress, ...r(7))
   const b8 = useBlurStyle(scrollYProgress, ...r(8))
 
-  const blur = isDesktop
+  const blur = isDesktop && !reducedMotion
     ? { b1, b2, b3, b4, b5, b6, b7, b8 }
     : { b1: undefined, b2: undefined, b3: undefined, b4: undefined, b5: undefined, b6: undefined, b7: undefined, b8: undefined }
 

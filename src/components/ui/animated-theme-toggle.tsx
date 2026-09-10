@@ -1,15 +1,19 @@
 'use client'
 
 import { motion, useMotionValue, useTransform } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import { cn } from '@/lib/utils'
+import { useLang } from '@/lib/lang'
+
+const subscribe = () => () => {}
 
 export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
   const { setTheme, resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => { setMounted(true) }, [])
+  const { lang } = useLang()
+  const reducedMotion = useReducedMotion()
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false)
 
   const isDark = mounted ? resolvedTheme === 'dark' : false
 
@@ -22,27 +26,26 @@ export const AnimatedThemeToggle = ({ className }: { className?: string }) => {
     document.documentElement.style.setProperty('--theme-x', `${x}px`)
     document.documentElement.style.setProperty('--theme-y', `${y}px`)
 
-    if (!('startViewTransition' in document)) {
+    if (reducedMotion || !document.startViewTransition) {
       setTheme(next)
       return
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(document as any).startViewTransition(() => setTheme(next))
+    document.startViewTransition(() => setTheme(next))
   }
 
   if (!mounted) {
-    return <div className={cn('h-8 w-8', className)} />
+    return <div className={cn('h-11 w-11', className)} />
   }
 
   return (
     <button
       onClick={(e) => toggleTheme(e)}
       className={cn(
-        'flex h-8 w-8 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground/40 transition-colors duration-200 hover:border-foreground/[0.16] hover:text-foreground',
+        'flex h-11 w-11 items-center justify-center rounded-full border border-foreground/[0.08] text-foreground/40 transition-colors duration-200 hover:border-foreground/[0.16] hover:text-foreground',
         className
       )}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={lang === 'es' ? (isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro') : (isDark ? 'Switch to light mode' : 'Switch to dark mode')}
     >
       <SolarSwitch isDark={isDark} />
     </button>

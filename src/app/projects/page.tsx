@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { Navbar } from '@/components/blocks/navbar'
-import { LiveProjectsSection, SiteFooter } from '@/components/blocks/sections'
+import { SiteFooter } from '@/components/blocks/sections'
 import { SITE_URL } from '@/lib/site'
+import { ProjectsPageContent } from './ProjectsPageContent'
 
 const title = 'Live Projects'
 const description = 'All products built by Numen Agency currently deployed and running in production.'
@@ -58,9 +59,9 @@ export default function ProjectsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c') }}
       />
-      <Navbar alwaysVisible />
-      <main className="flex min-h-screen flex-col">
-        <LiveProjectsSection />
+      <Navbar />
+      <main id="main-content" tabIndex={-1} className="flex min-h-screen flex-col">
+        <ProjectsPageContent />
       </main>
       <SiteFooter />
     </div>

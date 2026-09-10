@@ -1,7 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, useRef } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
 import { translations, type Lang, type Translations } from './translations'
 
 interface LangContextValue {
@@ -28,6 +29,10 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     const timer = setTimeout(() => setLangState(stored), 0)
     return () => clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
 
   useEffect(() => {
     return () => {
