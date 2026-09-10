@@ -11,8 +11,9 @@ import { WindowIcon } from './window'
 import { CoffeeIcon } from './coffee'
 import { PencilIcon } from './pencil'
 import { ChecklistIcon } from './checklist'
+import type { HeroIconProps, HeroIconMotion } from './icon-frame'
 
-export type { HeroIconProps, HeroIconStroke } from './icon-frame'
+export type { HeroIconProps, HeroIconStroke, HeroIconMotion } from './icon-frame'
 export { IdeaIcon } from './idea'
 export { CodeIcon } from './code'
 export { CursorIcon } from './cursor'
@@ -26,10 +27,10 @@ export { CoffeeIcon } from './coffee'
 export { PencilIcon } from './pencil'
 export { ChecklistIcon } from './checklist'
 
-export type HeroIconName = 'idea' | 'code' | 'cursor' | 'star' | 'heart' | 'gear' | 'rocket' | 'chat' | 'window' | 'coffee' | 'pencil' | 'checklist'
+export type HeroIconName = HeroIconMotion
 
 /** The scattered field beside the hero headline picks its icons out of this map. */
-export const HERO_ICONS: Record<HeroIconName, ComponentType<{ active?: boolean; className?: string }>> = {
+export const HERO_ICONS: Record<HeroIconName, ComponentType<HeroIconProps>> = {
   idea: IdeaIcon,
   code: CodeIcon,
   cursor: CursorIcon,

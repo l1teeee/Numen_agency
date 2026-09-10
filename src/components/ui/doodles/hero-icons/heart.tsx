@@ -1,5 +1,7 @@
 'use client'
 
+import { motion } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
 import { HeroIconFrame, type HeroIconProps, type HeroIconStroke } from './icon-frame'
 
 const STROKES: HeroIconStroke[] = [
@@ -8,5 +10,22 @@ const STROKES: HeroIconStroke[] = [
 
 /** A solid heart. */
 export function HeartIcon(props: HeroIconProps) {
-  return <HeroIconFrame strokes={STROKES} {...props} />
+  const reducedMotion = useReducedMotion()
+  const active = props.active !== false
+  const playing = active && !reducedMotion
+
+  return (
+    <HeroIconFrame strokes={STROKES} {...props} motionProfile="heart">
+      <motion.path
+        d="M 5.5 28.5 C 9 35.8 15.2 40.6 23.7 45 C 32.2 40.6 38.4 35.8 42 28.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.1"
+        initial={false}
+        animate={{ pathLength: playing ? [0, 1, 1, 0] : active ? 1 : 0, opacity: playing ? [0, 0.42, 0] : active ? 0.18 : 0, scale: playing ? [0.82, 1.06, 1.16] : 1 }}
+        transition={playing ? { duration: 2.2, repeat: Infinity, ease: 'easeOut' } : { duration: 0 }}
+        style={{ transformOrigin: '24px 32px' }}
+      />
+    </HeroIconFrame>
+  )
 }

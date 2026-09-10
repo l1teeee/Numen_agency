@@ -1,6 +1,9 @@
 'use client'
 
-import { HeroIconFrame, type HeroIconProps, type HeroIconStroke } from './icon-frame'
+import type { HeroIconProps, HeroIconStroke } from './icon-frame'
+import { motion } from 'framer-motion'
+import { useReducedMotion } from '@/lib/use-reduced-motion'
+import { DoodleSvg, DrawPath } from '../primitives'
 
 const STROKES: HeroIconStroke[] = [
   { d: 'M 23.9 2 C 28.7 5.7 32.5 10 35.2 14.5 C 35.6 18.9 35.1 23.3 35 27.5 C 38.6 31.8 42 36.1 45.4 40.7 C 41.2 38.2 37 35.7 32.8 33.3 C 31.5 35.7 29.9 38 28.4 40.1 C 25.4 40.7 22.3 40.6 19.4 39.9 C 18 37.7 16.6 35.4 15.2 33.1 C 11 35.3 6.8 37.6 2.7 39.8 C 6.2 35.5 9.6 31.4 12.9 27.3 C 12.4 23.1 12.5 18.9 12.7 14.5 C 15.6 10.1 19.4 5.8 23.9 2 Z', fill: 'currentColor' },
@@ -9,7 +12,29 @@ const STROKES: HeroIconStroke[] = [
   { d: 'M 27.2 42.2 C 27.7 43.3 28.2 44.5 28.8 45.6' },
 ]
 
+const FLAME = [
+  'M 21.5 42.4 C 21 43.7 20.5 44.9 19.9 46.1',
+  'M 27.2 42.2 C 27.7 43.3 28.2 44.5 28.8 45.6',
+]
+
 /** A solid rocket: short nose cone, wide barrel, two notched fins, a knocked-out porthole and two exhaust dashes. Drawn solid because an outline body merged into a plain triangle at hero size. */
 export function RocketIcon(props: HeroIconProps) {
-  return <HeroIconFrame strokes={STROKES} {...props} />
+  const { active = true, className } = props
+  const reducedMotion = useReducedMotion()
+  const playing = active && !reducedMotion
+
+  return (
+    <DoodleSvg viewBox="0 0 48 48" strokeWidth={2} className={className}>
+      <DrawPath d={STROKES[0].d} fill={STROKES[0].fill} active={active} />
+      <DrawPath d={STROKES[1].d} fill={STROKES[1].fill} active={active} delay={0.05} />
+      <motion.g
+        initial={false}
+        animate={playing ? { y: [0, 1.4, 0], scaleY: [0.72, 1.18, 0.72], opacity: [0.45, 1, 0.45] } : { y: 0, scaleY: 1, opacity: active ? 1 : 0 }}
+        transition={playing ? { duration: 0.85, repeat: Infinity, ease: 'easeInOut' } : { duration: 0 }}
+        style={{ transformOrigin: '24px 42px' }}
+      >
+        {FLAME.map((d) => <DrawPath key={d} d={d} active={active} delay={0.1} duration={0.25} />)}
+      </motion.g>
+    </DoodleSvg>
+  )
 }

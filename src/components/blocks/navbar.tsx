@@ -61,8 +61,8 @@ export function Navbar() {
     <>
       <a href="#main-content" className="skip-link">{es ? 'Saltar al contenido' : 'Skip to content'}</a>
       <header ref={headerRef} className="fixed inset-x-4 top-4 z-100 mx-auto max-w-[1408px] sm:inset-x-8 lg:inset-x-12">
-        <div className="flex min-h-16 items-center justify-between gap-3 rounded-2xl border border-foreground/12 bg-background/95 px-4 backdrop-blur-xl sm:px-6">
-          <Link href="/" aria-label={es ? 'Numen, inicio' : 'Numen, home'} className="group relative flex min-h-11 items-center text-foreground" onClick={() => setMenuOpen(false)}>
+        <div className="grid min-h-16 grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-2xl border border-foreground/12 bg-background/95 px-4 backdrop-blur-xl sm:px-6">
+          <Link href="/" aria-label={es ? 'Numen, inicio' : 'Numen, home'} className="group relative flex min-h-11 items-center justify-self-start text-foreground" onClick={() => setMenuOpen(false)}>
             <NumenMark className="h-6 w-6" />
             {/* Absolute so the wordmark can appear over the empty space to its
                 right without pushing the centre nav sideways. */}
@@ -71,7 +71,7 @@ export function Navbar() {
           <nav aria-label={es ? 'Navegación principal' : 'Main navigation'} className="hidden items-center gap-7 lg:flex">
             {links.map((link) => <Link key={link.href} href={destination(link.href)} onClick={(event) => navigate(event, link.href)} aria-current={pathname === link.href ? 'page' : undefined} className="flex min-h-11 items-center text-xs font-medium text-foreground/50 transition-colors hover:text-foreground aria-[current=page]:text-foreground">{link.label}</Link>)}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="col-start-3 flex items-center justify-self-end gap-2">
             <AnimatedThemeToggle />
             <button type="button" onClick={() => setLang(es ? 'en' : 'es')} className="flex h-11 min-w-11 items-center justify-center rounded-full text-xs font-semibold transition-colors hover:bg-foreground/5" aria-label={es ? 'Cambiar a inglés' : 'Switch to Spanish'}>{es ? 'EN' : 'ES'}</button>
             <Link href={destination('#contact')} onClick={(event) => navigate(event, '#contact')} className="ml-2 hidden min-h-11 items-center gap-5 rounded-full bg-foreground px-5 text-xs font-semibold text-background transition-opacity hover:opacity-80 sm:flex">{t.nav.contact}<ArrowUpRight size={14} aria-hidden="true" /></Link>
