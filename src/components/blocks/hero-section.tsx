@@ -161,23 +161,6 @@ export function HeroSection() {
 
         </div>
       </div>
-
-      <motion.div
-        {...enter(0.45)}
-        className="relative mx-auto mt-10 flex w-full max-w-[1408px] items-center justify-between gap-4 border-t border-foreground/12 pt-5 text-[10px] uppercase tracking-[0.12em] text-foreground/40 lg:mt-0"
-      >
-        <span className="min-w-0 flex items-center gap-3">
-          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          {es ? 'Productos en producción' : 'Products in production'}
-        </span>
-        <Link
-          href="/projects"
-          className="flex min-h-11 min-w-0 max-w-[62%] items-center justify-end gap-2 text-right hover:text-foreground sm:shrink-0"
-        >
-          {es ? 'Explora nuestros proyectos en producción' : 'Explore our products in production'}
-          <ArrowUpRight size={15} aria-hidden="true" />
-        </Link>
-      </motion.div>
     </section>
   )
 }
