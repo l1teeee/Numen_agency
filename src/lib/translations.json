@@ -60,6 +60,11 @@
       "seeAll": "See all projects",
       "items": [
         {
+          "name": "Brotiva",
+          "category": "Platform · 2026",
+          "desc": "An online learning campus for building useful skills at your own pace — guided learning paths, a course library, short practice moments and a personal campus for your courses, all led by a cast of friendly characters."
+        },
+        {
           "name": "VieLinks",
           "category": "Platform · 2026",
           "desc": "Social media management SaaS with OAuth integrations (Meta, Instagram, LinkedIn). Multi-channel publishing, real-time metrics dashboard, and automated workflow orchestration. Used by digital professionals worldwide."
@@ -467,6 +472,11 @@
       "label": "Proyectos Seleccionados",
       "seeAll": "Ver todos los proyectos",
       "items": [
+        {
+          "name": "Brotiva",
+          "category": "Plataforma · 2026",
+          "desc": "Un campus de aprendizaje en línea para desarrollar habilidades útiles a tu propio ritmo — rutas guiadas, biblioteca de cursos, momentos de práctica breves y un campus personal para tus cursos, todo guiado por un elenco de personajes amigables."
+        },
         {
           "name": "VieLinks",
           "category": "Plataforma · 2026",

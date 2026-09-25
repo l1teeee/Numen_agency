@@ -1,4 +1,5 @@
 export const MONITORED_URLS = [
+  'https://claro-campus.vercel.app',
   'https://vielinks.com',
   'https://scoutia.dev/landing',
   'https://app.inkytap.com',

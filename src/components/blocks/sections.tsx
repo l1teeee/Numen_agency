@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, type ComponentType } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Building2, MapPin, Phone, Tags, UserPlus } from 'lucide-react'
 import { useLenis } from 'lenis/react'
@@ -25,6 +24,8 @@ import { FounderSticker } from '@/components/ui/doodles/founder-sticker'
 import { SpeechBubble } from '@/components/ui/doodles/speech-bubble'
 import { NumenBot } from '@/components/ui/doodles/numen-bot'
 import { NumenMark } from '@/components/ui/doodles/numen-mark'
+import { BrotivaScene } from '@/components/ui/brotiva/brotiva-scene'
+import { ScoutiaScene } from '@/components/ui/scoutia/scoutia-scene'
 import { EditorialConceptArt } from './editorial-concept-art'
 import { useReducedMotion } from '@/lib/use-reduced-motion'
 
@@ -108,6 +109,21 @@ function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
   return <span ref={ref}>{reduceMotion ? to : val}{suffix}</span>
 }
 
+// The sticky stack blurs a section up to 8px while the next one slides over it. It is
+// hidden well before the blur tops out, and IntersectionObserver cannot see occlusion.
+const COVERED_BLUR_PX = 6
+
+function useCoveredByNextSection(blurStyle?: BlurStyle) {
+  const [covered, setCovered] = useState(false)
+  useEffect(() => {
+    if (!blurStyle) return
+    const update = (filter: string) => setCovered(parseFloat(filter.replace('blur(', '')) >= COVERED_BLUR_PX)
+    update(blurStyle.filter.get())
+    return blurStyle.filter.on('change', update)
+  }, [blurStyle])
+  return covered
+}
+
 // ─── Live status check ────────────────────────────────────────
 function useProjectStatus() {
   const [status, setStatus] = useState<Record<string, boolean>>({})
@@ -148,8 +164,18 @@ function StatusDot({ online, size = 'h-1.5 w-1.5' }: { online?: boolean; size?: 
 // `as const` keeps `num` a literal so it can key SERVICE_DOODLES.
 const serviceNums = ['01', '02', '03', '04'] as const
 
+// The first entry is the featured project of the Selected Work section; the side
+// column has room for three more, the rest only appear in the Live Now list.
+const SIDE_CARD_COUNT = 3
+
+// Side cards that show an illustrated scene above their text, keyed by project name.
+const SIDE_CARD_SCENES: Record<string, ComponentType<{ active: boolean; covered: boolean }>> = {
+  ScoutIA: ScoutiaScene,
+}
+
 const projectsMeta = [
-  { href: 'https://vielinks.com',          name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
+  { href: 'https://claro-campus.vercel.app', name: 'Brotiva',    status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'GSAP', 'Prisma'] },
+  { href: 'https://vielinks.com',         name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
   { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
   { href: 'https://dashboard-bot-whatsapp.vercel.app', name: 'WhatsApp Ops', status: 'Live', dot: 'bg-emerald-400', stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'TanStack Query'] },
   { href: 'https://servilocal-three.vercel.app', name: 'ServiLocal', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Tkiero'] },
@@ -228,6 +254,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
   const status = useProjectStatus()
   const [featuredMeta, ...restMeta] = projectsMeta
   const [featuredText, ...restText] = t.projects.items
+  const sideCards = restMeta.slice(0, SIDE_CARD_COUNT).map((meta, i) => ({ meta, text: restText[i] }))
+  const covered = useCoveredByNextSection(blurStyle)
 
   return (
     <section ref={ref} id="work" className="relative z-20 flex flex-col rounded-t-[2rem] border-t border-foreground/15 bg-background lg:sticky lg:top-0 lg:h-screen">
@@ -243,8 +271,8 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
         <motion.div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-5" variants={containerVariants} initial={reducedMotion ? false : 'hidden'} animate={isActive ? 'visible' : 'hidden'}>
           <motion.div variants={itemVariants} className="min-h-0 lg:col-span-3">
             <Link href={featuredMeta.href} target="_blank" rel="noopener noreferrer" className="group flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-foreground/15 transition-colors hover:border-foreground/50">
-              <div className="relative min-h-48 flex-1 overflow-hidden bg-[#100f0b] lg:min-h-0">
-                <Image src="/vielink/live-home.png" alt={lang === 'es' ? 'Página de VieLinks para campañas de correo y redes sociales' : 'VieLinks website for email campaigns and social media'} fill sizes="(min-width: 1024px) 570px, 90vw" className="object-cover object-top motion-safe:transition-transform motion-safe:duration-700 motion-safe:group-hover:scale-[1.03]" />
+              <div className="relative min-h-64 flex-1 overflow-hidden border-b border-foreground/15 sm:min-h-72 lg:min-h-40">
+                <BrotivaScene active={isActive} covered={covered} />
                 <span className="absolute left-4 top-4 rounded-full border border-white/25 bg-black px-3 py-1 text-[10px] text-white">{lang === 'es' ? 'Proyecto destacado' : 'Selected project'}</span>
               </div>
               <div className="relative p-5">
@@ -257,16 +285,22 @@ export function ProjectsSection({ blurStyle }: { blurStyle?: BlurStyle }) {
               </div>
             </Link>
           </motion.div>
-          <div className="grid min-h-0 gap-3 lg:col-span-2 lg:grid-rows-3">
-            {restMeta.map((project, i) => (
-              <motion.div key={project.href} variants={itemVariants} className="min-h-0">
-                <Link href={project.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col rounded-2xl border border-foreground/15 p-4 transition-colors hover:border-foreground/50 hover:bg-foreground/[0.02]">
-                  <div className="flex items-start justify-between gap-3"><div><p className="text-[10px] text-foreground/65">{restText[i].category}</p><h3 className="mt-1 text-lg font-semibold">{restText[i].name}</h3></div><span className="font-mono text-[11px] text-foreground/65">0{i + 2}</span></div>
-                  <p className="mt-2 text-xs leading-relaxed text-foreground/75">{restText[i].desc}</p>
-                  <div className="mt-auto flex items-center justify-between gap-2 pt-3"><span className="flex items-center gap-2 text-[10px] text-foreground/65"><StatusDot online={status[project.href]} />{status[project.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}</span><ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5" /></div>
-                </Link>
-              </motion.div>
-            ))}
+          <div className="grid min-h-0 gap-3 lg:col-span-2 lg:flex lg:flex-col">
+            {sideCards.map(({ meta, text }, i) => {
+              const Scene = SIDE_CARD_SCENES[meta.name]
+              return (
+                <motion.div key={meta.href} variants={itemVariants} className={Scene ? 'min-h-0 lg:flex-1' : 'lg:flex-none'}>
+                  <Link href={meta.href} target="_blank" rel="noopener noreferrer" className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/15 transition-colors hover:border-foreground/50 hover:bg-foreground/[0.02]">
+                    {Scene && <div className="relative min-h-40 flex-1 border-b border-foreground/15 lg:min-h-20"><Scene active={isActive} covered={covered} /></div>}
+                    <div className={`flex flex-col p-4 ${Scene ? '' : 'flex-1'}`}>
+                      <div className="flex items-start justify-between gap-3"><div><p className="text-[10px] text-foreground/65">{text.category}</p><h3 className="mt-1 text-lg font-semibold">{text.name}</h3></div><span className="font-mono text-[11px] text-foreground/65">0{i + 2}</span></div>
+                      <p className="mt-2 text-xs leading-relaxed text-foreground/75">{text.desc}</p>
+                      <div className="mt-auto flex items-center justify-between gap-2 pt-3"><span className="flex items-center gap-2 text-[10px] text-foreground/65"><StatusDot online={status[meta.href]} />{status[meta.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}</span><ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5" /></div>
+                    </div>
+                  </Link>
+                </motion.div>
+              )
+            })}
           </div>
         </motion.div>
       </motion.div>
