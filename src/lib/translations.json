@@ -32,7 +32,12 @@
       "subline": "Numen is a digital product agency from El Salvador. We build full-stack apps, SaaS platforms, and AI-powered tools, with the speed of a startup and the craft of a senior team.",
       "cta1": "View Our Work",
       "cta2": "Let's Talk",
-      "scroll": "Scroll to explore ↓"
+      "scroll": "Scroll to explore ↓",
+      "artLink": {
+        "label": "Numen Art",
+        "whisper": "Where our ideas go to play.",
+        "launch": "Ideas that refuse to sit still."
+      }
     },
     "services": {
       "label": "What We Do",
@@ -445,7 +450,12 @@
       "subline": "Numen es una agencia digital de El Salvador. Construimos apps full-stack, plataformas SaaS y herramientas con IA, con la velocidad de una startup y la calidad de un equipo senior.",
       "cta1": "Ver Nuestro Trabajo",
       "cta2": "Hablemos",
-      "scroll": "Explora ↓"
+      "scroll": "Explora ↓",
+      "artLink": {
+        "label": "Numen Art",
+        "whisper": "Donde nuestras ideas salen a jugar.",
+        "launch": "Ideas que no se quedan quietas."
+      }
     },
     "services": {
       "label": "Qué Hacemos",

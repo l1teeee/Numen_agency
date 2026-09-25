@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 import { ScribbleUnderline } from '@/components/ui/doodles/scribbles'
 import { HERO_ICONS, type HeroIconName } from '@/components/ui/doodles/hero-icons'
+import { NumenArtLink } from '@/components/ui/numen-art-link'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -157,6 +158,7 @@ export function HeroSection() {
               {t.hero.cta2}
               <span aria-hidden="true">+</span>
             </Link>
+            <NumenArtLink />
           </motion.div>
 
         </div>

@@ -454,3 +454,33 @@ html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
 .chat-composer input:focus-visible {
   outline: none;
 }
+
+/* Numen Art CTA pulse. Rings grow by animating inset, not scale: scale would
+   stretch a wide pill sideways, inset keeps the same px gap on every side. */
+@keyframes art-pulse {
+  from { inset: 0; opacity: 0.7; }
+  to   { inset: -14px; opacity: 0; }
+}
+
+@keyframes art-burst {
+  from { inset: 0; opacity: 0.9; }
+  to   { inset: -44px; opacity: 0; }
+}
+
+.art-pulse-ring {
+  animation: art-pulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.art-pulse-ring-delayed {
+  animation-delay: 1.2s;
+}
+
+.art-burst-ring {
+  opacity: 0;
+  animation: art-burst 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art-pulse-ring,
+  .art-burst-ring { animation: none; opacity: 0; }
+}
