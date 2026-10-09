@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, type ComponentType } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowUpRight, User, Mail, MessageSquare, DollarSign, Plus, Building2, MapPin, Phone, Tags, UserPlus } from 'lucide-react'
+import { ArrowUpRight, Globe, User, Mail, MessageSquare, DollarSign, Plus, Building2, MapPin, Phone, Tags, UserPlus } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import { motion, AnimatePresence, useInView, type MotionValue } from 'framer-motion'
 import { GlobeReach } from '@/components/ui/cobe-globe-cdn'
@@ -193,7 +193,7 @@ const liveProjectsMeta = [
 ]
 
 const teamMeta = [
-  { figure: 'julian', name: 'Julian Mendez', role: 'Software Engineer & Founder', linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
+  { figure: 'julian', name: 'Julian Mendez', role: 'Software Engineer & Founder', linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/', website: 'https://julian-menz.dev/' },
 ] as const
 
 // Every country that is not the HQ is a live client relationship.
@@ -462,17 +462,28 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
                   <p className="text-sm font-semibold text-neutral-900">{member.name}</p>
                   <p className="mt-0.5 text-[10px] text-neutral-600">{member.role}</p>
                   <p className="mt-2 text-[11px] leading-relaxed text-neutral-600">{ta.team[i].desc}</p>
-                  <a
-                    href={member.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-flex min-h-11 items-center gap-1.5 text-xs text-neutral-600 transition-colors duration-150 hover:text-neutral-700"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                    LinkedIn
-                  </a>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4">
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-11 items-center gap-1.5 text-xs text-neutral-600 transition-colors duration-150 hover:text-neutral-700"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="h-2.5 w-2.5 shrink-0">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
+                      LinkedIn
+                    </a>
+                    <a
+                      href={member.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-11 items-center gap-1.5 text-xs text-neutral-600 transition-colors duration-150 hover:text-neutral-700"
+                    >
+                      <Globe className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+                      julian-menz.dev
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             ))}
