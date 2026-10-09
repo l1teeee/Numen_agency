@@ -73,7 +73,7 @@ export function ProjectsPageContent() {
               <Link href="/#process" className="inline-flex min-h-12 items-center rounded-full border border-foreground/25 px-6 py-3 text-sm text-foreground/75 transition-colors hover:border-foreground/60 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4">{copy.process}</Link>
             </div>
           </div>
-          <FounderSticker figure="igmer" size="w-24 md:w-28" tilt={-4} className="hidden justify-self-center sm:block" />
+          <FounderSticker figure="julian" size="w-24 md:w-28" tilt={-4} className="hidden justify-self-center sm:block" />
         </div>
       </section>
     </>

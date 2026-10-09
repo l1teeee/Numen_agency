@@ -193,8 +193,7 @@ const liveProjectsMeta = [
 ]
 
 const teamMeta = [
-  { figure: 'julian', name: 'Julian Mendez',  role: 'Software Engineer & Founder',     linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
-  { figure: 'igmer',  name: 'Igmer Rodriguez', role: 'Software Engineer & Co-founder', linkedin: 'https://www.linkedin.com/in/igmer-rodriguez/' },
+  { figure: 'julian', name: 'Julian Mendez', role: 'Software Engineer & Founder', linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/' },
 ] as const
 
 // Every country that is not the HQ is a live client relationship.
@@ -434,7 +433,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           </div>
 
           {/* Founders */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:gap-4">
             {teamMeta.map((member, i) => (
               <motion.div
                 key={member.name}

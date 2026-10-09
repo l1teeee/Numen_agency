@@ -10,7 +10,7 @@ El sitio ya tiene temas claro/oscuro, ES/EN, una portada, nueve secciones apilad
 
 - Negro y blanco como base. Las capturas de productos conservan sus colores reales.
 - Plus Jakarta Sans permanece como tipografia principal. Notas breves en serif cursiva aportan contraste editorial.
-- Ilustraciones planas: tinta sencilla, pequenas imperfecciones, sin sombras ni realismo adicional. Las referencias locales de Julian e Igmer mantienen su identidad.
+- Ilustraciones planas: tinta sencilla, pequenas imperfecciones, sin sombras ni realismo adicional. La referencia local de Julian mantiene su identidad.
 - Personajes separados de las escenas: el SVG del personaje contiene solamente la figura. Anotaciones y graficos de interfaz viven en elementos independientes.
 - Cada ilustracion explica algo: personas para cercania, diagramas para servicios, bocetos para proceso, avion para contacto.
 

@@ -150,9 +150,6 @@
       "team": [
         {
           "desc": "Founder of Numen. Leads product vision, design direction, and project execution — from concept to launch."
-        },
-        {
-          "desc": "Handles domain services, infrastructure, and deployment. Keeps the systems running so the products can ship."
         }
       ],
       "principles": [
@@ -401,8 +398,7 @@
       "heroBubble": "Hi, we're Numen.",
       "heroBubbleAlt": "We build, you ship.",
       "aboutBubbles": [
-        "Design, product, launch.",
-        "Infra that stays up."
+        "Design, product, launch."
       ],
       "faqBubble": "Got questions? Ask me.",
       "contactSuccessBubble": "Thanks! Talk soon.",
@@ -568,9 +564,6 @@
       "team": [
         {
           "desc": "Fundador de Numen. Lidera la visión del producto, la dirección de diseño y la ejecución de proyectos — del concepto al lanzamiento."
-        },
-        {
-          "desc": "Gestiona los servicios de dominio, infraestructura y despliegue. Mantiene los sistemas funcionando para que los productos puedan lanzarse."
         }
       ],
       "principles": [
@@ -819,8 +812,7 @@
       "heroBubble": "Hola, somos Numen.",
       "heroBubbleAlt": "Nosotros construimos, tú lanzas.",
       "aboutBubbles": [
-        "Diseño, producto, lanzamiento.",
-        "Infra que no se cae."
+        "Diseño, producto, lanzamiento."
       ],
       "faqBubble": "¿Tienes preguntas? Hazmelas a mí.",
       "contactSuccessBubble": "¡Gracias! Hablamos pronto.",

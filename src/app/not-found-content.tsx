@@ -62,7 +62,7 @@ export function NotFoundContent() {
             ))}
           </DoodleSvg>
           <FounderSticker
-            figure="igmer"
+            figure="julian"
             size="w-16 sm:w-20"
             tilt={-6}
             delay={0.75}

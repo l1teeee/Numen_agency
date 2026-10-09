@@ -28,7 +28,6 @@ Numen is a boutique digital product studio based in El Salvador, working fully r
 TEAM
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Julian Mendez is the Software Engineer and Founder. He leads product vision, design direction, and project execution from concept to launch.
-Igmer Rodriguez is the Software Engineer and Co-founder. He handles domain services, infrastructure, and deployment — keeps the systems running so products can ship.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SERVICES

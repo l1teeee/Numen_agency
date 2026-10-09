@@ -48,11 +48,6 @@ const jsonLd = {
           name: "Julian Mendez",
           jobTitle: "Software Engineer & Founder",
         },
-        {
-          "@type": "Person",
-          name: "Igmer Rodriguez",
-          jobTitle: "Software Engineer & Co-founder",
-        },
       ],
       knowsAbout: [
         "Desarrollo Web Full-Stack",
