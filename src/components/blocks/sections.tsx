@@ -433,7 +433,7 @@ export function AboutSection({ blurStyle }: { blurStyle?: BlurStyle }) {
           </div>
 
           {/* Founders */}
-          <div className="grid grid-cols-1 gap-3 sm:gap-4">
+          <div className="mx-auto grid w-full max-w-xl grid-cols-1 gap-3 sm:gap-4">
             {teamMeta.map((member, i) => (
               <motion.div
                 key={member.name}
