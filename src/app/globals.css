@@ -6,6 +6,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
@@ -50,6 +51,7 @@
 
 :root {
   --background: oklch(1 0 0);
+  --surface: #f3f3f3;
   --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -85,6 +87,7 @@
 
 .dark {
   --background: oklch(0 0 0);
+  --surface: #0b0b0b;
   --foreground: oklch(1 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -118,10 +121,6 @@
 }
 
 :root {
-  --grid-line: rgba(0, 0, 0, 0.45);
-  --grid-fine: rgba(0, 0, 0, 0.25);
-  --vignette: #ffffff;
-
   /* ── Text legibility ramp ─────────────────────────────────────
      Solid stand-ins for text-foreground/NN opacity utilities. Raw
      opacity reads low-contrast on both bg extremes (worst on pure
@@ -147,10 +146,6 @@
 }
 
 .dark {
-  --grid-line: rgba(255, 255, 255, 0.12);
-  --grid-fine: rgba(255, 255, 255, 0.035);
-  --vignette: #000000;
-
   /* ── Text legibility ramp (dark) — see :root for context ────── */
   --text-80: #f0f0f0;
   --text-70: #e3e3e3;
@@ -195,6 +190,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.7s ease;
   }
   html {
     @apply font-sans;
@@ -270,34 +266,6 @@ html:not(.dark) .bg-foreground\/\[0\.12\]  { background-color: #b8b8b8; }
 
 /* Light mode opacity-60 icons — boost visibility */
 html:not(.dark) .opacity-60 { opacity: 0.8; }
-
-@media (max-width: 1023px), (max-height: 740px), (prefers-reduced-motion: reduce) {
-
-  /* Mobile: unpin the sticky-stack.
-     On desktop each section is position:sticky inside a 700vh container, so
-     sections pin and stack over each other. On touch that reads as a section
-     "getting stuck" that you have to drag. Here we drop the pinning and let
-     every section flow in normal document order — one screen at a time, plain
-     downward scroll — and stop the inner scroll boxes from trapping the gesture. */
-  .section-stack {
-    height: auto !important;
-  }
-  .section-stack > section {
-    position: relative;
-    height: auto;
-    min-height: 0;
-  }
-  .section-stack > section > * {
-    height: auto;
-  }
-  .section-stack .overflow-y-auto {
-    overflow: visible;
-  }
-  .section-stack > section > * > .flex-1 {
-    flex: none;
-    overflow: visible;
-  }
-}
 
 /* ── Borders: dark mode — outlines are ~invisible on pure black ──
    rgba (not solid hex) so the border still blends over whichever
@@ -388,11 +356,43 @@ html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
   letter-spacing: -0.025em;
 }
 
-.hero-grid {
-  background-image: linear-gradient(to right, var(--grid-fine) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-fine) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: linear-gradient(to right, transparent 20%, #000);
-  opacity: 0.5;
+/* Hero frame: the card is framed on top and sides and open at the bottom so it
+   runs straight into the first section. The inset and radius collapse on scroll. */
+.hero-frame-card,
+.hero-frame-border {
+  --hero-frame-inset: 10px;
+  --hero-frame-radius: 20px;
+  --hero-frame-open: calc(1 - var(--hero-collapse, 0));
+}
+
+@media (min-width: 640px) {
+  .hero-frame-card,
+  .hero-frame-border {
+    --hero-frame-inset: 16px;
+    --hero-frame-radius: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-frame-card,
+  .hero-frame-border {
+    --hero-frame-inset: 24px;
+    --hero-frame-radius: 32px;
+  }
+}
+
+.hero-frame-card {
+  clip-path: inset(calc(var(--hero-frame-inset) * var(--hero-frame-open)) calc(var(--hero-frame-inset) * var(--hero-frame-open)) 0 calc(var(--hero-frame-inset) * var(--hero-frame-open)) round calc(var(--hero-frame-radius) * var(--hero-frame-open)) calc(var(--hero-frame-radius) * var(--hero-frame-open)) 0 0);
+}
+
+.hero-frame-border {
+  top: calc(var(--hero-frame-inset) * var(--hero-frame-open));
+  right: calc(var(--hero-frame-inset) * var(--hero-frame-open));
+  bottom: 0;
+  left: calc(var(--hero-frame-inset) * var(--hero-frame-open));
+  border-bottom-width: 0;
+  border-radius: calc(var(--hero-frame-radius) * var(--hero-frame-open)) calc(var(--hero-frame-radius) * var(--hero-frame-open)) 0 0;
+  opacity: var(--hero-frame-open);
 }
 
 .hero-sketch {
@@ -437,6 +437,15 @@ html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* The thin ScrollProgress line is the page's scroll indicator, so the native bar is hidden.
+   scrollbar-width covers Firefox and current Chromium; the pseudo-element covers WebKit. */
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
 }
 
 /* Horizontal rails that carry their own arrow buttons hide the native bar.

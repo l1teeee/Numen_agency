@@ -1,7 +1,17 @@
 import { Navbar } from "@/components/blocks/navbar";
 import { HeroSection } from "@/components/blocks/hero-section";
-import { StickyStack } from "@/components/blocks/sticky-stack";
-import { SiteFooter } from "@/components/blocks/sections";
+import {
+  ServicesSection,
+  ProjectsSection,
+  UseCasesSection,
+  AboutSection,
+  GlobalReachSection,
+  InsightsSection,
+  ProcessSection,
+  FAQSection,
+  ContactFormSection,
+  SiteFooter,
+} from "@/components/blocks/sections";
 import { ChatBubble } from "@/components/ui/chat-bubble";
 import { companyStats } from "@/lib/company-stats";
 import { SITE_URL } from "@/lib/site";
@@ -155,7 +165,15 @@ export default function Home() {
         <Navbar />
         <main id="main-content" tabIndex={-1}>
           <HeroSection />
-          <StickyStack />
+          <ServicesSection />
+          <ProjectsSection />
+          <UseCasesSection />
+          <AboutSection />
+          <GlobalReachSection />
+          <InsightsSection />
+          <ProcessSection />
+          <FAQSection />
+          <ContactFormSection />
         </main>
         <SiteFooter />
         <ChatBubble />

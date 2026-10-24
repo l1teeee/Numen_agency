@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SITE_URL } from "@/lib/site";

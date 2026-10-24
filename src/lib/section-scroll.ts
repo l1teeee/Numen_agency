@@ -3,8 +3,11 @@
 import type { MouseEvent } from 'react'
 
 type SectionScroller = {
-  scrollTo: (target: number, options?: { duration?: number; immediate?: boolean }) => void
+  scrollTo: (target: number, options?: { duration?: number; easing?: (t: number) => number; immediate?: boolean }) => void
 }
+
+// Long jumps feel calmer when they ease in as well as out.
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
 export const SECTION_HREFS = {
   services: '#services',
@@ -18,15 +21,6 @@ export const SECTION_HREFS = {
 } as const
 
 function getAbsoluteTop(el: HTMLElement): number {
-  const stack = el.parentElement
-  if (stack?.classList.contains('section-stack')) {
-    let top = stack.getBoundingClientRect().top + window.scrollY
-    for (const section of stack.children) {
-      if (section === el) return top
-      top += (section as HTMLElement).offsetHeight
-    }
-  }
-
   let top = 0
   let curr: HTMLElement | null = el
 
@@ -53,11 +47,11 @@ export function scrollToSection(href: string, scroller?: SectionScroller | null)
   if (!target) return false
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const sticky = getComputedStyle(target).position === 'sticky'
-  const top = Math.max(0, getAbsoluteTop(target) - (sticky ? 0 : 96))
+  // Sections carry top padding; 40px keeps titles clear of the fixed navbar on phones.
+  const top = Math.max(0, getAbsoluteTop(target) - 40)
 
   if (scroller) {
-    scroller.scrollTo(top, { duration: 1.1, immediate: reducedMotion })
+    scroller.scrollTo(top, { duration: 1.4, easing: easeInOutCubic, immediate: reducedMotion })
   } else {
     window.scrollTo({ top, behavior: reducedMotion ? 'instant' : 'smooth' })
   }

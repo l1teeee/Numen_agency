@@ -60,7 +60,7 @@ export function ProjectsPageContent() {
         </div>
       </header>
 
-      <LiveProjectsSection standalone />
+      <LiveProjectsSection />
 
       <section id="contact" className="relative z-30 mx-auto my-16 w-full max-w-6xl scroll-mt-28 px-6 lg:my-24 lg:px-8">
         <div className="grid items-center gap-8 rounded-[1.5rem] border border-foreground/20 bg-background p-6 sm:grid-cols-[1fr_140px] lg:p-12">

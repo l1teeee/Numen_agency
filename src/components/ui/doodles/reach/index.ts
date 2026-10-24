@@ -12,7 +12,6 @@ export { MexicoMark } from './mexico'
 export { ArgentinaMark } from './argentina'
 export { UnitedKingdomMark } from './united-kingdom'
 export { GermanyMark } from './germany'
-export { PaperTileFrame } from './paper-tile-frame'
 
 /** Keyed by reachMeta[i].id in sections.tsx. */
 export const COUNTRY_DOODLES: Record<
