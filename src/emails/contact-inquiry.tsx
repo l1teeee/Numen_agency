@@ -15,19 +15,8 @@ import type { ReactNode } from 'react'
 export type ContactInquiryEmailProps = {
   name: string
   email: string
-  company?: string
-  phone?: string
-  location?: string
-  category?: string
-  budget?: string
+  category: string
   message: string
-}
-
-const budgetLabels: Record<string, string> = {
-  under1k: 'Under $1k',
-  '1-5k': '$1k - $5k',
-  '5-10k': '$5k - $10k',
-  '10k+': '$10k+',
 }
 
 const categoryLabels: Record<string, string> = {
@@ -53,16 +42,9 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 export function ContactInquiryEmail({
   name,
   email,
-  company,
-  phone,
-  location,
   category,
-  budget,
   message,
 }: ContactInquiryEmailProps) {
-  const formattedBudget = budget ? budgetLabels[budget] ?? budget : 'Not specified'
-  const formattedCategory = category ? categoryLabels[category] ?? category : 'Not specified'
-
   return (
     <Html lang="en">
       <Head />
@@ -86,11 +68,7 @@ export function ContactInquiryEmail({
 
           <Field label="Name">{name}</Field>
           <Field label="Email">{email}</Field>
-          {company && <Field label="Company">{company}</Field>}
-          {phone && <Field label="Phone / WhatsApp">{phone}</Field>}
-          <Field label="Location">{location || 'Not specified'}</Field>
-          <Field label="Category">{formattedCategory}</Field>
-          <Field label="Budget">{formattedBudget}</Field>
+          <Field label="Category">{categoryLabels[category] ?? category}</Field>
           <Field label="Message">{message}</Field>
 
           <Section style={ctaSection}>

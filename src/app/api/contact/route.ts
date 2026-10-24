@@ -19,7 +19,6 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.delta-numen.com',
 ])
 
-const VALID_BUDGETS = new Set(['under1k', '1-5k', '5-10k', '10k+'])
 const VALID_CATEGORIES = new Set([
   'website',
   'ecommerce',
@@ -70,8 +69,14 @@ function inMemoryRateLimited(ip: string): boolean {
 
 async function checkRateLimit(ip: string): Promise<{ limited: boolean; reset?: number }> {
   if (upstashLimiter) {
-    const { success, reset } = await upstashLimiter.limit(ip)
-    return { limited: !success, reset }
+    try {
+      const { success, reset } = await upstashLimiter.limit(ip)
+      return { limited: !success, reset }
+    } catch (error) {
+      // A dead rate-limit store must not take the contact form down with it: log it loudly and
+      // keep limiting in memory for this instance.
+      console.error('[contact] Upstash rate limiter unavailable, using in-memory fallback:', error)
+    }
   }
   return { limited: inMemoryRateLimited(ip) }
 }
@@ -123,7 +128,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true })
   }
 
-  const { name, email, company, phone, location, category, budget, message } = body
+  const { name, email, category, message } = body
 
   if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string') {
     return NextResponse.json({ error: 'Invalid fields' }, { status: 400 })
@@ -132,11 +137,7 @@ export async function POST(req: NextRequest) {
   const cleanName    = sanitize(name)
   const cleanEmail   = sanitize(email).toLowerCase()
   const cleanMessage = sanitize(message)
-  const cleanCompany = typeof company === 'string' ? sanitize(company) : ''
-  const cleanPhone   = typeof phone === 'string' ? sanitize(phone) : ''
-  const cleanLocation = typeof location === 'string' ? sanitize(location) : ''
   const cleanCategory = typeof category === 'string' ? sanitize(category) : ''
-  const cleanBudget  = typeof budget === 'string' ? sanitize(budget) : ''
 
   if (!cleanName || cleanName.length > 100) {
     return NextResponse.json({ error: 'Invalid name' }, { status: 400 })
@@ -147,20 +148,8 @@ export async function POST(req: NextRequest) {
   if (!cleanMessage || cleanMessage.length > 2000) {
     return NextResponse.json({ error: 'Invalid message' }, { status: 400 })
   }
-  if (cleanCompany.length > 120) {
-    return NextResponse.json({ error: 'Invalid company' }, { status: 400 })
-  }
-  if (cleanPhone.length > 40) {
-    return NextResponse.json({ error: 'Invalid phone' }, { status: 400 })
-  }
-  if (!cleanLocation || cleanLocation.length > 120) {
-    return NextResponse.json({ error: 'Invalid location' }, { status: 400 })
-  }
   if (!cleanCategory || !VALID_CATEGORIES.has(cleanCategory)) {
     return NextResponse.json({ error: 'Invalid category' }, { status: 400 })
-  }
-  if (cleanBudget && !VALID_BUDGETS.has(cleanBudget)) {
-    return NextResponse.json({ error: 'Invalid budget' }, { status: 400 })
   }
 
   const apiKey = process.env.BREVO_API_KEY
@@ -171,11 +160,7 @@ export async function POST(req: NextRequest) {
   const emailData = {
     name: cleanName,
     email: cleanEmail,
-    company: cleanCompany,
-    phone: cleanPhone,
-    location: cleanLocation,
     category: cleanCategory,
-    budget: cleanBudget,
     message: cleanMessage,
   }
   const inquiryTemplate      = createElement(ContactInquiryEmail, emailData)
