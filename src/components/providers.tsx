@@ -35,8 +35,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <MotionConfig reducedMotion="user">
         <LangProvider>
-          {/* Lower lerp softens the glide; lower wheel input prevents each notch from overshooting. */}
-          <ReactLenis root options={{ smoothWheel: !reducedMotion, lerp: 0.075, wheelMultiplier: 0.9 }}>
+          {/* The floaty glide made the long page feel endless; normal wheel input keeps it responsive. */}
+          <ReactLenis root options={{ smoothWheel: !reducedMotion, lerp: 0.1, wheelMultiplier: 1 }}>
             <LenisScrollReset />
             <ScrollProgress />
             {children}

@@ -62,7 +62,7 @@ export function BlogPageClient() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl px-6 pb-24 pt-32 lg:px-8 lg:pt-40">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl px-9 sm:px-14 pb-24 pt-32 lg:px-8 lg:pt-40">
         <motion.header
           className="mb-12 grid gap-10 border-b border-foreground/15 pb-12 md:grid-cols-[1fr_220px] md:items-end lg:mb-16 lg:pb-16"
           initial={reduceMotion ? false : { opacity: 0, y: 20 }}
@@ -84,7 +84,7 @@ export function BlogPageClient() {
             <p className="mt-7 max-w-xl text-base leading-relaxed text-foreground/65">
               {t.blog.subtext}
             </p>
-            <a href="#articles" className="mt-6 inline-flex min-h-11 items-center gap-3 text-sm font-medium text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4">
+            <a href="#articles" className="mt-6 inline-flex min-h-11 items-center gap-3 text-sm font-medium text-foreground underline decoration-neutral-400 decoration-1 underline-offset-4 hover:decoration-current dark:decoration-neutral-600 focus-visible:outline-2 focus-visible:outline-offset-4">
               {copy.browse}<ArrowDown className="size-4" aria-hidden="true" />
             </a>
           </div>

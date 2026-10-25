@@ -37,7 +37,7 @@ export function HeroSection() {
     <section
       ref={heroRef}
       id="hero"
-      className="hero-editorial relative flex min-h-svh flex-col overflow-hidden bg-background px-4 pb-12 pt-28 sm:px-8 sm:pb-14 lg:px-12 lg:pb-20"
+      className="hero-editorial relative flex min-h-svh flex-col overflow-hidden bg-background px-5 pb-24 pt-28 sm:px-8 sm:pb-14 lg:px-12 lg:pb-20"
     >
       <motion.div
         aria-hidden="true"
@@ -80,12 +80,12 @@ export function HeroSection() {
             {t.hero.subline}
           </motion.p>
 
-          <motion.div {...enter(0.3)} className="flex flex-wrap gap-3 lg:shrink-0 lg:justify-end">
+          <motion.div {...enter(0.3)} className="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap lg:shrink-0 lg:justify-end">
             <Link
               href={SECTION_HREFS.work}
               scroll={false}
               onClick={(event) => handleSectionLinkClick(event, SECTION_HREFS.work, lenis)}
-              className="inline-flex min-h-12 items-center justify-center gap-7 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-opacity hover:opacity-80"
+              className="inline-flex min-h-12 w-full items-center justify-between gap-7 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-[opacity,transform] hover:opacity-80 active:scale-[0.98] sm:w-auto sm:justify-center"
             >
               {t.hero.cta1}
               <ArrowUpRight size={17} aria-hidden="true" />
@@ -94,12 +94,12 @@ export function HeroSection() {
               href={SECTION_HREFS.contact}
               scroll={false}
               onClick={(event) => handleSectionLinkClick(event, SECTION_HREFS.contact, lenis)}
-              className="inline-flex min-h-12 items-center justify-center gap-5 rounded-full border border-foreground/16 px-6 text-sm font-medium transition-colors hover:bg-foreground/5"
+              className="inline-flex min-h-12 w-full items-center justify-between gap-5 rounded-full border border-foreground/16 px-6 text-sm font-medium transition-[background-color,transform] hover:bg-foreground/5 active:scale-[0.98] sm:w-auto sm:justify-center"
             >
               {t.hero.cta2}
               <span aria-hidden="true">+</span>
             </Link>
-            <NumenArtLink />
+            <NumenArtLink className="w-full justify-between active:scale-[0.98] sm:w-auto sm:justify-center" />
           </motion.div>
         </div>
       </motion.div>

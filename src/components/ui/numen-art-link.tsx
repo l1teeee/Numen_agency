@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useLang } from '@/lib/lang'
 import { useReducedMotion } from '@/lib/use-reduced-motion'
+import { cn } from '@/lib/utils'
 
 const NUMEN_ART_URL = 'https://art.delta-numen.com'
 const CAPTION_EASE = [0.22, 1, 0.36, 1] as const
@@ -40,7 +41,7 @@ function ArtLinkCaption({ message, reducedMotion }: { message: string | null; re
   )
 }
 
-export function NumenArtLink() {
+export function NumenArtLink({ className }: { className?: string }) {
   const { t } = useLang()
   const reducedMotion = useReducedMotion()
 
@@ -114,7 +115,7 @@ export function NumenArtLink() {
   return (
     <a
       href={NUMEN_ART_URL}
-      className="group relative inline-flex min-h-12 items-center justify-center gap-5 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-opacity hover:opacity-80"
+      className={cn('group relative inline-flex min-h-12 items-center justify-center gap-5 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-[opacity,transform] hover:opacity-80', className)}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onFocus={handleFocus}

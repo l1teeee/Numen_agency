@@ -44,7 +44,7 @@ export function ProjectsPageContent() {
 
   return (
     <>
-      <header ref={heroRef} className="mx-auto grid w-full max-w-6xl items-center gap-10 px-6 pb-14 pt-32 md:grid-cols-[minmax(0,1fr)_240px] lg:gap-16 lg:px-8 lg:pb-20 lg:pt-40">
+      <header ref={heroRef} className="mx-auto grid w-full max-w-6xl items-center gap-10 px-9 sm:px-14 pb-14 pt-32 md:grid-cols-[minmax(0,1fr)_240px] lg:gap-16 lg:px-8 lg:pb-20 lg:pt-40">
         <motion.div initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.6 }} className="min-w-0">
           <p className="mb-7 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.16em] text-foreground/65"><span className="h-px w-8 bg-foreground/60" />{copy.label}</p>
           <h1 className="text-[clamp(2.6rem,5.4vw,4.7rem)] font-semibold leading-[1.1] tracking-[-0.055em] text-foreground">
@@ -52,7 +52,7 @@ export function ProjectsPageContent() {
             <span className="relative inline-block pb-4">{copy.accent}<ScribbleUnderline className="absolute bottom-0 left-0 h-3 w-full text-foreground/70" /></span>
           </h1>
           <p className="mt-7 max-w-xl text-base leading-relaxed text-foreground/65">{copy.description}</p>
-          <a href="#live-projects" className="mt-6 inline-flex min-h-11 items-center gap-3 text-sm font-medium text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4">{copy.explore}<ArrowDown className="size-4" aria-hidden="true" /></a>
+          <a href="#live-projects" className="mt-6 inline-flex min-h-11 items-center gap-3 text-sm font-medium text-foreground underline decoration-neutral-400 decoration-1 underline-offset-4 hover:decoration-current dark:decoration-neutral-600 focus-visible:outline-2 focus-visible:outline-offset-4">{copy.explore}<ArrowDown className="size-4" aria-hidden="true" /></a>
         </motion.div>
         <div className="flex items-center gap-6 md:flex-col">
           <LaunchDoodle active={heroVisible} className="w-36 shrink-0 text-foreground md:w-full" />
@@ -62,7 +62,7 @@ export function ProjectsPageContent() {
 
       <LiveProjectsSection />
 
-      <section id="contact" className="relative z-30 mx-auto my-16 w-full max-w-6xl scroll-mt-28 px-6 lg:my-24 lg:px-8">
+      <section id="contact" className="relative z-30 mx-auto my-16 w-full max-w-6xl scroll-mt-28 px-9 sm:px-14 lg:my-24 lg:px-8">
         <div className="grid items-center gap-8 rounded-[1.5rem] border border-foreground/20 bg-background p-6 sm:grid-cols-[1fr_140px] lg:p-12">
           <div className="min-w-0">
             <p className="mb-4 text-xs font-medium uppercase tracking-widest text-foreground/65">{copy.detail}</p>

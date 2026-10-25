@@ -113,7 +113,7 @@ export function BlogPostContent({ post }: { post: BlogPost }) {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl px-6 pb-24 pt-28 lg:px-8 lg:pt-36">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl px-9 sm:px-14 pb-24 pt-28 lg:px-8 lg:pt-36">
         <div id="article-top" className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-foreground/15 pb-5 lg:mb-12">
           <Link
             href="/blog"

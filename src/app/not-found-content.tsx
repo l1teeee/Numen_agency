@@ -49,7 +49,7 @@ export function NotFoundContent() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
-      <main id="main-content" tabIndex={-1} className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 pb-20 pt-32 lg:px-8 lg:pt-40">
+      <main id="main-content" tabIndex={-1} className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-9 sm:px-14 pb-20 pt-32 lg:px-8 lg:pt-40">
         <p className="mb-10 flex items-center justify-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-foreground/65"><span className="h-px w-8 bg-foreground/60" />404 / {editorial.label}</p>
         <div className="relative mx-auto mb-14 w-fit sm:mb-16">
           <DoodleSvg

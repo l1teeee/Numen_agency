@@ -360,7 +360,7 @@ html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
    runs straight into the first section. The inset and radius collapse on scroll. */
 .hero-frame-card,
 .hero-frame-border {
-  --hero-frame-inset: 10px;
+  --hero-frame-inset: 14px;
   --hero-frame-radius: 20px;
   --hero-frame-open: calc(1 - var(--hero-collapse, 0));
 }

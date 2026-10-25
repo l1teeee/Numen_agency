@@ -34,6 +34,9 @@ const EASE = [0.22, 1, 0.36, 1] as const
 const INPUT =
   'w-full min-h-11 rounded-lg border border-neutral-300 bg-transparent px-4 py-2.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 transition-colors focus:border-neutral-900 focus:outline-none dark:border-neutral-700 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-100'
 
+const CTA_PILL =
+  'inline-flex min-h-11 items-center gap-2 rounded-full border border-neutral-300 px-5 text-[14px] font-medium text-neutral-900 transition-[background-color,color,border-color,transform] duration-200 hover:border-neutral-900 hover:bg-neutral-900 hover:text-neutral-100 active:scale-[0.98] dark:border-neutral-700 dark:text-neutral-100 dark:hover:border-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900'
+
 function useSectionReveal(ref: React.RefObject<HTMLElement | null>) {
   const isInView = useInView(ref, { amount: 0.12, once: true })
   const reducedMotion = useReducedMotion()
@@ -164,7 +167,7 @@ export function ServicesSection() {
           {lang === 'es' ? 'Diseño + ingeniería. Un mismo equipo.' : 'Design + engineering. One team.'}
         </p>
       </EditorialReveal>
-      <div className="mt-12 space-y-12">
+      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
         {serviceNums.map((num, i) => {
           const item = ts.items[i]
           const Doodle = SERVICE_DOODLES[num]
@@ -203,7 +206,7 @@ export function ProjectsSection() {
           <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Ideas que ya están ahí afuera.' : 'Ideas out in the real world.'}</span>
         </p>
       </EditorialReveal>
-      <div className="mt-12 space-y-12">
+      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
         {selectedProjects.map(({ meta, text }) => {
           const Scene = PROJECT_SCENES[meta.name]
           return (
@@ -215,17 +218,20 @@ export function ProjectsSection() {
             >
               <p>{text.desc}</p>
               <p className="text-sm">{meta.stack.join(' · ')}</p>
-              <p className="flex items-center gap-2 text-sm">
-                <StatusDot online={status[meta.href]} />
-                {status[meta.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}
+              <p>
+                <a href={meta.href} target="_blank" rel="noopener noreferrer" className={CTA_PILL}>
+                  <StatusDot online={status[meta.href]} />
+                  {status[meta.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}
+                  <ArrowUpRight className="size-4" aria-hidden="true" />
+                </a>
               </p>
             </EditorialEntry>
           )
         })}
       </div>
       <EditorialReveal>
-        <div className="mt-12">
-          <Link href="/projects" className={EDITORIAL_LINK}>{t.projects.seeAll}<ArrowUpRight className="size-3.5" aria-hidden="true" /></Link>
+        <div className="mt-10 md:mt-12">
+          <Link href="/projects" className={CTA_PILL}>{t.projects.seeAll}<ArrowUpRight className="size-4" aria-hidden="true" /></Link>
         </div>
       </EditorialReveal>
     </EditorialSection>
@@ -246,7 +252,7 @@ export function UseCasesSection() {
           {lang === 'es' ? 'Experimentos de marca, diseño y nuevas posibilidades.' : 'Experiments in brand, design and new possibilities.'}
         </p>
       </EditorialReveal>
-      <div className="mt-12 space-y-12">
+      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
         {tu.concepts.map((concept, i) => (
           <EditorialEntry
             key={concept.name}
@@ -257,8 +263,8 @@ export function UseCasesSection() {
             <p>{concept.desc}</p>
             <p>
               <HoverPeek url={useCaseMeta[i].href} peekWidth={320} peekHeight={200}>
-                <Link href={useCaseMeta[i].href} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>
-                  {concept.cta}<ArrowUpRight className="size-3.5" aria-hidden="true" />
+                <Link href={useCaseMeta[i].href} target="_blank" rel="noopener noreferrer" className={CTA_PILL}>
+                  {concept.cta}<ArrowUpRight className="size-4" aria-hidden="true" />
                 </Link>
               </HoverPeek>
             </p>
@@ -266,7 +272,12 @@ export function UseCasesSection() {
         ))}
         <EditorialEntry
           icon={<SketchPencilDoodle active={isActive} className="h-full w-full" />}
-          title={tu.comingSoon}
+          title={
+            <span className="inline-flex items-center gap-2 rounded-full border border-dashed border-neutral-400 px-3 py-1 text-[12px] font-medium uppercase tracking-[0.14em] text-neutral-700 dark:border-neutral-600 dark:text-neutral-300">
+              <span className="size-1.5 rounded-full bg-current motion-safe:animate-pulse" aria-hidden="true" />
+              {tu.comingSoon}
+            </span>
+          }
         >
           {tu.cards.map((card) => (
             <p key={card.category}><span className={EDITORIAL_STRONG}>{card.title}</span> · {card.category}</p>
@@ -294,7 +305,7 @@ export function LiveProjectsSection() {
         <p>{tl.subtext}</p>
       </EditorialEntry>
 
-      <div className="mt-12 space-y-12">
+      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
         {liveProjectsMeta.map((project) => (
           <EditorialEntry
             key={project.href}
@@ -306,9 +317,12 @@ export function LiveProjectsSection() {
             subtitle={new URL(project.href).hostname}
           >
             <p>{project.stack.slice(0, 3).join(' · ')}</p>
-            <p className="flex items-center gap-2 text-sm">
-              <StatusDot online={status[project.href]} />
-              {status[project.href] === true ? (lang === 'es' ? 'En línea' : 'Online') : status[project.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Visitar proyecto' : 'Visit project')}
+            <p>
+              <a href={project.href} target="_blank" rel="noopener noreferrer" className={CTA_PILL}>
+                <StatusDot online={status[project.href]} />
+                {status[project.href] === true ? (lang === 'es' ? 'En línea' : 'Online') : status[project.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Visitar proyecto' : 'Visit project')}
+                <ArrowUpRight className="size-4" aria-hidden="true" />
+              </a>
             </p>
           </EditorialEntry>
         ))}
@@ -316,9 +330,9 @@ export function LiveProjectsSection() {
           icon={<SparkleDoodle active={isActive} className="h-full w-full" />}
           title={lang === 'es' ? 'El siguiente puede ser el tuyo.' : 'Yours could be next.'}
         >
-          <Link href={SECTION_HREFS.contact} className={EDITORIAL_LINK}>
+          <Link href={SECTION_HREFS.contact} className={CTA_PILL}>
             {lang === 'es' ? 'Cuéntanos tu idea' : 'Tell us your idea'}
-            <ArrowUpRight className="size-3.5" aria-hidden="true" />
+            <ArrowUpRight className="size-4" aria-hidden="true" />
           </Link>
         </EditorialEntry>
       </div>
@@ -359,7 +373,7 @@ export function AboutSection() {
         ))}
       </div>
 
-      <div className="mt-12 space-y-12">
+      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
         {teamMeta.map((member, i) => (
           <EditorialEntry
             key={member.name}
@@ -412,8 +426,8 @@ export function GlobalReachSection() {
       </EditorialReveal>
       <EditorialReveal><p className={`mt-6 ${EDITORIAL_PROSE}`}>{tr.subtext}</p></EditorialReveal>
 
-      <div className="mt-12 grid gap-10 lg:grid-cols-[13rem_minmax(0,1fr)] lg:items-center lg:gap-10">
-        <div className="order-2 grid grid-cols-2 gap-x-6 gap-y-1 lg:order-1 lg:grid-cols-1">
+      <div className="mt-10 grid gap-10 md:mt-12 lg:grid-cols-[13rem_minmax(0,1fr)] lg:items-center lg:gap-10">
+        <div className="order-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:order-1 lg:grid-cols-1">
           {reachMeta.map((c, i) => {
             const country = tr.countries[i]
             const CountryMark = COUNTRY_DOODLES[c.id]
@@ -424,7 +438,7 @@ export function GlobalReachSection() {
                   type="button"
                   aria-pressed={focused === c.id}
                   onClick={() => setFocused(focused === c.id ? null : c.id)}
-                  className={`flex w-full items-center gap-3 py-1.5 text-left transition-opacity duration-300 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-neutral-100 ${focused && focused !== c.id ? 'opacity-40' : 'opacity-100'}`}
+                  className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-[opacity,transform,border-color] duration-300 hover:opacity-100 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-neutral-100 ${focused === c.id ? 'border-neutral-900 dark:border-neutral-100' : 'border-neutral-200 dark:border-neutral-800'} ${focused && focused !== c.id ? 'opacity-40' : 'opacity-100'}`}
                 >
                   <CountryMark active={isActive} className="size-7 shrink-0 text-neutral-900 dark:text-neutral-100" />
                   <span className="min-w-0">
@@ -467,7 +481,7 @@ export function InsightsSection() {
         </p>
       </EditorialReveal>
 
-      <div className="mt-12 space-y-12">
+      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
         {recentPosts.map((post, i) => {
           const title = lang === 'en' && post.en ? post.en.title : post.title
           const description = lang === 'en' && post.en ? post.en.description : post.description
@@ -493,9 +507,9 @@ export function InsightsSection() {
       </div>
 
       <EditorialReveal>
-        <div className="mt-12">
-          <Link href="/blog" className={EDITORIAL_LINK}>
-            {tb.moreArticles}<ArrowUpRight className="size-3.5" aria-hidden="true" />
+        <div className="mt-10 md:mt-12">
+          <Link href="/blog" className={CTA_PILL}>
+            {tb.moreArticles}<ArrowUpRight className="size-4" aria-hidden="true" />
           </Link>
         </div>
       </EditorialReveal>
@@ -523,7 +537,7 @@ export function ProcessSection() {
           {lang === 'es' ? 'Sabes qué sigue, desde el primer día.' : 'Know what comes next, from day one.'}
         </p>
       </EditorialReveal>
-      <div className="mt-12 space-y-12">
+      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
         {tp.steps.map((step, i) => {
           const Doodle = PROCESS_DOODLES[stepNums[i]]
           return (
@@ -571,10 +585,12 @@ export function FAQSection() {
               onClick={() => setOpen(open === i ? null : i)}
             >
               <span className={`pr-4 font-medium ${EDITORIAL_TEXT} ${EDITORIAL_STRONG}`}>{faq.q}</span>
-              <Plus
-                size={14}
-                className={`shrink-0 ${EDITORIAL_MUTED} transition-transform duration-300 ${open === i ? 'rotate-45' : ''}`}
-              />
+              <span className={`flex size-8 shrink-0 items-center justify-center rounded-full border transition-colors ${open === i ? 'border-neutral-900 dark:border-neutral-100' : 'border-neutral-300 dark:border-neutral-700'}`}>
+                <Plus
+                  size={14}
+                  className={`${EDITORIAL_MUTED} transition-transform duration-300 ${open === i ? 'rotate-45' : ''}`}
+                />
+              </span>
             </button>
             <AnimatePresence initial={false}>
               {open === i && (
@@ -596,7 +612,7 @@ export function FAQSection() {
         ))}
       </div>
       <EditorialReveal>
-        <div className="mt-12">
+        <div className="mt-10 md:mt-12">
           <EditorialEntry
             icon={<NumenBot active={isActive} className="h-full w-full" />}
             title={
@@ -680,7 +696,7 @@ export function ContactFormSection() {
           </EditorialRow>
         ))}
       </div>
-      <EditorialReveal className="mt-12 max-w-[36rem]">
+      <EditorialReveal className="mt-10 max-w-[36rem] md:mt-12">
         {status === 'sent' ? (
           <div role="status" aria-live="polite" className="rounded-lg border border-neutral-200 p-8 text-center dark:border-neutral-800">
             <CheckScribble active className={`mx-auto h-16 w-16 ${EDITORIAL_STRONG}`} />
@@ -797,7 +813,7 @@ export function ContactFormSection() {
             </Button>
             <Link
               href="/blog"
-              className={`block text-center text-sm transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+              className={`flex min-h-11 items-center justify-center text-center text-sm underline decoration-neutral-400 underline-offset-4 transition-colors hover:text-neutral-900 dark:decoration-neutral-600 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
             >
               {tc.blogCta}
             </Link>
@@ -813,7 +829,7 @@ export function SiteFooter() {
   return (
     <footer className="relative border-t border-neutral-200 bg-surface dark:border-neutral-800">
       <ColumnLines />
-      <div className="relative mx-auto max-w-[46rem] px-6 pb-36 pt-14 sm:px-10">
+      <div className="relative mx-auto max-w-[46rem] px-9 pb-36 pt-14 sm:px-14">
         <div className="flex items-center justify-between gap-6">
           <Link href="/" aria-label="Numen" className={EDITORIAL_STRONG}>
             <NumenMark className="h-5 w-5" />
@@ -846,19 +862,19 @@ export function SiteFooter() {
         <nav aria-label="Footer" className="mt-10 flex flex-wrap gap-x-7 gap-y-3">
           <Link
             href="/"
-            className={`text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+            className={`inline-flex min-h-11 items-center text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
           >
             {t.nav.home}
           </Link>
           <Link
             href="/projects"
-            className={`text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+            className={`inline-flex min-h-11 items-center text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
           >
             {t.nav.projectsLink}
           </Link>
           <Link
             href="/blog"
-            className={`text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+            className={`inline-flex min-h-11 items-center text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
           >
             {t.blog.label}
           </Link>

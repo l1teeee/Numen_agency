@@ -91,7 +91,7 @@ export function Navbar() {
     <>
       <a href="#main-content" className="skip-link">{es ? 'Saltar al contenido' : 'Skip to content'}</a>
       <header ref={headerRef} inert={!atPageTop} className={cn('fixed inset-x-0 top-0 z-100 pt-5 sm:pt-7 lg:pt-10', atPageTop ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-3 opacity-0', !reducedMotion && 'transition-[opacity,transform] duration-400 ease-out')}>
-        <div className="h-14 px-4 sm:px-8 lg:px-12">
+        <div className="h-14 px-5 sm:px-8 lg:px-12">
           <div className="mx-auto grid h-full max-w-[1408px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6">
             <Link href="/" aria-label={es ? 'Numen, inicio' : 'Numen, home'} className="group relative flex min-h-11 items-center justify-self-start text-foreground" onClick={() => setMenuOpen(false)}>
               <NumenMark className="h-5 w-5" />
@@ -111,7 +111,7 @@ export function Navbar() {
           </div>
         </div>
         <AnimatePresence>
-          {menuOpen && <motion.nav id="mobile-navigation" aria-label={es ? 'Navegación móvil' : 'Mobile navigation'} initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.18 }} className="mx-4 mt-2 rounded-xl border border-neutral-200 bg-background p-2 dark:border-neutral-800 lg:hidden">
+          {menuOpen && <motion.nav id="mobile-navigation" aria-label={es ? 'Navegación móvil' : 'Mobile navigation'} initial={reducedMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : 0.18 }} className="mx-5 mt-2 rounded-xl border border-neutral-200 bg-background p-2 dark:border-neutral-800 lg:hidden">
             {mobileLinks.map((link) => <Link key={link.href} href={destination(link.href)} onClick={(event) => navigate(event, link.href)} className="flex min-h-11 items-center justify-between border-b border-neutral-100 px-2 text-[14px] last:border-0 dark:border-neutral-900">{link.label}<ArrowUpRight size={14} aria-hidden="true" /></Link>)}
           </motion.nav>}
         </AnimatePresence>
