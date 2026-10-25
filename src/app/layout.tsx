@@ -22,11 +22,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Numen Agency | Agencia Digital El Salvador - Desarrollo Web & SaaS",
+    default: "Numen Agency | Digital Agency in El Salvador - Web & SaaS Development",
     template: "%s | Numen Agency",
   },
   description:
-    "Agencia digital en El Salvador. Desarrollo web full-stack, diseño de productos y IA. 12+ proyectos entregados. Del concepto a producción en 4-8 semanas.",
+    "Digital agency in El Salvador. Full-stack web development, product design and AI. 12+ projects delivered. From concept to production in 4-8 weeks.",
   keywords: [
     "agencia digital El Salvador",
     "desarrollo web El Salvador",
@@ -63,28 +63,28 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "Numen Agency | Agencia Digital El Salvador - Desarrollo Web & SaaS",
+    title: "Numen Agency | Digital Agency in El Salvador - Web & SaaS Development",
     description:
-      "Agencia digital en El Salvador. Desarrollo web full-stack, diseño de productos y IA. 12+ proyectos entregados. Del concepto a producción en 4-8 semanas.",
+      "Digital agency in El Salvador. Full-stack web development, product design and AI. 12+ projects delivered. From concept to production in 4-8 weeks.",
     url: SITE_URL,
     siteName: "Numen Agency",
     type: "website",
-    locale: "es_SV",
-    alternateLocale: ["en_US"],
+    locale: "en_US",
+    alternateLocale: ["es_SV"],
     images: [
       {
         url: "/OPimage.png",
         width: 1200,
         height: 630,
-        alt: "Numen Agency — Agencia Digital El Salvador",
+        alt: "Numen Agency - Digital Agency in El Salvador",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Numen Agency | Agencia Digital El Salvador - Desarrollo Web & SaaS",
+    title: "Numen Agency | Digital Agency in El Salvador - Web & SaaS Development",
     description:
-      "Agencia digital en El Salvador. Desarrollo web full-stack, diseño de productos y IA. 12+ proyectos entregados.",
+      "Digital agency in El Salvador. Full-stack web development, product design and AI. 12+ projects delivered.",
     images: ["/OPimage.png"],
   },
   alternates: {

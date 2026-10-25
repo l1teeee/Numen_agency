@@ -24,7 +24,8 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   useEffect(() => {
-    const stored = localStorage.getItem('numen-lang') as Lang | null
+    // The key changed when English became the default, so earlier choices start over in English.
+    const stored = localStorage.getItem('numen-lang-v2') as Lang | null
     if (stored !== 'en' && stored !== 'es') return
     const timer = setTimeout(() => setLangState(stored), 0)
     return () => clearTimeout(timer)
@@ -44,7 +45,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     if (l === lang) return
     timersRef.current.forEach(clearTimeout)
     timersRef.current = []
-    localStorage.setItem('numen-lang', l)
+    localStorage.setItem('numen-lang-v2', l)
 
     if (reduceMotion) {
       setLangState(l)

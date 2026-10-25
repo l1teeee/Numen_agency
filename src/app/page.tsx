@@ -17,7 +17,7 @@ import { companyStats } from "@/lib/company-stats";
 import { SITE_URL } from "@/lib/site";
 import { translations } from "@/lib/translations";
 
-const faqEs = translations.es.faq.items;
+const faqEn = translations.en.faq.items;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -37,7 +37,7 @@ const jsonLd = {
       image: `${SITE_URL}/OPimage.png`,
       email: "contact@delta-numen.com",
       description:
-        "Agencia digital en El Salvador especializada en desarrollo web full-stack, diseño de productos y integración de IA. 12+ proyectos entregados, 6 productos en producción.",
+        "Digital agency in El Salvador specializing in full-stack web development, product design and AI integration. 12+ projects delivered, 6 products in production.",
       foundingDate: "2024",
       areaServed: ["El Salvador", "Worldwide"],
       priceRange: "$$$",
@@ -60,10 +60,10 @@ const jsonLd = {
         },
       ],
       knowsAbout: [
-        "Desarrollo Web Full-Stack",
-        "Diseño de Productos Digitales",
-        "Integración de IA",
-        "Desarrollo SaaS",
+        "Full-Stack Web Development",
+        "Digital Product Design",
+        "AI Integration",
+        "SaaS Development",
         "DevOps",
         "Infrastructure as Code",
         "Kubernetes",
@@ -80,49 +80,16 @@ const jsonLd = {
       ],
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Servicios Digitales",
-        itemListElement: [
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Desarrollo Web Full-Stack en El Salvador",
-              description:
-                "Aplicaciones full-stack con Next.js, TypeScript y Supabase. Desde MVPs hasta plataformas SaaS de producción.",
-              provider: { "@id": `${SITE_URL}/#organization` },
-            },
+        name: "Digital Services",
+        itemListElement: translations.en.services.items.map((service) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: service.title,
+            description: service.desc,
+            provider: { "@id": `${SITE_URL}/#organization` },
           },
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Diseño de Productos Digitales",
-              description:
-                "Diseño end-to-end en Figma: flujos de usuario, wireframes, prototipos interactivos y sistemas de diseño.",
-              provider: { "@id": `${SITE_URL}/#organization` },
-            },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Integración de IA en Productos",
-              description:
-                "IA conversacional, búsqueda semántica, automatización de contenido y recomendaciones inteligentes.",
-              provider: { "@id": `${SITE_URL}/#organization` },
-            },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "DevOps e Infraestructura",
-              description:
-                "Despliegues en AWS, GCP y Kubernetes. CI/CD, infraestructura como código con Terraform.",
-              provider: { "@id": `${SITE_URL}/#organization` },
-            },
-          },
-        ],
+        })),
       },
       additionalProperty: companyStats.map((stat) => ({
         "@type": "PropertyValue",
@@ -135,14 +102,14 @@ const jsonLd = {
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
       name: "Numen Agency",
-      description: "Agencia digital en El Salvador — Desarrollo Web, SaaS e IA",
+      description: "Digital agency in El Salvador - Web Development, SaaS and AI",
       publisher: { "@id": `${SITE_URL}/#organization` },
-      inLanguage: ["es-SV", "en-US"],
+      inLanguage: ["en-US", "es-SV"],
     },
     {
       "@type": "FAQPage",
       "@id": `${SITE_URL}/#faq`,
-      mainEntity: faqEs.map((item) => ({
+      mainEntity: faqEn.map((item) => ({
         "@type": "Question",
         name: item.q,
         acceptedAnswer: {

@@ -18,34 +18,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = blogPosts.find((p) => p.slug === slug)
   if (!post) return {}
   const url = `${SITE_URL}/blog/${post.slug}`
+  const title = post.en?.title ?? post.title
+  const description = post.en?.description ?? post.description
   return {
-    title: post.title,
-    description: post.description,
+    title,
+    description,
     keywords: [post.category, 'agencia digital El Salvador', 'Numen Agency', 'desarrollo web El Salvador'],
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: post.title,
-      description: post.description,
+      title,
+      description,
       type: 'article',
       url,
       siteName: 'Numen Agency',
-      locale: 'es_SV',
+      locale: 'en_US',
       publishedTime: post.date,
       images: [
         {
           url: '/OPimage.png',
           width: 1200,
           height: 630,
-          alt: post.title,
+          alt: title,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
-      description: post.description,
+      title,
+      description,
       images: ['/OPimage.png'],
     },
   }
@@ -62,7 +64,7 @@ export default async function BlogPostPage({ params }: Props) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
       { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
-      { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+      { '@type': 'ListItem', position: 3, name: post.en?.title ?? post.title, item: `${SITE_URL}/blog/${post.slug}` },
     ],
   }
 

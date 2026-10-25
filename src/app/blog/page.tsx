@@ -5,7 +5,7 @@ import { BlogPageClient } from './BlogPageClient'
 
 const title = 'Blog'
 const description =
-  'Artículos sobre desarrollo web, diseño de productos, integración de IA e infraestructura. Recursos para founders y equipos tech en El Salvador y LATAM.'
+  'Articles on web development, product design, AI integration and infrastructure. Resources for founders and tech teams in El Salvador and LATAM.'
 const url = `${SITE_URL}/blog`
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
         url: '/OPimage.png',
         width: 1200,
         height: 630,
-        alt: 'Numen Agency — Blog',
+        alt: 'Numen Agency - Blog',
       },
     ],
   },

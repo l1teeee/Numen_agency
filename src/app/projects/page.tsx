@@ -31,7 +31,7 @@ export const metadata: Metadata = {
         url: '/OPimage.png',
         width: 1200,
         height: 630,
-        alt: 'Numen Agency — Proyectos en producción',
+        alt: 'Numen Agency - Live projects',
       },
     ],
   },
