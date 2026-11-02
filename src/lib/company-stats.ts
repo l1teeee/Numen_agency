@@ -15,9 +15,9 @@ export const companyStats = [
   },
   {
     key: 'productsLiveInProduction',
-    value: 7,
+    value: 8,
     suffix: '',
-    display: '7',
+    display: '8',
     schemaName: 'Products live in production',
   },
   {

@@ -108,8 +108,8 @@ function CheckLine({ active, children }: { active: boolean; children: ReactNode 
 const serviceNums = ['01', '02', '03', '04'] as const
 
 // The first entry is the featured project of the Selected Work section and the
-// next four follow it there; the rest only appear in the Live Now list.
-const SIDE_CARD_COUNT = 4
+// next five follow it there; the rest only appear in the Live Now list.
+const SIDE_CARD_COUNT = 5
 
 // Project scenes keyed by project name.
 const PROJECT_SCENES: Record<string, ComponentType<{ active: boolean; covered: boolean }>> = {
@@ -123,6 +123,7 @@ const projectsMeta = [
   { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
   { href: 'https://dashboard-bot-whatsapp.vercel.app', name: 'WhatsApp Ops', status: 'Live', dot: 'bg-emerald-400', stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'TanStack Query'] },
   { href: 'https://cora-dashboard-three.vercel.app/login', name: 'CORA', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'Tailwind CSS'] },
+  { href: 'https://nexo-erp-phi.vercel.app/login', name: 'Nexo ERP', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'NestJS', 'Prisma'] },
   { href: 'https://servilocal-three.vercel.app', name: 'ServiLocal', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Tkiero'] },
 ]
 

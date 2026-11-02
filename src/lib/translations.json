@@ -88,6 +88,11 @@
           "desc": "A call panel for teams — sign in and manage every call your team handles from one dashboard."
         },
         {
+          "name": "Nexo ERP",
+          "category": "Platform · 2026",
+          "desc": "A web ERP for businesses in El Salvador — accounting, invoicing and payroll from one place, with multi-company and multi-user access."
+        },
+        {
           "name": "ServiLocal",
           "category": "Platform · 2026",
           "desc": "A local services marketplace for El Salvador — post a request, compare proposals from verified professionals, and pay only when the job is done."
@@ -504,6 +509,11 @@
           "name": "CORA",
           "category": "Panel · 2026",
           "desc": "Panel de llamadas para equipos — inicia sesión y gestiona todas las llamadas de tu equipo desde un solo lugar."
+        },
+        {
+          "name": "Nexo ERP",
+          "category": "Plataforma · 2026",
+          "desc": "ERP web para empresas salvadoreñas — contabilidad, facturación y planillas desde un solo lugar, con acceso multiempresa y multiusuario."
         },
         {
           "name": "ServiLocal",
