@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode, type Ref } from 'react'
+import { createContext, useContext, useEffect, useRef, type ReactNode, type Ref } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import { useReducedMotion } from '@/lib/use-reduced-motion'
@@ -15,7 +15,7 @@ export const EDITORIAL_PROSE = `max-w-[32rem] ${EDITORIAL_TEXT} ${EDITORIAL_MUTE
 export const EDITORIAL_LINK = `inline ${EDITORIAL_STRONG} underline decoration-neutral-400 decoration-1 underline-offset-4 transition-colors hover:decoration-current dark:decoration-neutral-600 [&>svg]:mx-0.5 [&>svg]:inline-block [&>svg]:align-[-0.125em]`
 const FRAME = 'relative aspect-[4/3] overflow-hidden rounded-xl'
 
-// next-themes owns the html class. Lend the page the light palette while focused;
+// next-themes owns the html class. Lend the page the light palette, on pure white, while focused;
 // the provider's later effect still wins if the visitor changes themes meanwhile.
 function useLightSpotlight(active: boolean) {
   const { resolvedTheme } = useTheme()
@@ -24,9 +24,11 @@ function useLightSpotlight(active: boolean) {
     const root = document.documentElement
     root.classList.replace('dark', 'light')
     root.style.colorScheme = 'light'
+    root.classList.add('light-spotlight')
     return () => {
       root.classList.replace('light', 'dark')
       root.style.colorScheme = 'dark'
+      root.classList.remove('light-spotlight')
     }
   }, [active, resolvedTheme])
 }
@@ -52,46 +54,69 @@ export function EditorialReveal({ children, className, delay }: EditorialRevealP
   return <motion.div className={className} {...revealProps(reducedMotion, delay)}>{children}</motion.div>
 }
 
+interface EditorialHeadingValue {
+  number?: number
+  title: string
+  focused: boolean
+}
+
+const EditorialHeadingContext = createContext<EditorialHeadingValue | null>(null)
+
+export function EditorialHeading() {
+  const heading = useContext(EditorialHeadingContext)
+  const reducedMotion = useReducedMotion()
+  if (!heading) throw new Error('EditorialHeading must be rendered inside EditorialSection')
+  const { number, title, focused } = heading
+  return (
+    <motion.h2 className={`relative font-medium ${EDITORIAL_TEXT} ${EDITORIAL_STRONG}`} {...revealProps(reducedMotion)}>
+      {number !== undefined && (
+        <span aria-hidden="true" className={`mr-3 font-normal tabular-nums transition-colors duration-500 ${focused ? EDITORIAL_STRONG : 'text-neutral-400 dark:text-neutral-600'}`}>
+          {number}
+        </span>
+      )}
+      <span aria-hidden="true" className={`absolute right-full top-1/2 mr-4 hidden h-px w-8 origin-right bg-neutral-900 dark:bg-neutral-100 lg:block ${reducedMotion ? '' : 'transition-transform duration-500'} ${focused ? 'scale-x-100' : 'scale-x-0'}`} />
+      {title}
+    </motion.h2>
+  )
+}
+
 interface EditorialSectionProps {
   id: string
   title: string
   number?: number
   sectionRef?: Ref<HTMLElement>
   spotlight?: boolean
+  /** False when a child such as HorizontalScroll places the heading itself. */
+  heading?: boolean
+  columnLines?: boolean
   children: ReactNode
 }
 
-export function EditorialSection({ id, title, number, sectionRef, spotlight = false, children }: EditorialSectionProps) {
+export function EditorialSection({ id, title, number, sectionRef, spotlight = false, heading = true, columnLines = true, children }: EditorialSectionProps) {
   const reducedMotion = useReducedMotion()
   const focusRef = useRef<HTMLDivElement>(null)
-  const isOnScreen = useInView(focusRef)
   // The narrow middle band picks the section the reader is currently crossing.
   const isFocused = useInView(focusRef, { margin: '-45% 0px -45% 0px' })
   useLightSpotlight(spotlight && isFocused)
 
   return (
     <section ref={sectionRef} id={id} className="relative bg-surface transition-colors duration-700">
-      <ColumnLines />
+      {columnLines && <ColumnLines />}
+      <div aria-hidden="true" className="relative flex h-14 items-start justify-center pt-7 sm:h-20 sm:pt-10">
+        <span className="h-1.5 w-24 rounded-full bg-neutral-400 dark:bg-neutral-600" />
+      </div>
       <motion.div
         ref={focusRef}
         className="relative mx-auto w-full max-w-[46rem] px-9 py-12 sm:px-14 sm:py-20 lg:py-24"
         initial={false}
         // Opacity keeps off-screen links reachable by keyboard focus.
-        animate={{ opacity: isFocused ? 1 : isOnScreen ? 0.25 : 0 }}
+        animate={{ opacity: isFocused ? 1 : 0 }}
         transition={{ duration: reducedMotion ? 0 : 0.6, ease: EASE }}
       >
-        <motion.h2 className={`relative font-medium ${EDITORIAL_TEXT} ${EDITORIAL_STRONG}`} {...revealProps(reducedMotion)}>
-          {number !== undefined && (
-            <span aria-hidden="true" className={`mr-3 font-normal tabular-nums transition-colors duration-500 ${isFocused ? EDITORIAL_STRONG : 'text-neutral-400 dark:text-neutral-600'}`}>
-              {number}
-            </span>
-          )}
-          <span aria-hidden="true" className={`absolute right-full top-1/2 mr-4 hidden h-px w-8 origin-right bg-neutral-900 dark:bg-neutral-100 lg:block ${reducedMotion ? '' : 'transition-transform duration-500'} ${isFocused ? 'scale-x-100' : 'scale-x-0'}`} />
-          {title}
-        </motion.h2>
-        <div className="mt-6">
-          {children}
-        </div>
+        <EditorialHeadingContext value={{ number, title, focused: isFocused }}>
+          {heading && <EditorialHeading />}
+          <div className={heading ? 'mt-6' : undefined}>{children}</div>
+        </EditorialHeadingContext>
       </motion.div>
     </section>
   )
@@ -102,24 +127,33 @@ interface EditorialEntryProps {
   subtitle?: ReactNode
   /** A doodle from the site's ink family, padded inside the frame. */
   icon?: ReactNode
+  stackedMobileIcon?: boolean
   /** Artwork that fills the frame edge to edge. */
   media?: ReactNode
   children?: ReactNode
   delay?: number
 }
 
-export function EditorialEntry({ title, subtitle, icon, media, children, delay }: EditorialEntryProps) {
+export function EditorialEntry({ title, subtitle, icon, stackedMobileIcon = false, media, children, delay }: EditorialEntryProps) {
   const reducedMotion = useReducedMotion()
   const visual = media ?? icon
   const iconOnly = Boolean(icon && !media)
+  const compactIcon = iconOnly && !stackedMobileIcon
+  let articleClass = 'max-w-[32rem]'
+  if (visual) articleClass = 'grid gap-4 md:grid-cols-[minmax(0,1fr)_13rem] md:items-start md:gap-10'
+  if (iconOnly) articleClass = 'grid grid-cols-[6rem_minmax(0,1fr)] gap-x-4 md:grid-cols-[minmax(0,1fr)_13rem] md:items-start md:gap-x-10'
+  if (iconOnly && stackedMobileIcon) articleClass = 'grid gap-y-3 md:grid-cols-[minmax(0,1fr)_13rem] md:items-start md:gap-x-10'
+  const iconFrameClass = stackedMobileIcon
+    ? `${FRAME} order-first h-[5.75rem] w-60 max-w-full md:order-none md:h-auto md:w-full`
+    : `${FRAME} col-start-1 row-start-1 h-[4.5rem] w-24 md:col-start-2 md:h-auto md:w-full`
   return (
-    <motion.article className={iconOnly ? 'grid grid-cols-[6rem_minmax(0,1fr)] gap-x-4 md:grid-cols-[minmax(0,1fr)_13rem] md:items-start md:gap-x-10' : visual ? 'grid gap-4 md:grid-cols-[minmax(0,1fr)_13rem] md:items-start md:gap-10' : 'max-w-[32rem]'} {...revealProps(reducedMotion, delay)}>
-      <div className={`min-w-0 ${EDITORIAL_TEXT} ${iconOnly ? 'contents md:block' : ''}`}>
+    <motion.article className={articleClass} {...revealProps(reducedMotion, delay)}>
+      <div className={`min-w-0 ${EDITORIAL_TEXT} ${compactIcon ? 'contents md:block' : ''}`}>
         {iconOnly ? (
           <>
-            <h3 className={`col-start-2 row-start-1 min-w-0 self-center font-medium md:col-auto md:row-auto md:self-auto ${EDITORIAL_STRONG}`}>{title}</h3>
+            <h3 className={`${compactIcon ? 'col-start-2 row-start-1 self-center md:col-auto md:row-auto md:self-auto ' : ''}min-w-0 font-medium ${EDITORIAL_STRONG}`}>{title}</h3>
             {(subtitle || children) && (
-              <div className="col-span-2 mt-3 md:col-auto md:mt-0">
+              <div className={compactIcon ? 'col-span-2 mt-3 md:col-auto md:mt-0' : 'mt-3 md:mt-0'}>
                 {subtitle && <p className={EDITORIAL_MUTED}>{subtitle}</p>}
                 {children && <div className={`${subtitle ? 'mt-3 ' : 'md:mt-3 '}space-y-3 ${EDITORIAL_MUTED}`}>{children}</div>}
               </div>
@@ -136,7 +170,7 @@ export function EditorialEntry({ title, subtitle, icon, media, children, delay }
         )}
       </div>
       {visual && (
-        <div aria-hidden="true" className={iconOnly ? `${FRAME} col-start-1 row-start-1 h-[4.5rem] w-24 md:col-start-2 md:h-auto md:w-full` : `${FRAME} order-first ${media ? 'w-full' : 'w-28 md:w-full'} md:order-last`}>
+        <div aria-hidden="true" className={iconOnly ? iconFrameClass : `${FRAME} order-first ${media ? 'w-full' : 'w-28 md:w-full'} md:order-last`}>
           {media ?? <div className={`absolute inset-0 flex items-center justify-center p-0 md:p-8 ${EDITORIAL_STRONG}`}>{icon}</div>}
         </div>
       )}

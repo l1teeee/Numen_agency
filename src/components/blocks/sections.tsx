@@ -27,6 +27,7 @@ import { BrotivaScene } from '@/components/ui/brotiva/brotiva-scene'
 import { ScoutiaScene } from '@/components/ui/scoutia/scoutia-scene'
 import { EditorialConceptArt } from './editorial-concept-art'
 import { EditorialSection, EditorialEntry, EditorialRow, EditorialReveal, EDITORIAL_STRONG, EDITORIAL_MUTED, EDITORIAL_PROSE, EDITORIAL_TEXT, EDITORIAL_LINK } from './editorial-shell'
+import { HorizontalScroll, twoDigits } from './horizontal-scroll'
 import { useReducedMotion } from '@/lib/use-reduced-motion'
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -106,9 +107,9 @@ function CheckLine({ active, children }: { active: boolean; children: ReactNode 
 // `as const` keeps `num` a literal so it can key SERVICE_DOODLES.
 const serviceNums = ['01', '02', '03', '04'] as const
 
-// The first entry is the featured project of the Selected Work section; the side
-// column has room for three more, the rest only appear in the Live Now list.
-const SIDE_CARD_COUNT = 3
+// The first entry is the featured project of the Selected Work section and the
+// next four follow it there; the rest only appear in the Live Now list.
+const SIDE_CARD_COUNT = 4
 
 // Project scenes keyed by project name.
 const PROJECT_SCENES: Record<string, ComponentType<{ active: boolean; covered: boolean }>> = {
@@ -121,6 +122,7 @@ const projectsMeta = [
   { href: 'https://vielinks.com',         name: 'VieLinks',     status: 'Live', dot: 'bg-emerald-400', stack: ['React 19', 'Vite', 'TypeScript', 'Framer Motion', 'GSAP'] },
   { href: 'https://scoutia.dev/landing',   name: 'ScoutIA',      status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
   { href: 'https://dashboard-bot-whatsapp.vercel.app', name: 'WhatsApp Ops', status: 'Live', dot: 'bg-emerald-400', stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'TanStack Query'] },
+  { href: 'https://cora-dashboard-three.vercel.app/login', name: 'CORA', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'Tailwind CSS'] },
   { href: 'https://servilocal-three.vercel.app', name: 'ServiLocal', status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Tkiero'] },
 ]
 
@@ -139,14 +141,14 @@ const teamMeta = [
   { figure: 'julian', name: 'Julian Mendez', role: 'Software Engineer & Founder', linkedin: 'https://www.linkedin.com/in/juli%C3%A1n-m%C3%A9ndez-arev/', website: 'https://julian-menz.dev/' },
 ] as const
 
-// Every country that is not the HQ is a live client relationship.
+// Projects delivered per country; every country that is not the HQ is a live client relationship.
 const reachMeta = [
-  { id: 'sv', isHQ: true },
-  { id: 'gt', isHQ: false },
-  { id: 'mx', isHQ: false },
-  { id: 'ar', isHQ: false },
-  { id: 'gb', isHQ: false },
-  { id: 'de', isHQ: false },
+  { id: 'sv', isHQ: true, delivered: 4 },
+  { id: 'gt', isHQ: false, delivered: 2 },
+  { id: 'mx', isHQ: false, delivered: 2 },
+  { id: 'ar', isHQ: false, delivered: 1 },
+  { id: 'gb', isHQ: false, delivered: 2 },
+  { id: 'de', isHQ: false, delivered: 1 },
 ] as const
 
 // ─── Services ────────────────────────────────────────────────
@@ -175,6 +177,7 @@ export function ServicesSection() {
             <EditorialEntry
               key={num}
               icon={<Doodle active={isActive} className="h-full w-full" />}
+              stackedMobileIcon
               title={item.title}
               subtitle={<CheckLine active={isActive}>{deliverables[i]}</CheckLine>}
             >
@@ -184,6 +187,78 @@ export function ServicesSection() {
         })}
       </div>
     </EditorialSection>
+  )
+}
+
+const PROJECT_STAGE = 'relative block aspect-[16/10] w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 dark:border-neutral-800 md:aspect-auto md:h-[min(26rem,42svh)]'
+
+interface ProjectPanelProps {
+  index: number
+  meta: (typeof projectsMeta)[number]
+  text: { name: string; category: string; desc: string }
+  online?: boolean
+  active: boolean
+  lang: string
+}
+
+function ProjectPanel({ index, meta, text, online, active, lang }: ProjectPanelProps) {
+  const Scene = PROJECT_SCENES[meta.name]
+  const number = twoDigits(index + 1)
+  return (
+    <EditorialReveal className="group">
+      {/* Decorative duplicate of the title link, so it stays out of the tab order. */}
+      <a href={meta.href} target="_blank" rel="noopener noreferrer" tabIndex={-1} aria-hidden="true" className={PROJECT_STAGE}>
+        {Scene ? (
+          <Scene active={active} covered={false} />
+        ) : (
+          <>
+            <span className="absolute inset-0 flex flex-col justify-between p-6 md:p-8">
+              <span className="text-[11px] uppercase tracking-[0.2em] text-white/50">{text.category}</span>
+              <span className="text-[clamp(2.5rem,6vw,4.75rem)] font-medium leading-[0.95] tracking-[-0.04em] text-white transition-transform duration-700 group-hover:-translate-y-1">{text.name}</span>
+            </span>
+            <span className="pointer-events-none absolute -bottom-4 right-5 text-[clamp(6rem,14vw,11rem)] font-medium leading-none tracking-[-0.06em] tabular-nums text-white/[0.07]">{number}</span>
+          </>
+        )}
+        <span className="absolute right-4 top-4 flex size-11 items-center justify-center rounded-full bg-white text-neutral-950 transition-transform duration-500 group-hover:rotate-45">
+          <ArrowUpRight className="size-4" />
+        </span>
+      </a>
+      <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
+        <div className={`min-w-0 ${EDITORIAL_TEXT}`}>
+          <h3 className={`flex items-baseline gap-3 font-medium ${EDITORIAL_STRONG}`}>
+            <span className={`font-normal tabular-nums ${EDITORIAL_MUTED}`}>{number}</span>
+            <Link href={meta.href} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>{text.name}<ArrowUpRight className="size-3.5" aria-hidden="true" /></Link>
+          </h3>
+          <p className={EDITORIAL_MUTED}>{text.category}</p>
+          <p className={`mt-3 max-w-[32rem] md:line-clamp-3 ${EDITORIAL_MUTED}`}>{text.desc}</p>
+          <p className={`mt-2 text-sm ${EDITORIAL_MUTED}`}>{meta.stack.join(' · ')}</p>
+        </div>
+        <a href={meta.href} target="_blank" rel="noopener noreferrer" className={`${CTA_PILL} shrink-0`}>
+          <StatusDot online={online} />
+          {online === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}
+          <ArrowUpRight className="size-4" aria-hidden="true" />
+        </a>
+      </div>
+    </EditorialReveal>
+  )
+}
+
+function SeeAllProjectsPanel({ label, liveLabel, liveCount }: { label: string; liveLabel: string; liveCount: number }) {
+  return (
+    <EditorialReveal>
+      <Link
+        href="/projects"
+        className={`group flex aspect-[16/10] w-full flex-col justify-between rounded-2xl border border-neutral-200 p-6 transition-colors duration-500 hover:bg-neutral-950 hover:text-white dark:border-neutral-800 dark:hover:bg-white dark:hover:text-neutral-950 md:aspect-auto md:h-[min(26rem,42svh)] md:p-8 ${EDITORIAL_STRONG}`}
+      >
+        <span className="text-[11px] uppercase tracking-[0.2em] opacity-60">{liveLabel} · {twoDigits(liveCount)}</span>
+        <span className="flex items-end justify-between gap-6">
+          <span className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.04em]">{label}</span>
+          <span className="flex size-16 shrink-0 items-center justify-center rounded-full border border-current transition-transform duration-500 group-hover:rotate-45">
+            <ArrowUpRight className="size-6" aria-hidden="true" />
+          </span>
+        </span>
+      </Link>
+    </EditorialReveal>
   )
 }
 
@@ -200,40 +275,20 @@ export function ProjectsSection() {
   ]
 
   return (
-    <EditorialSection id="work" number={2} title={t.projects.label} sectionRef={ref}>
-      <EditorialReveal>
-        <p className={EDITORIAL_PROSE}>
-          <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Ideas que ya están ahí afuera.' : 'Ideas out in the real world.'}</span>
-        </p>
-      </EditorialReveal>
-      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
-        {selectedProjects.map(({ meta, text }) => {
-          const Scene = PROJECT_SCENES[meta.name]
-          return (
-            <EditorialEntry
-              key={meta.href}
-              media={Scene ? <Scene active={isActive} covered={false} /> : undefined}
-              title={<Link href={meta.href} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>{text.name}<ArrowUpRight className="size-3.5" aria-hidden="true" /></Link>}
-              subtitle={text.category}
-            >
-              <p>{text.desc}</p>
-              <p className="text-sm">{meta.stack.join(' · ')}</p>
-              <p>
-                <a href={meta.href} target="_blank" rel="noopener noreferrer" className={CTA_PILL}>
-                  <StatusDot online={status[meta.href]} />
-                  {status[meta.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}
-                  <ArrowUpRight className="size-4" aria-hidden="true" />
-                </a>
-              </p>
-            </EditorialEntry>
-          )
-        })}
-      </div>
-      <EditorialReveal>
-        <div className="mt-10 md:mt-12">
-          <Link href="/projects" className={CTA_PILL}>{t.projects.seeAll}<ArrowUpRight className="size-4" aria-hidden="true" /></Link>
-        </div>
-      </EditorialReveal>
+    <EditorialSection id="work" number={2} title={t.projects.label} sectionRef={ref} heading={false} columnLines={false}>
+      <HorizontalScroll
+        panelClassName="w-[min(44rem,78vw)]"
+        intro={
+          <p className={EDITORIAL_PROSE}>
+            <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Ideas que ya están ahí afuera.' : 'Ideas out in the real world.'}</span>
+          </p>
+        }
+      >
+        {selectedProjects.map(({ meta, text }, i) => (
+          <ProjectPanel key={meta.href} index={i} meta={meta} text={text} online={status[meta.href]} active={isActive} lang={lang} />
+        ))}
+        <SeeAllProjectsPanel label={t.projects.seeAll} liveLabel={t.liveProjects.label} liveCount={liveProjectsMeta.length} />
+      </HorizontalScroll>
     </EditorialSection>
   )
 }
@@ -426,8 +481,8 @@ export function GlobalReachSection() {
       </EditorialReveal>
       <EditorialReveal><p className={`mt-6 ${EDITORIAL_PROSE}`}>{tr.subtext}</p></EditorialReveal>
 
-      <div className="mt-10 grid gap-10 md:mt-12 lg:grid-cols-[13rem_minmax(0,1fr)] lg:items-center lg:gap-10">
-        <div className="order-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:order-1 lg:grid-cols-1">
+      <div className="mt-10 grid gap-10 md:mt-12 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-center lg:gap-8">
+        <div className="order-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:order-1 lg:grid-cols-1">
           {reachMeta.map((c, i) => {
             const country = tr.countries[i]
             const CountryMark = COUNTRY_DOODLES[c.id]
@@ -438,15 +493,19 @@ export function GlobalReachSection() {
                   type="button"
                   aria-pressed={focused === c.id}
                   onClick={() => setFocused(focused === c.id ? null : c.id)}
-                  className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-[opacity,transform,border-color] duration-300 hover:opacity-100 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-neutral-100 ${focused === c.id ? 'border-neutral-900 dark:border-neutral-100' : 'border-neutral-200 dark:border-neutral-800'} ${focused && focused !== c.id ? 'opacity-40' : 'opacity-100'}`}
+                  className={`flex w-full items-center gap-4 rounded-xl border px-4 py-3.5 text-left transition-[opacity,transform,border-color] duration-300 hover:opacity-100 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-neutral-100 ${focused === c.id ? 'border-neutral-900 dark:border-neutral-100' : 'border-neutral-200 dark:border-neutral-800'} ${focused && focused !== c.id ? 'opacity-40' : 'opacity-100'}`}
                 >
                   <CountryMark active={isActive} className="size-7 shrink-0 text-neutral-900 dark:text-neutral-100" />
-                  <span className="min-w-0">
-                    <span className="inline-flex items-center gap-2">
-                      <span className={`text-[14px] font-medium ${EDITORIAL_STRONG}`}>{country.name}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span className={`truncate text-[14px] font-medium ${EDITORIAL_STRONG}`}>{country.name}</span>
                       <span className="size-1.5 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
                     </span>
-                    <span className={`block text-[12px] ${EDITORIAL_MUTED}`}>{country.city} · {c.isHQ ? tr.hq : tr.liveProject}</span>
+                    <span className={`block truncate text-[12px] ${EDITORIAL_MUTED}`}>{country.city}{c.isHQ ? ` · ${tr.hq}` : ''}</span>
+                  </span>
+                  <span className="shrink-0 text-right">
+                    <span className={`block text-[16px] font-medium leading-none tabular-nums ${EDITORIAL_STRONG}`}>{c.delivered}</span>
+                    <span className={`mt-1 block whitespace-nowrap text-[11px] ${EDITORIAL_MUTED}`}>{c.delivered === 1 ? tr.project : tr.projects}</span>
                   </span>
                 </button>
               </EditorialReveal>
@@ -520,6 +579,55 @@ export function InsightsSection() {
 // ─── Process ─────────────────────────────────────────────────
 const stepNums = ['01', '02', '03', '04', '05'] as const
 
+const PROCESS_STAGE = 'relative flex aspect-[5/2] w-full items-center justify-center overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 md:aspect-auto md:h-[min(22rem,36svh)]'
+
+interface ProcessPanelProps {
+  index: number
+  count: number
+  title: string
+  extra: string
+  desc: string
+  output: string
+  activities: readonly string[]
+  active: boolean
+  stepLabel: string
+}
+
+function ProcessPanel({ index, count, title, extra, desc, output, activities, active, stepLabel }: ProcessPanelProps) {
+  const Doodle = PROCESS_DOODLES[stepNums[index]]
+  const number = twoDigits(index + 1)
+  return (
+    <EditorialReveal>
+      <div className={PROCESS_STAGE}>
+        <span className={`absolute left-6 top-5 text-[11px] uppercase tracking-[0.2em] ${EDITORIAL_MUTED}`}>
+          {stepLabel} {number} / {twoDigits(count)}
+        </span>
+        <span aria-hidden="true" className="pointer-events-none absolute -bottom-4 right-5 text-[clamp(5rem,12vw,9rem)] font-medium leading-none tracking-[-0.06em] tabular-nums text-neutral-900/[0.06] dark:text-white/[0.07]">
+          {number}
+        </span>
+        <div aria-hidden="true" className={`relative aspect-[4/3] h-3/5 ${EDITORIAL_STRONG}`}>
+          <Doodle active={active} className="h-full w-full" />
+        </div>
+      </div>
+      <div className={`mt-6 ${EDITORIAL_TEXT}`}>
+        <h3 className={`text-[clamp(1.5rem,2.4vw,2rem)] font-medium leading-tight tracking-[-0.02em] ${EDITORIAL_STRONG}`}>{title}</h3>
+        <div className={`mt-2 ${EDITORIAL_STRONG}`}>
+          <CheckLine active={active}>{output}</CheckLine>
+        </div>
+        <p className={`mt-3 max-w-[34rem] md:line-clamp-3 ${EDITORIAL_MUTED}`}>{desc}</p>
+        {extra && <p className={`mt-2 max-w-[34rem] text-sm md:line-clamp-2 ${EDITORIAL_MUTED}`}>{extra}</p>}
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {activities.map((activity) => (
+            <li key={activity} className={`rounded-full border border-neutral-200 px-3 py-1 text-[12px] dark:border-neutral-800 ${EDITORIAL_MUTED}`}>
+              {activity}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </EditorialReveal>
+  )
+}
+
 export function ProcessSection() {
   const ref = useRef<HTMLElement>(null)
   const { isActive } = useSectionReveal(ref)
@@ -528,30 +636,48 @@ export function ProcessSection() {
   const outputs = lang === 'es'
     ? ['Objetivos y alcance definidos', 'Prototipo y sistema visual', 'Producto funcional e integraciones', 'Producto publicado y monitoreado', 'Iteraciones y nuevas funcionalidades']
     : ['Clear goals and project scope', 'Prototype and visual system', 'Working product and integrations', 'Live product and monitoring', 'Iterations and new features']
+  const activities = lang === 'es'
+    ? [
+        ['Investigación de usuarios', 'Análisis de competencia', 'Alcance del proyecto'],
+        ['Wireframes', 'Prototipos', 'Sistema de diseño'],
+        ['Full-stack', 'CI/CD', 'Automatización de infraestructura'],
+        ['Checklist de lanzamiento', 'Seguimiento de errores', 'Analítica'],
+        ['Pruebas A/B', 'Optimización de rendimiento', 'Nuevas funciones'],
+      ]
+    : [
+        ['User research', 'Competitor analysis', 'Project scope'],
+        ['Wireframes', 'Prototypes', 'Design system'],
+        ['Full-stack', 'CI/CD', 'Infrastructure automation'],
+        ['Go-live checklist', 'Error tracking', 'Analytics'],
+        ['A/B testing', 'Performance tuning', 'New features'],
+      ]
 
   return (
-    <EditorialSection id="process" number={7} title={tp.label} sectionRef={ref}>
-      <EditorialReveal>
-        <p className={EDITORIAL_PROSE}>
-          <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Una idea. Cinco pasos claros.' : 'One idea. Five clear steps.'}</span>{' '}
-          {lang === 'es' ? 'Sabes qué sigue, desde el primer día.' : 'Know what comes next, from day one.'}
-        </p>
-      </EditorialReveal>
-      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
-        {tp.steps.map((step, i) => {
-          const Doodle = PROCESS_DOODLES[stepNums[i]]
-          return (
-            <EditorialEntry
-              key={step.title}
-              icon={<Doodle active={isActive} className="h-full w-full" />}
-              title={step.title}
-              subtitle={<CheckLine active={isActive}>{outputs[i]}</CheckLine>}
-            >
-              <p>{tp.stepsListDesc[i]}</p>
-            </EditorialEntry>
-          )
-        })}
-      </div>
+    <EditorialSection id="process" number={7} title={tp.label} sectionRef={ref} heading={false} columnLines={false}>
+      <HorizontalScroll
+        panelClassName="w-[min(40rem,74vw)]"
+        intro={
+          <p className={EDITORIAL_PROSE}>
+            <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Una idea. Cinco pasos claros.' : 'One idea. Five clear steps.'}</span>{' '}
+            {lang === 'es' ? 'Sabes qué sigue, desde el primer día.' : 'Know what comes next, from day one.'}
+          </p>
+        }
+      >
+        {tp.steps.map((step, i) => (
+          <ProcessPanel
+            key={step.title}
+            index={i}
+            count={tp.steps.length}
+            title={step.title}
+            extra={step.extra}
+            desc={tp.stepsListDesc[i]}
+            output={outputs[i]}
+            activities={activities[i]}
+            active={isActive}
+            stepLabel={lang === 'es' ? 'Paso' : 'Step'}
+          />
+        ))}
+      </HorizontalScroll>
     </EditorialSection>
   )
 }
@@ -827,7 +953,7 @@ export function ContactFormSection() {
 export function SiteFooter() {
   const { t } = useLang()
   return (
-    <footer className="relative border-t border-neutral-200 bg-surface dark:border-neutral-800">
+    <footer className="relative border-t border-neutral-200 bg-surface dark:bg-black dark:border-neutral-800">
       <ColumnLines />
       <div className="relative mx-auto max-w-[46rem] px-9 pb-36 pt-14 sm:px-14">
         <div className="flex items-center justify-between gap-6">

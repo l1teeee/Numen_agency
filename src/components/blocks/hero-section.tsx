@@ -19,10 +19,14 @@ export function HeroSection() {
   const { t, lang } = useLang()
   const lenis = useLenis()
   const heroRef = useRef<HTMLElement>(null)
-  const { scrollYProgress: heroExit } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  // Fade the copy before the next section reaches the viewport's middle; the card stays as the same surface as the page.
-  const heroOpacity = useTransform(heroExit, [0, 0.65], [1, 0])
   const { scrollY } = useScroll()
+  const heroOpacity = useTransform(scrollY, (position) => {
+    const height = heroRef.current?.offsetHeight ?? 0
+    if (!height) return 1
+    const fadeStart = height * 0.35
+    const fadeEnd = height * 0.75
+    return Math.max(0, Math.min(1, (fadeEnd - position) / (fadeEnd - fadeStart)))
+  })
   const frameCollapse = useTransform(scrollY, [0, FRAME_COLLAPSE_DISTANCE], [0, 1])
   const frameStyle = { '--hero-collapse': frameCollapse } as MotionStyle
   const reducedMotion = useReducedMotion()
@@ -80,26 +84,26 @@ export function HeroSection() {
             {t.hero.subline}
           </motion.p>
 
-          <motion.div {...enter(0.3)} className="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap lg:shrink-0 lg:justify-end">
+          <motion.div {...enter(0.3)} className="grid grid-cols-2 gap-x-3 gap-y-6 sm:flex sm:flex-wrap sm:gap-3 lg:shrink-0 lg:justify-end">
+            <NumenArtLink className="col-span-2 w-full justify-between active:scale-[0.98] sm:order-3 sm:w-auto sm:justify-center" />
             <Link
               href={SECTION_HREFS.work}
               scroll={false}
               onClick={(event) => handleSectionLinkClick(event, SECTION_HREFS.work, lenis)}
-              className="inline-flex min-h-12 w-full items-center justify-between gap-7 rounded-full bg-foreground px-6 text-sm font-medium text-background transition-[opacity,transform] hover:opacity-80 active:scale-[0.98] sm:w-auto sm:justify-center"
+              className="inline-flex min-h-12 min-w-0 w-full items-center justify-between gap-2 rounded-full border border-foreground/20 bg-foreground/5 px-3 text-xs font-medium text-foreground transition-[background-color,transform] hover:bg-foreground/8 active:scale-[0.98] sm:order-1 sm:w-auto sm:gap-7 sm:px-6 sm:text-sm sm:justify-center"
             >
               {t.hero.cta1}
-              <ArrowUpRight size={17} aria-hidden="true" />
+              <ArrowUpRight size={17} className="hidden shrink-0 min-[360px]:block" aria-hidden="true" />
             </Link>
             <Link
               href={SECTION_HREFS.contact}
               scroll={false}
               onClick={(event) => handleSectionLinkClick(event, SECTION_HREFS.contact, lenis)}
-              className="inline-flex min-h-12 w-full items-center justify-between gap-5 rounded-full border border-foreground/16 px-6 text-sm font-medium transition-[background-color,transform] hover:bg-foreground/5 active:scale-[0.98] sm:w-auto sm:justify-center"
+              className="inline-flex min-h-12 min-w-0 w-full items-center justify-between gap-2 rounded-full border border-foreground/16 px-3 text-xs font-medium transition-[background-color,transform] hover:bg-foreground/5 active:scale-[0.98] sm:order-2 sm:w-auto sm:gap-5 sm:px-6 sm:text-sm sm:justify-center"
             >
               {t.hero.cta2}
               <span aria-hidden="true">+</span>
             </Link>
-            <NumenArtLink className="w-full justify-between active:scale-[0.98] sm:w-auto sm:justify-center" />
           </motion.div>
         </div>
       </motion.div>

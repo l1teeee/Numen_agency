@@ -34,9 +34,7 @@
       "cta2": "Let's Talk",
       "scroll": "Scroll to explore ↓",
       "artLink": {
-        "label": "Numen Art",
-        "whisper": "Where our ideas go to play.",
-        "launch": "Ideas that refuse to sit still."
+        "label": "Numen Art"
       }
     },
     "services": {
@@ -83,6 +81,11 @@
           "name": "WhatsApp Ops",
           "category": "Dashboard · 2026",
           "desc": "Turns WhatsApp orders into a clear operation — a live order queue, status flow from pending to completed, menu management, searchable history, and analytics in a single panel with team roles."
+        },
+        {
+          "name": "CORA",
+          "category": "Dashboard · 2026",
+          "desc": "A call panel for teams — sign in and manage every call your team handles from one dashboard."
         },
         {
           "name": "ServiLocal",
@@ -173,7 +176,8 @@
       "headline2": "worldwide clients.",
       "subtext": "Headquartered in San Salvador. Active client relationships in Guatemala, Mexico, Argentina, the UK, and Germany: six countries, one team, fully remote.",
       "hq": "HQ",
-      "liveProject": "Live project",
+      "project": "project",
+      "projects": "projects",
       "countries": [
         {
           "name": "El Salvador",
@@ -448,9 +452,7 @@
       "cta2": "Hablemos",
       "scroll": "Explora ↓",
       "artLink": {
-        "label": "Numen Art",
-        "whisper": "Donde nuestras ideas salen a jugar.",
-        "launch": "Ideas que no se quedan quietas."
+        "label": "Numen Art"
       }
     },
     "services": {
@@ -497,6 +499,11 @@
           "name": "WhatsApp Ops",
           "category": "Panel · 2026",
           "desc": "Convierte los pedidos de WhatsApp en una operación clara — cola de pedidos en vivo, estados de pendiente a completado, gestión de menú, historial buscable y analíticas en un solo panel con roles de equipo."
+        },
+        {
+          "name": "CORA",
+          "category": "Panel · 2026",
+          "desc": "Panel de llamadas para equipos — inicia sesión y gestiona todas las llamadas de tu equipo desde un solo lugar."
         },
         {
           "name": "ServiLocal",
@@ -587,7 +594,8 @@
       "headline2": "clientes en el mundo.",
       "subtext": "Con sede en San Salvador. Relaciones activas con clientes en Guatemala, México, Argentina, Reino Unido y Alemania: seis países, un mismo equipo, 100% remoto.",
       "hq": "Sede",
-      "liveProject": "Proyecto en vivo",
+      "project": "proyecto",
+      "projects": "proyectos",
       "countries": [
         {
           "name": "El Salvador",

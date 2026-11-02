@@ -120,6 +120,12 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* While About is spotlighted the page matches the founder drawing's white
+   paper, so the avatar frame blends into the background. */
+html.light-spotlight {
+  --surface: #ffffff;
+}
+
 :root {
   /* ── Text legibility ramp ─────────────────────────────────────
      Solid stand-ins for text-foreground/NN opacity utilities. Raw
@@ -350,14 +356,9 @@ html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
   vector-effect: non-scaling-stroke;
 }
 
-.editorial-note {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-style: italic;
-  letter-spacing: -0.025em;
-}
-
-/* Hero frame: the card is framed on top and sides and open at the bottom so it
-   runs straight into the first section. The inset and radius collapse on scroll. */
+/* Hero frame: at the top of the page the card is inset on all four sides, so a
+   margin separates it from the first section. On scroll the inset and radius
+   collapse to zero and the card joins the sections below. */
 .hero-frame-card,
 .hero-frame-border {
   --hero-frame-inset: 14px;
@@ -382,16 +383,12 @@ html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
 }
 
 .hero-frame-card {
-  clip-path: inset(calc(var(--hero-frame-inset) * var(--hero-frame-open)) calc(var(--hero-frame-inset) * var(--hero-frame-open)) 0 calc(var(--hero-frame-inset) * var(--hero-frame-open)) round calc(var(--hero-frame-radius) * var(--hero-frame-open)) calc(var(--hero-frame-radius) * var(--hero-frame-open)) 0 0);
+  clip-path: inset(calc(var(--hero-frame-inset) * var(--hero-frame-open)) round calc(var(--hero-frame-radius) * var(--hero-frame-open)));
 }
 
 .hero-frame-border {
-  top: calc(var(--hero-frame-inset) * var(--hero-frame-open));
-  right: calc(var(--hero-frame-inset) * var(--hero-frame-open));
-  bottom: 0;
-  left: calc(var(--hero-frame-inset) * var(--hero-frame-open));
-  border-bottom-width: 0;
-  border-radius: calc(var(--hero-frame-radius) * var(--hero-frame-open)) calc(var(--hero-frame-radius) * var(--hero-frame-open)) 0 0;
+  inset: calc(var(--hero-frame-inset) * var(--hero-frame-open));
+  border-radius: calc(var(--hero-frame-radius) * var(--hero-frame-open));
   opacity: var(--hero-frame-open);
 }
 
@@ -464,10 +461,54 @@ html::-webkit-scrollbar {
   outline: none;
 }
 
-/* Numen Art CTA pulse. Rings grow by animating inset, not scale: scale would
-   stretch a wide pill sideways, inset keeps the same px gap on every side. */
+.art-link {
+  color: #17121e;
+}
+
+.art-link > * {
+  z-index: 2;
+}
+
+.art-link::before,
+.art-link::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.art-link::before {
+  z-index: 0;
+  inset: -9px;
+  background: linear-gradient(100deg, #ff8bc8, #a78bfa, #67dcf0, #aaf2b4, #ffe09a, #ff8bc8);
+  background-size: 200% 100%;
+  filter: blur(15px);
+  opacity: 0.58;
+  animation: art-colors 8s linear infinite;
+  transition: opacity 250ms ease;
+}
+
+.art-link::after {
+  z-index: 1;
+  inset: 0;
+  border: 1px solid rgb(255 255 255 / 55%);
+  background: linear-gradient(100deg, #ffd0e9, #c8b7ff, #a8ecf3, #cdf4be, #fff0ba, #ffd0e9);
+  background-size: 200% 100%;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 60%), 0 3px 14px rgb(103 82 150 / 14%);
+  animation: art-colors 8s linear infinite;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .art-link:hover::before { opacity: 0.9; }
+}
+
+@keyframes art-colors {
+  to { background-position: 200% 0; }
+}
+
+/* Expanding inset keeps the glow even around the pill's long sides. */
 @keyframes art-pulse {
-  from { inset: 0; opacity: 0.7; }
+  from { inset: 0; opacity: 0.6; }
   to   { inset: -14px; opacity: 0; }
 }
 
@@ -477,19 +518,24 @@ html::-webkit-scrollbar {
 }
 
 .art-pulse-ring {
+  border-color: #bd9bf4;
   animation: art-pulse 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 .art-pulse-ring-delayed {
+  border-color: #72ddea;
   animation-delay: 1.2s;
 }
 
 .art-burst-ring {
+  border-color: #c19bf4;
   opacity: 0;
   animation: art-burst 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .art-link::before,
+  .art-link::after { animation: none; }
   .art-pulse-ring,
   .art-burst-ring { animation: none; opacity: 0; }
 }
