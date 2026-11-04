@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useReducedMotion } from '@/lib/use-reduced-motion'
 import { ArrowUpRight, AtSign, Menu, X } from 'lucide-react'
 import { useLenis } from 'lenis/react'
@@ -11,9 +11,9 @@ import { AnimatedThemeToggle } from '@/components/ui/animated-theme-toggle'
 import { NumenMark } from '@/components/ui/doodles/numen-mark'
 import { useLang } from '@/lib/lang'
 import { handleSectionLinkClick } from '@/lib/section-scroll'
+import { useAtPageTop } from '@/lib/use-at-page-top'
 import { cn } from '@/lib/utils'
 
-const HERO_TOP_THRESHOLD = 48
 type NavLink = { href: string; label: string }
 
 type NavbarDockProps = {
@@ -35,13 +35,7 @@ export function Navbar() {
   const { lang, setLang, t } = useLang()
   const pathname = usePathname()
   const reducedMotion = useReducedMotion()
-  const { scrollY } = useScroll()
-  const [atPageTop, setAtPageTop] = useState(true)
-  useMotionValueEvent(scrollY, 'change', (y) => {
-    const isAtTop = y < HERO_TOP_THRESHOLD
-    setAtPageTop(isAtTop)
-    if (!isAtTop) setMenuOpen(false)
-  })
+  const atPageTop = useAtPageTop(() => setMenuOpen(false))
   const es = lang === 'es'
   const links = [
     { href: '#services', label: t.nav.links[0].label },
