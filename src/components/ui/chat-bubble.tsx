@@ -6,6 +6,7 @@ import { X, Send, Mail, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-
 import { NumenBot } from '@/components/ui/doodles/numen-bot'
 import { useLang } from '@/lib/lang'
 import { useReducedMotion } from '@/lib/use-reduced-motion'
+import { useAtPageTop } from '@/lib/use-at-page-top'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
@@ -145,6 +146,9 @@ export function ChatBubble() {
   const es = lang === 'es'
   const reduceMotion = useReducedMotion()
   const [open, setOpen] = useState(false)
+  const atPageTop = useAtPageTop()
+  // Phones: the hero CTAs sit where the launcher floats, so it appears together with the dock once the user scrolls.
+  const hiddenOnPhoneHero = atPageTop && !open
   const [messages, setMessages] = useState<Message[]>(() => [createInitialMessage(chat.initialMessage)])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -245,7 +249,8 @@ export function ChatBubble() {
   const showSuggestions = messages.length === 1 && !loading
 
   return (
-    <div ref={containerRef} className="fixed inset-x-4 bottom-4 z-100 flex flex-col items-end gap-3 sm:inset-x-auto sm:right-6 sm:bottom-6">
+    // On phones this wrapper spans the full width; only its children take taps so content under the strip stays clickable.
+    <div ref={containerRef} className="pointer-events-none fixed inset-x-4 bottom-4 z-100 flex flex-col items-end gap-3 sm:inset-x-auto sm:right-6 sm:bottom-6">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -257,7 +262,7 @@ export function ChatBubble() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.96 }}
             transition={{ duration: reduceMotion ? 0 : 0.25, ease: EASE }}
-            className="flex max-h-[calc(100dvh-8rem)] w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-background/95 shadow-xl backdrop-blur-xl"
+            className="pointer-events-auto flex max-h-[calc(100dvh-8rem)] w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-background/95 shadow-xl backdrop-blur-xl"
           >
             {/* Header */}
             <div className="flex shrink-0 items-center justify-between border-b border-foreground/8 px-5 py-4">
@@ -410,7 +415,7 @@ export function ChatBubble() {
         onClick={() => setOpen((p) => !p)}
         whileHover={reduceMotion ? undefined : { scale: 1.06 }}
         whileTap={reduceMotion ? undefined : { scale: 0.94 }}
-        className="relative flex h-14 w-14 items-center justify-center rounded-full border border-background/20 bg-foreground text-background shadow-lg"
+        className={`pointer-events-auto relative flex h-14 w-14 items-center justify-center rounded-full border border-background/20 bg-foreground text-background shadow-lg transition-[opacity,visibility] duration-300 motion-reduce:transition-none ${hiddenOnPhoneHero ? 'max-sm:invisible max-sm:opacity-0' : ''}`}
         aria-label={open ? chat.closeLabel : chat.openLabel}
         aria-expanded={open}
         aria-controls="numen-chat-dialog"
