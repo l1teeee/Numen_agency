@@ -52,6 +52,7 @@ export function SketchPencilDoodle({ active = true, className }: SketchPencilDoo
   return (
     <DoodleSvg viewBox="0 0 160 100" className={cn('w-24', className)}>
       <motion.g
+        initial={false}
         animate={sketching ? { opacity: [1, 1, 0, 0] } : { opacity: active ? 1 : 0 }}
         transition={
           sketching
@@ -60,6 +61,7 @@ export function SketchPencilDoodle({ active = true, className }: SketchPencilDoo
         }
       >
         <motion.path
+          initial={false}
           d={FRAME}
           strokeDasharray={FRAME_DASHES}
           animate={sketching ? { strokeDashoffset: [FRAME_LENGTH, FRAME_LENGTH, 0, 0] } : { strokeDashoffset: 0 }}

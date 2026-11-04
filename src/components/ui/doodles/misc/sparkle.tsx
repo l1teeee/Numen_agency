@@ -27,6 +27,7 @@ export function SparkleDoodle({ active = true, delay = 0, className }: SparkleDo
   return (
     <DoodleSvg viewBox="0 0 32 32" strokeWidth={1.5} className={cn('w-4', className)}>
       <motion.g
+        initial={false}
         animate={
           twinkling
             ? { scale: [0.85, 0.85, 1.1, 0.92, 0.85, 0.85], opacity: [0.6, 0.6, 1, 0.8, 0.6, 0.6] }

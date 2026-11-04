@@ -83,6 +83,7 @@ export function ScaleDoodle({ active = true, className }: { active?: boolean; cl
       </motion.g>
 
       <motion.g
+        initial={false}
         style={CENTRED}
         animate={idle ? { opacity: [1, 1, 0.25, 1, 1], scale: [1, 1, 0.85, 1, 1] } : { opacity: 1, scale: 1 }}
         transition={
