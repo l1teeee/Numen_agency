@@ -92,6 +92,7 @@ export function DevOpsDoodle({ active = true, className }: DevOpsDoodleProps) {
         )}
         {RACK_UNITS.map((unit) => (
           <motion.g
+            initial={false}
             key={unit.led}
             animate={looping ? { opacity: BLINK_OPACITY } : { opacity: 1 }}
             transition={

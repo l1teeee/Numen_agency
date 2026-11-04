@@ -219,6 +219,7 @@ function SaviaRoastery({ active, className }: SceneProps) {
       <DrawPath d="M 17.6 145 a 3.4 3.3 0 1 0 6.8 0 a 3.4 3.3 0 1 0 -6.8 0" active={active} delay={0.97} duration={0.25} fill="currentColor" />
 
       <motion.g
+        initial={false}
         animate={idle ? { y: DRIFT_Y, opacity: DRIFT_OPACITY } : { y: 0, opacity: 1 }}
         transition={
           idle
@@ -309,6 +310,7 @@ function LuvreAtelier({ active, className }: SceneProps) {
       ))}
 
       <motion.g
+        initial={false}
         style={{ transformBox: 'fill-box', originX: 0.5, originY: 0.5 }}
         animate={idle ? { opacity: GLINT_OPACITY, scale: GLINT_SCALE } : { opacity: 1, scale: 1 }}
         transition={

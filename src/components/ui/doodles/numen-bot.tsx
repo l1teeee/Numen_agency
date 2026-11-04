@@ -90,6 +90,7 @@ export function NumenBot({ state = 'idle', active = true, className }: NumenBotP
 
           <motion.path
             d={MOUTH_CLOSED}
+            initial={false}
             animate={playing && state === 'talking' ? { d: [MOUTH_CLOSED, MOUTH_OPEN, MOUTH_CLOSED] } : { d: MOUTH_CLOSED }}
             transition={
               playing && state === 'talking'

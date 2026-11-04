@@ -142,6 +142,7 @@ export function LaunchDoodle({ active = true, className }: { active?: boolean; c
 
       {STARS.map((star) => (
         <motion.g
+          initial={false}
           key={star.d}
           animate={idle ? { opacity: [1, 1, 0.15, 1, 1] } : { opacity: 1 }}
           transition={
