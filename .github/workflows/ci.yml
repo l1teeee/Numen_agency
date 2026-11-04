@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  quality:
+    name: Lint, build, typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # Build first: it generates next-env.d.ts and .next/types, which the typecheck needs.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+      - name: Typecheck
+        run: npm run typecheck
+
+  snyk:
+    name: Snyk
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install Snyk CLI
+        run: npm install --global snyk@1.1308.3
+
+      - name: Dependency scan
+        run: snyk test --severity-threshold=high --sarif-file-output=snyk-deps.sarif
+
+      # Runs even when the dependency scan fails so both reports reach the Security tab.
+      - name: Code scan
+        if: ${{ !cancelled() }}
+        run: snyk code test --severity-threshold=high --sarif-file-output=snyk-code.sarif
+
+      - name: Upload dependency results
+        if: ${{ !cancelled() && hashFiles('snyk-deps.sarif') != '' }}
+        uses: github/codeql-action/upload-sarif@1fc58d04a4d4374f921bdac573c3811c240f9c26 # v4.39.2
+        with:
+          sarif_file: snyk-deps.sarif
+          category: snyk-deps
+
+      - name: Upload code results
+        if: ${{ !cancelled() && hashFiles('snyk-code.sarif') != '' }}
+        uses: github/codeql-action/upload-sarif@1fc58d04a4d4374f921bdac573c3811c240f9c26 # v4.39.2
+        with:
+          sarif_file: snyk-code.sarif
+          category: snyk-code
+
+      - name: Monitor dependencies
+        if: ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: snyk monitor
