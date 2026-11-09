@@ -32,7 +32,7 @@ function LenisScrollReset() {
 export function Providers({ children }: { children: React.ReactNode }) {
   const reducedMotion = useReducedMotion()
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+    <ThemeProvider attribute="class" forcedTheme="light" enableSystem={false}>
       <MotionConfig reducedMotion="user">
         <LangProvider>
           {/* The floaty glide made the long page feel endless; normal wheel input keeps it responsive. */}

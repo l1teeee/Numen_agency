@@ -1,0 +1,33 @@
+# Numen Agency
+
+> Digital agency from El Salvador. We design and build web, SaaS and AI products.
+
+Numen is a digital product studio headquartered in San Salvador, El Salvador, working fully remote with clients worldwide. It has active client relationships in Guatemala, Mexico, Argentina, the UK and Germany. Numen was founded and is led by Julian Mendez, Software Engineer and Founder. 12+ projects delivered, 8 products live in production, 24h maximum response time.
+
+## Services
+
+- Full-Stack Web Development: full-stack applications built with Next.js, TypeScript and Supabase, from zero-to-one MVPs to production-grade SaaS.
+- Digital Product Design: end-to-end design in Figma, including user flows, wireframes, interactive prototypes and design systems.
+- AI Integration: conversational AI, semantic search, content automation and smart recommendations inside your product.
+- DevOps & Infrastructure: production deployments across AWS, GCP and Kubernetes, with CI/CD automation and infrastructure as code with Terraform.
+
+## Selected work
+
+- [Brotiva](https://claro-campus.vercel.app): online learning campus with guided paths, a course library and short practice moments.
+- [VieLinks](https://vielinks.com): social media management SaaS with multi-channel publishing and real-time metrics.
+- [ScoutIA](https://scoutia.dev/landing): local business prospecting workspace to search by zone and category and organize follow-up.
+- [WhatsApp Ops](https://dashboard-bot-whatsapp.vercel.app): turns WhatsApp orders into a live queue with menu management and analytics.
+- [CORA](https://cora-dashboard-three.vercel.app/login): call panel for teams to manage every call from one dashboard.
+- [Nexo ERP](https://nexo-erp-phi.vercel.app/login): web ERP for businesses in El Salvador covering accounting, invoicing and payroll.
+
+## Pages
+
+- [Home](https://www.delta-numen.com/): services, selected work, about, process, FAQ and contact.
+- [Live projects](https://www.delta-numen.com/projects): products in production.
+- [Blog](https://www.delta-numen.com/blog): articles on web development, product design, AI integration and infrastructure.
+
+## Contact
+
+- Email: contact@delta-numen.com
+- WhatsApp: +503 6046 3566
+- Location: San Salvador, El Salvador. Remote worldwide.

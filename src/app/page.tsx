@@ -12,9 +12,8 @@ import {
   ContactFormSection,
   SiteFooter,
 } from "@/components/blocks/sections";
-import { ChatBubble } from "@/components/ui/chat-bubble";
 import { companyStats } from "@/lib/company-stats";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 import { translations } from "@/lib/translations";
 
 const faqEn = translations.en.faq.items;
@@ -34,10 +33,11 @@ const jsonLd = {
         width: 512,
         height: 512,
       },
-      image: `${SITE_URL}/OPimage.png`,
+      image: `${SITE_URL}/og-numen.jpg`,
       email: "contact@delta-numen.com",
-      description:
-        "Digital agency in El Salvador specializing in full-stack web development, product design and AI integration. 12+ projects delivered, 6 products in production.",
+      description: `Digital agency from El Salvador. We design and build web, SaaS and AI products. ${companyStats[0].display} projects delivered, ${companyStats[2].display} products in production.`,
+      slogan: "We design and build web, SaaS and AI.",
+      sameAs: [SOCIAL_LINKS.instagram, SOCIAL_LINKS.linkedin],
       foundingDate: "2024",
       areaServed: ["El Salvador", "Worldwide"],
       priceRange: "$$$",
@@ -143,7 +143,6 @@ export default function Home() {
           <ContactFormSection />
         </main>
         <SiteFooter />
-        <ChatBubble />
       </div>
     </>
   );

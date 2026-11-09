@@ -1,5 +1,0 @@
-export { QuestionMarkDoodle } from './question-mark'
-export { CheckScribble } from './check-scribble'
-export { PaperPlaneDoodle } from './paper-plane'
-export { SketchPencilDoodle } from './sketch-pencil'
-export { SparkleDoodle } from './sparkle'

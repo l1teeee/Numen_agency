@@ -13,20 +13,24 @@ const font = Plus_Jakarta_Sans({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
+const SITE_TITLE = "Numen Agency | Digital Agency from El Salvador - Web, SaaS & AI";
+const SITE_DESCRIPTION =
+  "Digital agency from El Salvador. We design and build web, SaaS and AI products. 12+ projects delivered, from concept to production in 4-8 weeks.";
+const SHARE_IMAGE = "/og-numen.jpg";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#000000",
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Numen Agency | Digital Agency in El Salvador - Web & SaaS Development",
+    default: SITE_TITLE,
     template: "%s | Numen Agency",
   },
-  description:
-    "Digital agency in El Salvador. Full-stack web development, product design and AI. 12+ projects delivered. From concept to production in 4-8 weeks.",
+  description: SITE_DESCRIPTION,
   keywords: [
     "agencia digital El Salvador",
     "desarrollo web El Salvador",
@@ -63,9 +67,8 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   openGraph: {
-    title: "Numen Agency | Digital Agency in El Salvador - Web & SaaS Development",
-    description:
-      "Digital agency in El Salvador. Full-stack web development, product design and AI. 12+ projects delivered. From concept to production in 4-8 weeks.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: "Numen Agency",
     type: "website",
@@ -73,19 +76,18 @@ export const metadata: Metadata = {
     alternateLocale: ["es_SV"],
     images: [
       {
-        url: "/OPimage.png",
+        url: SHARE_IMAGE,
         width: 1200,
         height: 630,
-        alt: "Numen Agency - Digital Agency in El Salvador",
+        alt: "Numen. Digital agency from El Salvador. We design and build web, SaaS and AI.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Numen Agency | Digital Agency in El Salvador - Web & SaaS Development",
-    description:
-      "Digital agency in El Salvador. Full-stack web development, product design and AI. 12+ projects delivered.",
-    images: ["/OPimage.png"],
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [SHARE_IMAGE],
   },
   alternates: {
     canonical: SITE_URL,
@@ -105,7 +107,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${font.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${font.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
         <Analytics />

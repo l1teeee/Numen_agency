@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useTheme } from 'next-themes'
 import createGlobe, { type COBEOptions } from 'cobe'
 
 export interface GlobeMarker {
@@ -67,34 +66,23 @@ type GlobePalette = Pick<
   'dark' | 'baseColor' | 'markerColor' | 'glowColor' | 'mapBrightness'
 >
 
-/* cobe bakes these at creation, so a theme flip means a full rebuild. */
-const PALETTE: Record<'dark' | 'light', GlobePalette> = {
-  dark: {
-    dark: 1,
-    baseColor: [0.42, 0.42, 0.42],
-    markerColor: [1, 1, 1],
-    glowColor: [0.2, 0.2, 0.2],
-    mapBrightness: 11,
-  },
-  light: {
-    dark: 0,
-    baseColor: [1, 1, 1],
-    markerColor: [0, 0, 0],
-    // Light mode paints the land dots by darkening the base, so brightness
-    // works the opposite way here: a high value washes them out to white.
-    glowColor: [0.72, 0.72, 0.72],
-    mapBrightness: 1.15,
-  },
+const PALETTE: GlobePalette = {
+  dark: 0,
+  baseColor: [1, 1, 1],
+  markerColor: [0, 0, 0],
+  // Light mode paints the land dots by darkening the base, so brightness
+  // works the opposite way here: a high value washes them out to white.
+  glowColor: [0.72, 0.72, 0.72],
+  mapBrightness: 1.15,
 }
 
 export function GlobeReach({ markers = DEFAULT_MARKERS, className = '', focus = null }: GlobeReachProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { resolvedTheme } = useTheme()
 
   const origin = markers.find((m) => m.id === HQ_ID) ?? markers[0]
 
-  /* Rotation lives in refs so it survives the rebuild on a theme flip —
-     otherwise the globe visibly snaps back to its starting longitude. */
+  /* Rotation lives in refs so it survives a rebuild; otherwise the globe
+     visibly snaps back to its starting longitude. */
   const phiRef = useRef(origin ? lngToPhi(origin.location[1] + VIEW_LNG_OFFSET) : 0)
   const thetaOffset = useRef(0)
   const dragStart = useRef<{ x: number; y: number } | null>(null)
@@ -168,12 +156,9 @@ export function GlobeReach({ markers = DEFAULT_MARKERS, className = '', focus = 
 
   useEffect(() => {
     const canvas = canvasRef.current
-    /* next-themes reports undefined until it has read the stored theme;
-       creating the globe before then bakes in the wrong palette. It is also
-       what keeps this off the server and the first client render. */
-    if (!canvas || !resolvedTheme) return
+    if (!canvas) return
 
-    const palette = PALETTE[resolvedTheme === 'dark' ? 'dark' : 'light']
+    const palette = PALETTE
     let globe: ReturnType<typeof createGlobe> | null = null
     let frame = 0
     let painted = false
@@ -260,7 +245,7 @@ export function GlobeReach({ markers = DEFAULT_MARKERS, className = '', focus = 
       intersectionObserver.disconnect()
       globe?.destroy()
     }
-  }, [markers, arcs, resolvedTheme])
+  }, [markers, arcs])
 
   return (
     <div className={`relative aspect-square select-none ${className}`}>

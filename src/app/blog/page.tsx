@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/OPimage.png',
+        url: '/og-numen.jpg',
         width: 1200,
         height: 630,
         alt: 'Numen Agency - Blog',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title,
     description,
-    images: ['/OPimage.png'],
+    images: ['/og-numen.jpg'],
   },
 }
 
