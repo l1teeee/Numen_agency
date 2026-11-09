@@ -71,11 +71,9 @@ export function NumenArtLink({ className }: { className?: string }) {
   return (
     <a
       href={NUMEN_ART_URL}
-      className={cn('art-link relative isolate inline-flex min-h-14 items-center justify-center gap-5 rounded-full px-7 text-sm font-semibold transition-transform', className)}
+      className={cn('art-link relative inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-black px-5 text-[13px] font-medium text-white transition-[background-color,transform] hover:bg-neutral-800', className)}
       onClick={handleClick}
     >
-      <span aria-hidden="true" className="art-pulse-ring pointer-events-none absolute inset-0 rounded-full border" />
-      <span aria-hidden="true" className="art-pulse-ring art-pulse-ring-delayed pointer-events-none absolute inset-0 rounded-full border" />
       {launching && BURST_RING_DELAYS_MS.map((delay) => (
         <span
           key={delay}

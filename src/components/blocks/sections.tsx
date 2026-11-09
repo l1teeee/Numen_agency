@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, type ComponentType, type ReactNode } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowUpRight, Globe, User, Mail, MessageSquare, Plus, Tags, UserPlus } from 'lucide-react'
@@ -12,31 +12,18 @@ import { blogPosts } from '@/lib/blog-posts'
 import { useLang } from '@/lib/lang'
 import { SECTION_HREFS, handleSectionLinkClick } from '@/lib/section-scroll'
 import { SOCIAL_LINKS } from '@/lib/site'
-import { HoverPeek } from '@/components/ui/link-preview'
 import { FounderAvatar } from '@/components/ui/founder-avatar'
-import { SERVICE_DOODLES } from '@/components/ui/doodles/services'
-import { PROCESS_DOODLES } from '@/components/ui/doodles/process'
-import { INSIGHT_DOODLES } from '@/components/ui/doodles/insights'
-import { COUNTRY_DOODLES } from '@/components/ui/doodles/reach'
-import { CheckScribble, PaperPlaneDoodle, QuestionMarkDoodle, SketchPencilDoodle, SparkleDoodle } from '@/components/ui/doodles/misc'
+import { CheckScribble } from '@/components/ui/doodles/misc/check-scribble'
 import { FounderSticker } from '@/components/ui/doodles/founder-sticker'
-import { NumenBot } from '@/components/ui/doodles/numen-bot'
 import { NumenMark } from '@/components/ui/doodles/numen-mark'
-import { ColumnLines } from '@/components/ui/column-lines'
-import { BrotivaScene } from '@/components/ui/brotiva/brotiva-scene'
-import { ScoutiaScene } from '@/components/ui/scoutia/scoutia-scene'
-import { EditorialConceptArt } from './editorial-concept-art'
-import { EditorialSection, EditorialEntry, EditorialRow, EditorialReveal, EDITORIAL_STRONG, EDITORIAL_MUTED, EDITORIAL_PROSE, EDITORIAL_TEXT, EDITORIAL_LINK } from './editorial-shell'
-import { HorizontalScroll, twoDigits } from './horizontal-scroll'
+import { IndexEntry, IndexSection, INDEX_ASIDE_LINK, INDEX_GRID, INDEX_GRID_TWO, INDEX_GUTTER } from './index-section'
+import { EditorialReveal, EDITORIAL_STRONG, EDITORIAL_MUTED, EDITORIAL_TEXT, EDITORIAL_LINK } from './editorial-shell'
 import { useReducedMotion } from '@/lib/use-reduced-motion'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 
 const INPUT =
   'w-full min-h-11 rounded-lg border border-neutral-300 bg-transparent px-4 py-2.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 transition-colors focus:border-neutral-900 focus:outline-none dark:border-neutral-700 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-100'
-
-const CTA_PILL =
-  'inline-flex min-h-11 items-center gap-2 rounded-full border border-neutral-300 px-5 text-[14px] font-medium text-neutral-900 transition-[background-color,color,border-color,transform] duration-200 hover:border-neutral-900 hover:bg-neutral-900 hover:text-neutral-100 active:scale-[0.98] dark:border-neutral-700 dark:text-neutral-100 dark:hover:border-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900'
 
 function useSectionReveal(ref: React.RefObject<HTMLElement | null>) {
   const isInView = useInView(ref, { amount: 0.12, once: true })
@@ -92,30 +79,9 @@ function StatusDot({ online, size = 'h-1.5 w-1.5' }: { online?: boolean; size?: 
   )
 }
 
-function CheckLine({ active, children }: { active: boolean; children: ReactNode }) {
-  return (
-    <span className="flex items-start gap-2">
-      <span className="flex h-[1.75em] shrink-0 items-center">
-        <CheckScribble active={active} className="h-3.5 w-3.5 translate-y-px" />
-      </span>
-      {children}
-    </span>
-  )
-}
-
 // ─── Static non-translatable data ────────────────────────────
-// `as const` keeps `num` a literal so it can key SERVICE_DOODLES.
-const serviceNums = ['01', '02', '03', '04'] as const
-
-// The first entry is the featured project of the Selected Work section and the
-// next five follow it there; the rest only appear in the Live Now list.
-const SIDE_CARD_COUNT = 5
-
-// Project scenes keyed by project name.
-const PROJECT_SCENES: Record<string, ComponentType<{ active: boolean; covered: boolean }>> = {
-  Brotiva: BrotivaScene,
-  ScoutIA: ScoutiaScene,
-}
+// The Selected Work section shows the first six projects; the rest only appear in the Live Now list.
+const SELECTED_PROJECT_COUNT = 6
 
 const projectsMeta = [
   { href: 'https://claro-campus.vercel.app', name: 'Brotiva',    status: 'Live', dot: 'bg-emerald-400', stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'GSAP', 'Prisma'] },
@@ -154,246 +120,131 @@ const reachMeta = [
 
 // ─── Services ────────────────────────────────────────────────
 export function ServicesSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const { t, lang } = useLang()
-  const ts = t.services
   const deliverables = lang === 'es'
     ? ['MVPs, plataformas SaaS y aplicaciones web', 'Flujos, prototipos y sistemas de diseño', 'Asistentes, búsqueda y automatización', 'Despliegues, monitoreo e infraestructura']
     : ['MVPs, SaaS platforms and web applications', 'User flows, prototypes and design systems', 'Assistants, search and automation', 'Deployments, monitoring and infrastructure']
 
   return (
-    <EditorialSection id="services" number={1} title={ts.label} sectionRef={ref}>
-      <EditorialReveal>
-        <p className={EDITORIAL_PROSE}>
-          <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'De una buena idea a algo real.' : 'From a good idea to the real thing.'}</span>{' '}
-          {lang === 'es' ? 'Diseño + ingeniería. Un mismo equipo.' : 'Design + engineering. One team.'}
-        </p>
-      </EditorialReveal>
-      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
-        {serviceNums.map((num, i) => {
-          const item = ts.items[i]
-          const Doodle = SERVICE_DOODLES[num]
-          return (
-            <EditorialEntry
-              key={num}
-              icon={<Doodle active={isActive} className="h-full w-full" />}
-              stackedMobileIcon
-              title={item.title}
-              subtitle={<CheckLine active={isActive}>{deliverables[i]}</CheckLine>}
-            >
-              <p>{item.desc}</p>
-            </EditorialEntry>
-          )
-        })}
-      </div>
-    </EditorialSection>
-  )
-}
-
-const PROJECT_STAGE = 'relative block aspect-[16/10] w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 dark:border-neutral-800 md:aspect-auto md:h-[min(26rem,42svh)]'
-
-interface ProjectPanelProps {
-  index: number
-  meta: (typeof projectsMeta)[number]
-  text: { name: string; category: string; desc: string }
-  online?: boolean
-  active: boolean
-  lang: string
-}
-
-function ProjectPanel({ index, meta, text, online, active, lang }: ProjectPanelProps) {
-  const Scene = PROJECT_SCENES[meta.name]
-  const number = twoDigits(index + 1)
-  return (
-    <EditorialReveal className="group">
-      {/* Decorative duplicate of the title link, so it stays out of the tab order. */}
-      <a href={meta.href} target="_blank" rel="noopener noreferrer" tabIndex={-1} aria-hidden="true" className={PROJECT_STAGE}>
-        {Scene ? (
-          <Scene active={active} covered={false} />
-        ) : (
-          <>
-            <span className="absolute inset-0 flex flex-col justify-between p-6 md:p-8">
-              <span className="text-[11px] uppercase tracking-[0.2em] text-white/50">{text.category}</span>
-              <span className="text-[clamp(2.5rem,6vw,4.75rem)] font-medium leading-[0.95] tracking-[-0.04em] text-white transition-transform duration-700 group-hover:-translate-y-1">{text.name}</span>
-            </span>
-            <span className="pointer-events-none absolute -bottom-4 right-5 text-[clamp(6rem,14vw,11rem)] font-medium leading-none tracking-[-0.06em] tabular-nums text-white/[0.07]">{number}</span>
-          </>
-        )}
-        <span className="absolute right-4 top-4 flex size-11 items-center justify-center rounded-full bg-white text-neutral-950 transition-transform duration-500 group-hover:rotate-45">
-          <ArrowUpRight className="size-4" />
-        </span>
-      </a>
-      <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
-        <div className={`min-w-0 ${EDITORIAL_TEXT}`}>
-          <h3 className={`flex items-baseline gap-3 font-medium ${EDITORIAL_STRONG}`}>
-            <span className={`font-normal tabular-nums ${EDITORIAL_MUTED}`}>{number}</span>
-            <Link href={meta.href} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>{text.name}<ArrowUpRight className="size-3.5" aria-hidden="true" /></Link>
-          </h3>
-          <p className={EDITORIAL_MUTED}>{text.category}</p>
-          <p className={`mt-3 max-w-[32rem] md:line-clamp-3 ${EDITORIAL_MUTED}`}>{text.desc}</p>
-          <p className={`mt-2 text-sm ${EDITORIAL_MUTED}`}>{meta.stack.join(' · ')}</p>
-        </div>
-        <a href={meta.href} target="_blank" rel="noopener noreferrer" className={`${CTA_PILL} shrink-0`}>
-          <StatusDot online={online} />
-          {online === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Ver producto' : 'Explore product')}
-          <ArrowUpRight className="size-4" aria-hidden="true" />
-        </a>
-      </div>
-    </EditorialReveal>
-  )
-}
-
-function SeeAllProjectsPanel({ label, liveLabel, liveCount }: { label: string; liveLabel: string; liveCount: number }) {
-  return (
-    <EditorialReveal>
-      <Link
-        href="/projects"
-        className={`group flex aspect-[16/10] w-full flex-col justify-between rounded-2xl border border-neutral-200 p-6 transition-colors duration-500 hover:bg-neutral-950 hover:text-white dark:border-neutral-800 dark:hover:bg-white dark:hover:text-neutral-950 md:aspect-auto md:h-[min(26rem,42svh)] md:p-8 ${EDITORIAL_STRONG}`}
-      >
-        <span className="text-[11px] uppercase tracking-[0.2em] opacity-60">{liveLabel} · {twoDigits(liveCount)}</span>
-        <span className="flex items-end justify-between gap-6">
-          <span className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-medium leading-[0.95] tracking-[-0.04em]">{label}</span>
-          <span className="flex size-16 shrink-0 items-center justify-center rounded-full border border-current transition-transform duration-500 group-hover:rotate-45">
-            <ArrowUpRight className="size-6" aria-hidden="true" />
-          </span>
-        </span>
-      </Link>
-    </EditorialReveal>
+    <IndexSection
+      id="services"
+      fullScreen
+      number={1}
+      title={t.services.label}
+      intro={lang === 'es' ? 'De una buena idea a algo real. Diseño + ingeniería. Un mismo equipo.' : 'From a good idea to the real thing. Design + engineering. One team.'}
+    >
+      <ol className={INDEX_GRID_TWO}>
+        {t.services.items.map((service, index) => (
+          <IndexEntry key={service.title} index={index} name={service.title} details={deliverables[index]} desc={service.desc} />
+        ))}
+      </ol>
+    </IndexSection>
   )
 }
 
 export function ProjectsSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const { t, lang } = useLang()
   const status = useProjectStatus()
-  const [featuredMeta, ...restMeta] = projectsMeta
-  const [featuredText, ...restText] = t.projects.items
-  const selectedProjects = [
-    { meta: featuredMeta, text: featuredText },
-    ...restMeta.slice(0, SIDE_CARD_COUNT).map((meta, i) => ({ meta, text: restText[i] })),
-  ]
 
   return (
-    <EditorialSection id="work" number={2} title={t.projects.label} sectionRef={ref} heading={false} columnLines={false}>
-      <HorizontalScroll
-        panelClassName="w-[min(44rem,78vw)]"
-        intro={
-          <p className={EDITORIAL_PROSE}>
-            <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Ideas que ya están ahí afuera.' : 'Ideas out in the real world.'}</span>
-          </p>
-        }
-      >
-        {selectedProjects.map(({ meta, text }, i) => (
-          <ProjectPanel key={meta.href} index={i} meta={meta} text={text} online={status[meta.href]} active={isActive} lang={lang} />
-        ))}
-        <SeeAllProjectsPanel label={t.projects.seeAll} liveLabel={t.liveProjects.label} liveCount={liveProjectsMeta.length} />
-      </HorizontalScroll>
-    </EditorialSection>
+    <IndexSection
+      id="work"
+      number={2}
+      title={t.projects.label}
+      intro={lang === 'es' ? 'Ideas que ya están ahí afuera.' : 'Ideas out in the real world.'}
+      aside={
+        <Link href="/projects" className={INDEX_ASIDE_LINK}>
+          {t.projects.seeAll}
+          <ArrowUpRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      }
+    >
+      <ol className={INDEX_GRID}>
+        {projectsMeta.slice(0, SELECTED_PROJECT_COUNT).map((meta, index) => {
+          const project = t.projects.items[index]
+          const online = status[meta.href]
+          return (
+            <IndexEntry
+              key={meta.href}
+              index={index}
+              href={meta.href}
+              name={project.name}
+              details={
+                <>
+                  <StatusDot online={online} />
+                  {project.category}
+                  {online === false && <span>· {lang === 'es' ? 'No disponible' : 'Unavailable'}</span>}
+                </>
+              }
+              desc={project.desc}
+              footnote={meta.stack.join(' · ')}
+            />
+          )
+        })}
+      </ol>
+    </IndexSection>
   )
 }
 
 export function UseCasesSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const { t, lang } = useLang()
   const tu = t.useCases
 
   return (
-    <EditorialSection id="use-cases" number={3} title={tu.label} sectionRef={ref}>
-      <EditorialReveal>
-        <p className={EDITORIAL_PROSE}>
-          <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Espacio para explorar.' : 'Room to explore.'}</span>{' '}
-          {lang === 'es' ? 'Experimentos de marca, diseño y nuevas posibilidades.' : 'Experiments in brand, design and new possibilities.'}
-        </p>
-      </EditorialReveal>
-      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
-        {tu.concepts.map((concept, i) => (
-          <EditorialEntry
-            key={concept.name}
-            icon={<EditorialConceptArt kind={i} active={isActive} className="h-full w-full" />}
-            title={concept.name}
-            subtitle={concept.category}
-          >
-            <p>{concept.desc}</p>
-            <p>
-              <HoverPeek url={useCaseMeta[i].href} peekWidth={320} peekHeight={200}>
-                <Link href={useCaseMeta[i].href} target="_blank" rel="noopener noreferrer" className={CTA_PILL}>
-                  {concept.cta}<ArrowUpRight className="size-4" aria-hidden="true" />
-                </Link>
-              </HoverPeek>
-            </p>
-          </EditorialEntry>
+    <IndexSection
+      id="use-cases"
+      number={3}
+      title={tu.label}
+      intro={lang === 'es' ? 'Espacio para explorar. Experimentos de marca, diseño y nuevas posibilidades.' : 'Room to explore. Experiments in brand, design and new possibilities.'}
+    >
+      <ol className={INDEX_GRID}>
+        {tu.concepts.map((concept, index) => (
+          <IndexEntry key={concept.name} index={index} href={useCaseMeta[index].href} name={concept.name} details={concept.category} desc={concept.desc} />
         ))}
-        <EditorialEntry
-          icon={<SketchPencilDoodle active={isActive} className="h-full w-full" />}
-          title={
-            <span className="inline-flex items-center gap-2 rounded-full border border-dashed border-neutral-400 px-3 py-1 text-[12px] font-medium uppercase tracking-[0.14em] text-neutral-700 dark:border-neutral-600 dark:text-neutral-300">
-              <span className="size-1.5 rounded-full bg-current motion-safe:animate-pulse" aria-hidden="true" />
-              {tu.comingSoon}
-            </span>
-          }
-        >
-          {tu.cards.map((card) => (
-            <p key={card.category}><span className={EDITORIAL_STRONG}>{card.title}</span> · {card.category}</p>
-          ))}
-        </EditorialEntry>
-      </div>
-    </EditorialSection>
+        {tu.cards.map((card, cardIndex) => (
+          <IndexEntry key={card.category} index={tu.concepts.length + cardIndex} name={card.title} details={`${card.category} · ${tu.comingSoon}`} />
+        ))}
+      </ol>
+    </IndexSection>
   )
 }
 
 export function LiveProjectsSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const { t, lang } = useLang()
   const tl = t.liveProjects
   const status = useProjectStatus()
 
   return (
-    <EditorialSection id="live-projects" title={tl.label} sectionRef={ref}>
-      <EditorialEntry
-        icon={<PaperPlaneDoodle active={isActive} className="h-full w-full" />}
-        title={tl.headline1}
-        stackedMobileIcon
-        subtitle={tl.headline2}
-      >
-        <p>{tl.subtext}</p>
-      </EditorialEntry>
-
-      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
-        {liveProjectsMeta.map((project) => (
-          <EditorialEntry
+    <IndexSection
+      id="live-projects"
+      title={tl.label}
+      intro={`${tl.headline1} ${tl.headline2} ${tl.subtext}`}
+      aside={
+        <Link href={SECTION_HREFS.contact} className={INDEX_ASIDE_LINK}>
+          {lang === 'es' ? 'Cuéntanos tu idea' : 'Tell us your idea'}
+          <ArrowUpRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      }
+    >
+      <ol className={INDEX_GRID}>
+        {liveProjectsMeta.map((project, index) => (
+          <IndexEntry
             key={project.href}
-            title={
-              <a href={project.href} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>
-                {project.name}<ArrowUpRight className="size-3.5" aria-hidden="true" />
-              </a>
-            }
-            subtitle={new URL(project.href).hostname}
-          >
-            <p>{project.stack.slice(0, 3).join(' · ')}</p>
-            <p>
-              <a href={project.href} target="_blank" rel="noopener noreferrer" className={CTA_PILL}>
+            index={index}
+            name={project.name}
+            href={project.href}
+            details={
+              <>
                 <StatusDot online={status[project.href]} />
-                {status[project.href] === true ? (lang === 'es' ? 'En línea' : 'Online') : status[project.href] === false ? (lang === 'es' ? 'No disponible' : 'Unavailable') : (lang === 'es' ? 'Visitar proyecto' : 'Visit project')}
-                <ArrowUpRight className="size-4" aria-hidden="true" />
-              </a>
-            </p>
-          </EditorialEntry>
+                {new URL(project.href).hostname}
+                {status[project.href] === false && <span>· {lang === 'es' ? 'No disponible' : 'Unavailable'}</span>}
+              </>
+            }
+            footnote={project.stack.slice(0, 3).join(' · ')}
+          />
         ))}
-        <EditorialEntry
-          icon={<SparkleDoodle active={isActive} className="h-full w-full" />}
-          title={lang === 'es' ? 'El siguiente puede ser el tuyo.' : 'Yours could be next.'}
-        >
-          <Link href={SECTION_HREFS.contact} className={CTA_PILL}>
-            {lang === 'es' ? 'Cuéntanos tu idea' : 'Tell us your idea'}
-            <ArrowUpRight className="size-4" aria-hidden="true" />
-          </Link>
-        </EditorialEntry>
-      </div>
-    </EditorialSection>
+      </ol>
+    </IndexSection>
   )
 }
 
@@ -404,46 +255,16 @@ export function AboutSection() {
   const ta = t.about
 
   return (
-    <EditorialSection id="about" number={4} title={ta.label} sectionRef={ref} spotlight>
-      <EditorialReveal>
-        <p className={EDITORIAL_PROSE}>
-          <span className={EDITORIAL_STRONG}>{ta.headline1} {ta.headline2}</span>
-        </p>
-      </EditorialReveal>
-      <EditorialReveal><p className={`mt-6 ${EDITORIAL_PROSE}`}>{ta.p1}</p></EditorialReveal>
-      <EditorialReveal><p className={`mt-6 ${EDITORIAL_PROSE}`}>{ta.p2}</p></EditorialReveal>
-
-      <div className="mt-10 space-y-3">
-        {companyStats.map((s, i) => (
-          <div key={s.key} data-stat-name={s.schemaName} data-stat-value={s.display}>
-            <EditorialRow
-              delay={i * 0.08}
-              label={
-                <span className={EDITORIAL_STRONG} aria-label={s.display + ' ' + ta.stats[i].label}>
-                  <CountUp to={s.value} suffix={s.suffix} />
-                </span>
-              }
-            >
-              <span className={EDITORIAL_MUTED}>{ta.stats[i].label}</span>
-            </EditorialRow>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
+    <IndexSection id="about" number={4} title={ta.label} sectionRef={ref} stacked intro={`${ta.headline1} ${ta.headline2}`}>
+      <div className="grid gap-12 lg:grid-cols-3 lg:items-center lg:gap-16">
         {teamMeta.map((member, i) => (
-          <EditorialEntry
-            key={member.name}
-            media={<div className="flex h-full w-full items-center justify-center bg-white p-6"><FounderAvatar figure={member.figure} active={isActive} className="w-36" /></div>}
-            title={member.name}
-            subtitle={member.role}
-          >
-            <p>{ta.team[i].desc}</p>
-            <div className="flex flex-wrap gap-x-6">
+          <EditorialReveal key={member.name} className="order-first flex flex-col items-center text-center lg:order-none lg:col-start-2 lg:row-start-1">
+            <FounderAvatar figure={member.figure} active={isActive} className="w-48 lg:w-64" />
+            <h3 className={`mt-4 text-[clamp(1.5rem,2vw,2.25rem)] font-medium leading-[1.02] tracking-[-0.04em] ${EDITORIAL_STRONG}`}>{member.name}</h3>
+            <p className={`mt-2 text-[13px] ${EDITORIAL_MUTED}`}>{member.role}</p>
+            <p className={`mt-4 max-w-[24rem] text-[13px] leading-relaxed ${EDITORIAL_MUTED}`}>{ta.team[i].desc}</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-x-5 text-[13px]">
               <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>
-                <svg viewBox="0 0 24 24" fill="currentColor" className="size-3.5 shrink-0" aria-hidden="true">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                </svg>
                 LinkedIn<ArrowUpRight className="size-3.5" aria-hidden="true" />
               </a>
               <a href={member.website} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>
@@ -451,76 +272,73 @@ export function AboutSection() {
                 julian-menz.dev<ArrowUpRight className="size-3.5" aria-hidden="true" />
               </a>
             </div>
-          </EditorialEntry>
+          </EditorialReveal>
         ))}
+        <EditorialReveal className={`space-y-4 text-[13px] leading-relaxed lg:col-start-1 lg:row-start-1 ${EDITORIAL_MUTED}`}>
+          <p>{ta.p1}</p>
+          <p>{ta.p2}</p>
+        </EditorialReveal>
+        <EditorialReveal className="lg:col-start-3 lg:row-start-1">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-8">
+            {companyStats.map((s, i) => (
+              <div key={s.key} data-stat-name={s.schemaName} data-stat-value={s.display} className="flex flex-col-reverse justify-end gap-1">
+                <dt className={`text-[13px] leading-snug ${EDITORIAL_MUTED}`}>{ta.stats[i].label}</dt>
+                <dd className={`text-[clamp(1.5rem,2vw,2.25rem)] font-medium leading-none tracking-[-0.04em] ${EDITORIAL_STRONG}`} aria-label={s.display + ' ' + ta.stats[i].label}>
+                  <CountUp to={s.value} suffix={s.suffix} />
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </EditorialReveal>
       </div>
-
-      <div className="mt-10 space-y-3">
-        {ta.principles.map((v, i) => (
-          <EditorialRow key={v.title} delay={i * 0.08} label={<span className={EDITORIAL_STRONG}>{v.title}</span>}>
-            <span className={EDITORIAL_MUTED}>{v.desc}</span>
-          </EditorialRow>
+      <ol className="mt-16 grid gap-10 md:grid-cols-3 lg:mt-24 lg:gap-16 lg:[&:hover>li:not(:hover)]:opacity-35">
+        {ta.principles.map((principle, index) => (
+          <IndexEntry key={principle.title} index={index} name={principle.title} desc={principle.desc} compact />
         ))}
-      </div>
-    </EditorialSection>
+      </ol>
+    </IndexSection>
   )
 }
 
 // ─── Global Reach ────────────────────────────────────────────
 export function GlobalReachSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const { t } = useLang()
   const tr = t.reach
   const [focused, setFocused] = useState<string | null>(null)
 
   return (
-    <EditorialSection id="reach" number={5} title={tr.label} sectionRef={ref}>
-      <EditorialReveal>
-        <p className={EDITORIAL_PROSE}>
-          <span className={EDITORIAL_STRONG}>{tr.headline1}</span> {tr.headline2}
-        </p>
-      </EditorialReveal>
-      <EditorialReveal><p className={`mt-6 ${EDITORIAL_PROSE}`}>{tr.subtext}</p></EditorialReveal>
-
-      <div className="mt-10 grid gap-10 md:mt-12 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-center lg:gap-8">
-        <div className="order-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:order-1 lg:grid-cols-1">
+    <IndexSection id="reach" number={5} title={tr.label} intro={`${tr.headline1} ${tr.headline2} ${tr.subtext}`}>
+      <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-center md:gap-12">
+        <ul className="order-2 md:order-1">
           {reachMeta.map((c, i) => {
             const country = tr.countries[i]
-            const CountryMark = COUNTRY_DOODLES[c.id]
-
             return (
-              <EditorialReveal key={c.id} delay={i * 0.06}>
-                <button
-                  type="button"
-                  aria-pressed={focused === c.id}
-                  onClick={() => setFocused(focused === c.id ? null : c.id)}
-                  className={`flex w-full items-center gap-4 rounded-xl border px-4 py-3.5 text-left transition-[opacity,transform,border-color] duration-300 hover:opacity-100 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-neutral-100 ${focused === c.id ? 'border-neutral-900 dark:border-neutral-100' : 'border-neutral-200 dark:border-neutral-800'} ${focused && focused !== c.id ? 'opacity-40' : 'opacity-100'}`}
-                >
-                  <CountryMark active={isActive} className="size-7 shrink-0 text-neutral-900 dark:text-neutral-100" />
-                  <span className="min-w-0 flex-1">
-                    <span className="flex min-w-0 items-center gap-2">
-                      <span className={`truncate text-[14px] font-medium ${EDITORIAL_STRONG}`}>{country.name}</span>
-                      <span className="size-1.5 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
+              <li key={c.id}>
+                <EditorialReveal delay={i * 0.06}>
+                  <button
+                    type="button"
+                    aria-pressed={focused === c.id}
+                    onClick={() => setFocused(focused === c.id ? null : c.id)}
+                    className={`flex min-h-14 w-full items-center justify-between gap-4 text-left transition-opacity duration-300 hover:opacity-100 ${focused && focused !== c.id ? 'opacity-35' : 'opacity-100'}`}
+                  >
+                    <span className="min-w-0">
+                      <span className={`block truncate text-[15px] font-medium ${EDITORIAL_STRONG}`}>{country.name}</span>
+                      <span className={`block truncate text-[13px] ${EDITORIAL_MUTED}`}>{country.city}{c.isHQ ? ` · ${tr.hq}` : ''}</span>
                     </span>
-                    <span className={`block truncate text-[12px] ${EDITORIAL_MUTED}`}>{country.city}{c.isHQ ? ` · ${tr.hq}` : ''}</span>
-                  </span>
-                  <span className="shrink-0 text-right">
-                    <span className={`block text-[16px] font-medium leading-none tabular-nums ${EDITORIAL_STRONG}`}>{c.delivered}</span>
-                    <span className={`mt-1 block whitespace-nowrap text-[11px] ${EDITORIAL_MUTED}`}>{c.delivered === 1 ? tr.project : tr.projects}</span>
-                  </span>
-                </button>
-              </EditorialReveal>
+                    <span className={`shrink-0 text-[13px] tabular-nums ${EDITORIAL_MUTED}`}>{c.delivered} {c.delivered === 1 ? tr.project : tr.projects}</span>
+                  </button>
+                </EditorialReveal>
+              </li>
             )
           })}
-        </div>
-        <EditorialReveal className="order-1 lg:order-2">
-          <div aria-hidden="true" className="mx-auto w-full max-w-[22rem] sm:max-w-[28rem] lg:max-w-[34rem]">
+        </ul>
+        <EditorialReveal className="order-1 md:order-2">
+          <div aria-hidden="true" className="mx-auto w-full max-w-[22rem] lg:max-w-[30rem]">
             <GlobeReach focus={focused} />
           </div>
         </EditorialReveal>
       </div>
-    </EditorialSection>
+    </IndexSection>
   )
 }
 
@@ -528,111 +346,50 @@ export function GlobalReachSection() {
 const recentPosts = [...blogPosts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
 
 export function InsightsSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const { lang, t } = useLang()
   const tb = t.blog
   const locale = lang === 'en' ? 'en-US' : 'es-SV'
 
   return (
-    <EditorialSection id="blog" number={6} title={tb.label} sectionRef={ref}>
-      <EditorialReveal>
-        <p className={EDITORIAL_PROSE}>
-          <span className={EDITORIAL_STRONG}>{tb.headline}</span> {tb.subtext}
-        </p>
-      </EditorialReveal>
-
-      <div className="mt-10 space-y-10 md:mt-12 md:space-y-12">
-        {recentPosts.map((post, i) => {
+    <IndexSection
+      id="blog"
+      number={6}
+      title={tb.label}
+      intro={`${tb.headline} ${tb.subtext}`}
+      aside={
+        <Link href="/blog" className={INDEX_ASIDE_LINK}>
+          {tb.moreArticles}
+          <ArrowUpRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      }
+    >
+      <ol className={INDEX_GRID}>
+        {recentPosts.map((post, index) => {
           const title = lang === 'en' && post.en ? post.en.title : post.title
           const description = lang === 'en' && post.en ? post.en.description : post.description
-          const ArticleDoodle = INSIGHT_DOODLES[i]
           const category = lang === 'en' && post.en ? post.en.category : post.category
           const date = new Date(post.date + 'T00:00:00').toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })
-
           return (
-            <EditorialEntry
+            <IndexEntry
               key={post.slug}
-              icon={<ArticleDoodle active={isActive} className="h-full w-full" />}
-              title={
-                <Link href={`/blog/${post.slug}`} className={EDITORIAL_LINK} aria-label={title + ', ' + tb.readArticle}>
-                  {title}<ArrowUpRight className="size-3.5" aria-hidden="true" />
-                </Link>
-              }
-              subtitle={category + ' · ' + post.readTime + ' ' + tb.readTime + ' · ' + date}
-            >
-              <p>{description}</p>
-            </EditorialEntry>
+              index={index}
+              name={title}
+              compact
+              href={`/blog/${post.slug}`}
+              external={false}
+              linkLabel={title + ', ' + tb.readArticle}
+              details={category + ' · ' + post.readTime + ' ' + tb.readTime + ' · ' + date}
+              desc={description}
+            />
           )
         })}
-      </div>
-
-      <EditorialReveal>
-        <div className="mt-10 md:mt-12">
-          <Link href="/blog" className={CTA_PILL}>
-            {tb.moreArticles}<ArrowUpRight className="size-4" aria-hidden="true" />
-          </Link>
-        </div>
-      </EditorialReveal>
-    </EditorialSection>
+      </ol>
+    </IndexSection>
   )
 }
 
 // ─── Process ─────────────────────────────────────────────────
-const stepNums = ['01', '02', '03', '04', '05'] as const
-
-const PROCESS_STAGE = 'relative flex aspect-[5/2] w-full items-center justify-center overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 md:aspect-auto md:h-[min(22rem,36svh)]'
-
-interface ProcessPanelProps {
-  index: number
-  count: number
-  title: string
-  extra: string
-  desc: string
-  output: string
-  activities: readonly string[]
-  active: boolean
-  stepLabel: string
-}
-
-function ProcessPanel({ index, count, title, extra, desc, output, activities, active, stepLabel }: ProcessPanelProps) {
-  const Doodle = PROCESS_DOODLES[stepNums[index]]
-  const number = twoDigits(index + 1)
-  return (
-    <EditorialReveal>
-      <div className={PROCESS_STAGE}>
-        <span className={`absolute left-6 top-5 text-[11px] uppercase tracking-[0.2em] ${EDITORIAL_MUTED}`}>
-          {stepLabel} {number} / {twoDigits(count)}
-        </span>
-        <span aria-hidden="true" className="pointer-events-none absolute -bottom-4 right-5 text-[clamp(5rem,12vw,9rem)] font-medium leading-none tracking-[-0.06em] tabular-nums text-neutral-900/[0.06] dark:text-white/[0.07]">
-          {number}
-        </span>
-        <div aria-hidden="true" className={`relative aspect-[4/3] h-3/5 ${EDITORIAL_STRONG}`}>
-          <Doodle active={active} className="h-full w-full" />
-        </div>
-      </div>
-      <div className={`mt-6 ${EDITORIAL_TEXT}`}>
-        <h3 className={`text-[clamp(1.5rem,2.4vw,2rem)] font-medium leading-tight tracking-[-0.02em] ${EDITORIAL_STRONG}`}>{title}</h3>
-        <div className={`mt-2 ${EDITORIAL_STRONG}`}>
-          <CheckLine active={active}>{output}</CheckLine>
-        </div>
-        <p className={`mt-3 max-w-[34rem] md:line-clamp-3 ${EDITORIAL_MUTED}`}>{desc}</p>
-        {extra && <p className={`mt-2 max-w-[34rem] text-sm md:line-clamp-2 ${EDITORIAL_MUTED}`}>{extra}</p>}
-        <ul className="mt-4 flex flex-wrap gap-2">
-          {activities.map((activity) => (
-            <li key={activity} className={`rounded-full border border-neutral-200 px-3 py-1 text-[12px] dark:border-neutral-800 ${EDITORIAL_MUTED}`}>
-              {activity}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </EditorialReveal>
-  )
-}
-
 export function ProcessSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const { t, lang } = useLang()
   const tp = t.process
   const outputs = lang === 'es'
@@ -655,53 +412,41 @@ export function ProcessSection() {
       ]
 
   return (
-    <EditorialSection id="process" number={7} title={tp.label} sectionRef={ref} heading={false} columnLines={false}>
-      <HorizontalScroll
-        panelClassName="w-[min(40rem,74vw)]"
-        intro={
-          <p className={EDITORIAL_PROSE}>
-            <span className={EDITORIAL_STRONG}>{lang === 'es' ? 'Una idea. Cinco pasos claros.' : 'One idea. Five clear steps.'}</span>{' '}
-            {lang === 'es' ? 'Sabes qué sigue, desde el primer día.' : 'Know what comes next, from day one.'}
-          </p>
-        }
-      >
-        {tp.steps.map((step, i) => (
-          <ProcessPanel
-            key={step.title}
-            index={i}
-            count={tp.steps.length}
-            title={step.title}
-            extra={step.extra}
-            desc={tp.stepsListDesc[i]}
-            output={outputs[i]}
-            activities={activities[i]}
-            active={isActive}
-            stepLabel={lang === 'es' ? 'Paso' : 'Step'}
-          />
+    <IndexSection
+      id="process"
+      number={7}
+      title={tp.label}
+      intro={lang === 'es' ? 'Una idea. Cinco pasos claros. Sabes qué sigue, desde el primer día.' : 'One idea. Five clear steps. Know what comes next, from day one.'}
+    >
+      <ol className={INDEX_GRID}>
+        {tp.steps.map((step, index) => (
+          <IndexEntry key={step.title} index={index} name={step.title} details={outputs[index]} desc={tp.stepsListDesc[index]} footnote={activities[index].join(' · ')} />
         ))}
-      </HorizontalScroll>
-    </EditorialSection>
+      </ol>
+    </IndexSection>
   )
 }
 
 export function FAQSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const [open, setOpen] = useState<number | null>(0)
   const { t } = useLang()
   const lenis = useLenis()
   const tf = t.faq
 
   return (
-    <EditorialSection id="faq" number={8} title={tf.label} sectionRef={ref}>
-      <EditorialEntry
-        icon={<QuestionMarkDoodle active={isActive} className="h-full w-full" />}
-        title={`${tf.headline1} ${tf.headline2}`}
-        subtitle={tf.headline3}
-      >
-        <p>{tf.subtext}</p>
-      </EditorialEntry>
-      <div className="mt-10 max-w-[36rem] divide-y divide-neutral-200 border-y border-neutral-200 dark:divide-neutral-800 dark:border-neutral-800">
+    <IndexSection
+      id="faq"
+      number={8}
+      title={tf.label}
+      intro={`${tf.headline1} ${tf.headline2} ${tf.headline3} ${tf.subtext}`}
+      aside={
+        <Link href={SECTION_HREFS.contact} scroll={false} onClick={(e) => handleSectionLinkClick(e, SECTION_HREFS.contact, lenis)} className={INDEX_ASIDE_LINK}>
+          {tf.cta}
+          <ArrowUpRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      }
+    >
+      <div className="divide-y divide-neutral-200 border-y border-neutral-200">
         {tf.items.map((faq, i) => (
           <EditorialReveal key={i} delay={i * 0.05}>
             <button
@@ -739,31 +484,12 @@ export function FAQSection() {
           </EditorialReveal>
         ))}
       </div>
-      <EditorialReveal>
-        <div className="mt-10 md:mt-12">
-          <EditorialEntry
-            icon={<NumenBot active={isActive} className="h-full w-full" />}
-            title={
-              <Link
-                href={SECTION_HREFS.contact}
-                scroll={false}
-                onClick={(e) => handleSectionLinkClick(e, SECTION_HREFS.contact, lenis)}
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-foreground px-5 text-[14px] font-medium text-background transition-opacity hover:opacity-80"
-              >
-                {tf.cta} <ArrowUpRight size={15} aria-hidden="true" />
-              </Link>
-            }
-          />
-        </div>
-      </EditorialReveal>
-    </EditorialSection>
+    </IndexSection>
   )
 }
 
 // ─── Contact Form + Footer ───────────────────────────────────
 export function ContactFormSection() {
-  const ref = useRef<HTMLElement>(null)
-  const { isActive } = useSectionReveal(ref)
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -803,29 +529,31 @@ export function ContactFormSection() {
   }
 
   return (
-    <EditorialSection id="contact" number={9} title={tc.label} sectionRef={ref}>
-      <EditorialEntry
-        icon={<PaperPlaneDoodle active={isActive} className="h-full w-full" />}
-        title={tc.headline1}
-        stackedMobileIcon
-        subtitle={tc.headline2}
-      >
-        <p>{tc.subtext}</p>
-      </EditorialEntry>
-      <div className="mt-10 space-y-3">
-        {infoItems.map((item, i) => (
-          <EditorialRow key={item.label} delay={i * 0.08} label={item.label}>
-            {item.href ? (
-              <a href={item.href} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>
-                {item.value} <ArrowUpRight className="size-3.5" aria-hidden="true" />
-              </a>
-            ) : (
-              <span className={EDITORIAL_STRONG}>{item.value}</span>
-            )}
-          </EditorialRow>
-        ))}
-      </div>
-      <EditorialReveal className="mt-10 max-w-[36rem] md:mt-12">
+    <IndexSection
+      id="contact"
+      number={9}
+      title={tc.label}
+      intro={`${tc.headline1} ${tc.headline2} ${tc.subtext}`}
+      aside={
+        <dl className="mt-8 space-y-4 text-[13px]">
+          {infoItems.map((item) => (
+            <div key={item.label}>
+              <dt className={EDITORIAL_MUTED}>{item.label}</dt>
+              <dd className="mt-0.5">
+                {item.href ? (
+                  <a href={item.href} target="_blank" rel="noopener noreferrer" className={EDITORIAL_LINK}>
+                    {item.value} <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span className={EDITORIAL_STRONG}>{item.value}</span>
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      }
+    >
+      <EditorialReveal className="max-w-[40rem]">
         {status === 'sent' ? (
           <div role="status" aria-live="polite" className="rounded-lg border border-neutral-200 p-8 text-center dark:border-neutral-800">
             <CheckScribble active className={`mx-auto h-16 w-16 ${EDITORIAL_STRONG}`} />
@@ -935,36 +663,58 @@ export function ContactFormSection() {
               type="submit"
               size="lg"
               disabled={status === 'loading'}
-              className="w-full rounded-lg bg-neutral-900 text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
+              className="min-h-11 w-full rounded-lg bg-neutral-900 text-neutral-100 hover:bg-neutral-700 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
             >
               <UserPlus className="size-4" />
               {status === 'loading' ? tc.sendingBtn : tc.sendBtn}
             </Button>
             <Link
               href="/blog"
-              className={`flex min-h-11 items-center justify-center text-center text-sm underline decoration-neutral-400 underline-offset-4 transition-colors hover:text-neutral-900 dark:decoration-neutral-600 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+              className={`flex min-h-11 items-center justify-center text-center text-balance text-sm underline decoration-neutral-400 underline-offset-4 transition-colors hover:text-neutral-900 dark:decoration-neutral-600 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
             >
               {tc.blogCta}
             </Link>
           </form>
         )}
       </EditorialReveal>
-    </EditorialSection>
+    </IndexSection>
   )
 }
 
 export function SiteFooter() {
   const { t } = useLang()
   return (
-    <footer className="relative border-t border-neutral-200 bg-surface dark:bg-black dark:border-neutral-800">
-      <ColumnLines />
-      <div className="relative mx-auto max-w-[46rem] px-9 pb-36 pt-14 sm:px-14">
-        <div className="flex items-center justify-between gap-6">
+    <footer className={`bg-white pb-8 pt-10 lg:pt-14 ${INDEX_GUTTER}`}>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,7fr)] lg:gap-16">
+        <div>
           <Link href="/" aria-label="Numen" className={`-m-2 inline-flex p-2 ${EDITORIAL_STRONG}`}>
             <NumenMark className="h-5 w-5" />
           </Link>
+          <p className={`mt-4 text-[13px] ${EDITORIAL_MUTED}`}>© {new Date().getFullYear()} Numen Agency. {t.contact.footer}</p>
+        </div>
+        <div className="flex flex-wrap items-start justify-between gap-x-10 gap-y-2">
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-7">
+            <Link
+              href="/"
+              className={`inline-flex min-h-11 items-center text-[13px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+            >
+              {t.nav.home}
+            </Link>
+            <Link
+              href="/projects"
+              className={`inline-flex min-h-11 items-center text-[13px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+            >
+              {t.nav.projectsLink}
+            </Link>
+            <Link
+              href="/blog"
+              className={`inline-flex min-h-11 items-center text-[13px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
+            >
+              {t.blog.label}
+            </Link>
+          </nav>
           {/* Negative margin plus padding grows each tap target to 36px without moving the icons. */}
-          <div className="flex items-center gap-5">
+          <div className="flex min-h-11 items-center gap-5">
             <a
               href={SOCIAL_LINKS.instagram}
               target="_blank"
@@ -989,27 +739,6 @@ export function SiteFooter() {
             </a>
           </div>
         </div>
-        <nav aria-label="Footer" className="mt-10 flex flex-wrap gap-x-7 gap-y-3">
-          <Link
-            href="/"
-            className={`inline-flex min-h-11 items-center text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
-          >
-            {t.nav.home}
-          </Link>
-          <Link
-            href="/projects"
-            className={`inline-flex min-h-11 items-center text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
-          >
-            {t.nav.projectsLink}
-          </Link>
-          <Link
-            href="/blog"
-            className={`inline-flex min-h-11 items-center text-[14px] transition-colors hover:text-neutral-900 dark:hover:text-neutral-100 ${EDITORIAL_MUTED}`}
-          >
-            {t.blog.label}
-          </Link>
-        </nav>
-        <p className={`mt-6 text-[13px] ${EDITORIAL_MUTED}`}>© {new Date().getFullYear()} Numen Agency. {t.contact.footer}</p>
       </div>
     </footer>
   )
