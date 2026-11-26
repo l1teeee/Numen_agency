@@ -19,7 +19,7 @@ export function HeroWordmark() {
             className="inline-block"
             initial={reducedMotion ? false : { opacity: 0, y: '16%', filter: 'blur(16px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            transition={{ duration: reducedMotion ? 0 : 1.4, ease: EASE, delay: reducedMotion ? 0 : 0.2 + index * 0.09 }}
+            transition={{ duration: reducedMotion ? 0 : 1.4, ease: EASE, delay: reducedMotion ? 0 : 0.3 + index * 0.09 }}
           >
             {letter}
           </motion.span>

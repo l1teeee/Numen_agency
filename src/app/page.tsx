@@ -124,6 +124,8 @@ const jsonLd = {
 export default function Home() {
   return (
     <>
+      <link rel="preload" as="image" href="/home-intro-curtain.webp" fetchPriority="high" media="(prefers-reduced-motion: no-preference)" />
+      <div className="home-intro" aria-hidden="true" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}

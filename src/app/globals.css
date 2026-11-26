@@ -355,6 +355,75 @@ html:not(.dark) .hover\:bg-foreground\/4:hover { background-color: #f5f5f5; }
   --foreground: #000;
 }
 
+.home-intro {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-intro {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* The curtain: solid black on top, then the soft neutral-grey edge derived from
+     the reference clip (home-intro-curtain.webp covers 22vh to 95.625vh). It is
+     squeezed toward the top edge, so the edge rises and tightens as it goes,
+     like the reference. The solid layer alone covers the screen during the hold,
+     so the page loads black even before the texture arrives. */
+  .home-intro::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 100vh;
+    background:
+      linear-gradient(#121212, #121212) 0 0 / 100% 22.3vh no-repeat,
+      url("/home-intro-curtain.webp") 0 22vh / 100% 73.625vh no-repeat;
+    transform-origin: top;
+    will-change: transform;
+    animation: home-intro-sweep 1.62s linear forwards;
+  }
+
+  /* Blur over the whole page for the length of the sweep, under the curtain; it
+     only clears once the curtain is gone. */
+  .home-intro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    backdrop-filter: blur(18px);
+    animation: home-intro-unblur 0.6s 1.62s ease-out forwards;
+  }
+}
+
+/* Scale values follow the reference clip frame by frame after a 0.3s black hold;
+   the closing stretch keeps its speed down to zero. */
+@keyframes home-intro-sweep {
+  0%, 18.52% { transform: scaleY(4.6); }
+  21.6% { transform: scaleY(4.25); }
+  24.69% { transform: scaleY(3.41); }
+  32.9% { transform: scaleY(2.14); }
+  37.04% { transform: scaleY(1.78); }
+  41.17% { transform: scaleY(1.47); }
+  45.25% { transform: scaleY(1.22); }
+  49.38% { transform: scaleY(1); }
+  53.52% { transform: scaleY(0.81); }
+  57.59% { transform: scaleY(0.66); }
+  61.73% { transform: scaleY(0.53); }
+  65.86% { transform: scaleY(0.41); }
+  69.94% { transform: scaleY(0.33); }
+  76.11% { transform: scaleY(0.23); }
+  84.38% { transform: scaleY(0.15); }
+  100% { transform: scaleY(0); visibility: hidden; }
+}
+
+@keyframes home-intro-unblur {
+  to { backdrop-filter: blur(0); visibility: hidden; }
+}
+
 .skip-link {
   position: fixed;
   top: 1rem;
